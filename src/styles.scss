@@ -1,1 +1,19 @@
-/* You can add global styles to this file, and also import other style files */
+:root {
+    --mat-menu-container-color: #fff;
+}
+
+html,
+body {
+    height: 100%;
+}
+
+body {
+    margin: 0;
+    font-family: Roboto, 'Helvetica Neue', sans-serif;
+    background: linear-gradient(135deg, #b9864b, #f2bf7c, #b9864b);
+}
+
+mat-toolbar.mat-toolbar {
+    background: linear-gradient(#004000, #005500, #006000, #005500, #004000);
+    color: #fff;
+}
