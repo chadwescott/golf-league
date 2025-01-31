@@ -2,7 +2,7 @@ import { Course } from "../models/course.model";
 
 export const Courses: Course[] = [
     {
-        name: 'Morgan\s Crossing',
+        name: 'Morgan\'s Crossing',
         holes: [
             {
                 holeNumber: 1,

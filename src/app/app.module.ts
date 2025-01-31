@@ -11,11 +11,15 @@ import { HashLocationStrategy, LocationStrategy } from '@angular/common';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { PlayerListComponent } from './player-list/player-list.component';
+import { ScheduleComponent } from './schedule/schedule.component';
+import { ScoresComponent } from './scores/scores.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    PlayerListComponent
+    PlayerListComponent,
+    ScheduleComponent,
+    ScoresComponent
   ],
   imports: [
     AppRoutingModule,

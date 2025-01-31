@@ -1,21 +1,12 @@
 import { Player } from "../models/player.model";
 
-export const Chad: Player = {
-    id: '1',
-    firstName: 'Chad',
-    lastName: 'Wescott',
-    email: 'test@gmail.com',
-    phone: '555-555-5555',
-    imagePath: ''
-}
-
-export const Players: Player[] =  [
+export const Players: Player[] = [
     {
         id: '1',
         firstName: 'Chad',
         lastName: 'Wescott',
-        email: 'test@gmail.com',
-        phone: '555-555-5555',
+        email: 'chadwescott@gmail.com',
+        phone: '585-813-6237',
         imagePath: ''
     },
     {
@@ -77,7 +68,7 @@ export const Players: Player[] =  [
     {
         id: '9',
         firstName: 'Stephanie',
-        lastName: '',
+        lastName: 'Parks',
         email: 'test@gmail.com',
         phone: '555-555-5555',
         imagePath: ''
