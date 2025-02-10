@@ -1,26 +1,36 @@
-<p>{{ scores.player.firstName }} {{ scores.player.lastName }}</p>
-<table mat-table [dataSource]="scores.holeScores" class="mat-elevation-z8">
-
-    <ng-container matColumnDef="hole">
-        <th mat-header-cell *matHeaderCellDef> Hole </th>
-        <td mat-cell *matCellDef="let element"> {{element.hole.holeNumber}} </td>
-    </ng-container>
-
-    <ng-container matColumnDef="par">
-        <th mat-header-cell *matHeaderCellDef> Par </th>
-        <td mat-cell *matCellDef="let element"> {{element.hole.par}} </td>
-    </ng-container>
-
-    <ng-container matColumnDef="score">
-        <th mat-header-cell *matHeaderCellDef> Score </th>
-        <td mat-cell *matCellDef="let element"> {{element.score}} </td>
-    </ng-container>
-
-    <ng-container matColumnDef="fairway">
-        <th mat-header-cell *matHeaderCellDef> Fairway </th>
-        <td mat-cell *matCellDef="let element"> {{element.fairwayHit ?? 'N/A'}} </td>
-    </ng-container>
-
-    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+<table class="scorecard">
+    <thead>
+        <tr>
+            <th>Hole</th>
+            <th *ngFor="let hole of scores.holeScores">{{ hole.hole.holeNumber }}</th>
+            <th>Total</th>
+        </tr>
+        <tr>
+            <th>Handicap</th>
+            <th *ngFor="let hole of scores.holeScores">{{ hole.hole.handicap }}</th>
+            <th></th>
+        </tr>
+        <tr>
+            <th>Par</th>
+            <th *ngFor="let hole of scores.holeScores">{{ hole.hole.par }}</th>
+            <th>{{ totalPar }}</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>{{ scores.player.firstName }} {{ scores.player.lastName }}</td>
+            <td *ngFor="let holeScore of scores.holeScores" [ngClass]="holeScore.fairwayHit ? 'fairway' : ''">{{
+                holeScore.score }}</td>
+            <td>{{ scores.totalScore }}</td>
+        </tr>
+    </tbody>
+    <tfoot>
+        <tr>
+            <td colspan="11">
+                <div>
+                    <mat-icon>check</mat-icon> fairway hit
+                </div>
+            </td>
+        </tr>
+    </tfoot>
 </table>

@@ -57,5 +57,6 @@ export const Scorecards: Scorecard = {
             score: 6,
             fairwayHit: false
         }
-    ]
+    ],
+    totalScore: 42
 }

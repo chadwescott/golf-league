@@ -3,5 +3,6 @@ import { Player } from "./player.model";
 
 export interface Scorecard {
     player: Player,
-    holeScores: HoleScore[]
+    holeScores: HoleScore[],
+    totalScore: number
 }
