@@ -1,0 +1,9 @@
+.matchup {
+    display: flex;
+    flex-direction: row;
+    gap: 4px;
+
+    > div {
+        margin-block-end: 4px;
+    }
+}

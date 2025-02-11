@@ -13,13 +13,17 @@ import { AppComponent } from './app.component';
 import { PlayerListComponent } from './player-list/player-list.component';
 import { ScheduleComponent } from './schedule/schedule.component';
 import { ScoresComponent } from './scores/scores.component';
+import { ScoreEntryComponent } from './score-entry/score-entry.component';
+import { ScheduleManagerComponent } from './schedule-manager/schedule-manager.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     PlayerListComponent,
     ScheduleComponent,
-    ScoresComponent
+    ScoresComponent,
+    ScoreEntryComponent,
+    ScheduleManagerComponent
   ],
   imports: [
     AppRoutingModule,

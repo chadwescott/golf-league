@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
-import { Scorecards } from '../data/scorecards';
+import { PlayerScores } from '../models/player-scores.model';
+import { ScoreService } from '../services/score-service';
 
 @Component({
   selector: 'glm-scores',
@@ -7,9 +8,13 @@ import { Scorecards } from '../data/scorecards';
   styleUrls: ['./scores.component.scss']
 })
 export class ScoresComponent {
-  scores = Scorecards;
+  scores: PlayerScores;
   displayedColumns: string[] = ['hole', 'par', 'score', 'fairway'];
   totalPar = 0;
+
+  constructor(private readonly scoreService: ScoreService) {
+    this.scores = this.scoreService.getScorecard();
+  }
 
   ngOnInit() {
     this.totalPar = this.scores.holeScores.reduce((acc, holeScore) => acc + holeScore.hole.par, 0);

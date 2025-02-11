@@ -1,8 +1,8 @@
-import { Scorecard } from "../models/scorecard.model"
+import { PlayerScores } from "../models/player-scores.model"
 import { Courses } from "./courses"
 
 
-export const Scorecards: Scorecard = {
+export const Scorecards: PlayerScores = {
     player: {
         id: '1',
         firstName: 'Chad',

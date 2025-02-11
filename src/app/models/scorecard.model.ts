@@ -1,8 +1,6 @@
-import { HoleScore } from "./hole-score.model";
-import { Player } from "./player.model";
+import { PlayerScores } from "./player-scores.model";
 
 export interface Scorecard {
-    player: Player,
-    holeScores: HoleScore[],
-    totalScore: number
+    id: string,
+    scores: PlayerScores[]
 }

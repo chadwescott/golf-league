@@ -1,0 +1,16 @@
+<div *ngFor="let match of schedule">
+    <p>Week {{ match.week }} - {{ match.date | date :'M/d/yyyy' }}</p>
+    <div *ngFor="let matchup of match.matchups" class="matchup">
+        <div>
+            <div *ngFor="let player of matchup.team1">{{ player.firstName }} {{ player.lastName }}</div>
+        </div>
+        <div>vs</div>
+        <div>
+            <div *ngFor="let player of matchup.team2">{{ player.firstName }} {{ player.lastName }}</div>
+        </div>
+    </div>
+</div>
+
+<div *ngFor="let score of scores">
+    <div>{{ score.score1 }}, {{ score.score2 }}, {{ score.score3 }}: {{ score.handicap | number:'1.2-2' }}</div>
+</div>
