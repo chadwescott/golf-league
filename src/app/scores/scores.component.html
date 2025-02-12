@@ -19,7 +19,8 @@
     <tbody>
         <tr>
             <td>{{ scores.player.firstName }} {{ scores.player.lastName }}</td>
-            <td *ngFor="let holeScore of scores.holeScores" [ngClass]="holeScore.fairwayHit ? 'fairway' : ''">{{
+            <td *ngFor="let holeScore of scores.holeScores" [ngClass]="{ fairway: holeScore.fairwayHit  }"
+                [attr.scoreType]="holeScore.scoreType">{{
                 holeScore.score }}</td>
             <td>{{ scores.totalScore }}</td>
         </tr>
