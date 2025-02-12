@@ -1,13 +1,21 @@
-import { Injectable } from "@angular/core";
-import { Schedule } from "../data/schedule";
-import { Scorecards } from "../data/scorecards";
-import { Match } from "../models/match.model";
-import { PlayerScores } from "../models/player-scores.model";
+import { Injectable } from '@angular/core';
+import { AngularFirestore } from "@angular/fire/compat/firestore";
+import { Schedule } from '../data/schedule';
+import { Scorecards } from '../data/scorecards';
+import { Match } from '../models/match.model';
+import { PlayerScores } from '../models/player-scores.model';
+
 
 @Injectable({
     providedIn: 'root'
 })
 export class ScoreService {
+    constructor(private firestore: AngularFirestore) {
+        firestore.collection('scores').doc('9evVqox2CW4bn2Rx24kM').get().subscribe((doc) => {
+            console.log(doc.data());
+        });
+    }
+
     getSchedule(): Match[] {
         return Schedule;
     }

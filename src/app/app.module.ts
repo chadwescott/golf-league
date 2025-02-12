@@ -7,14 +7,18 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
+import { AngularFireModule } from '@angular/fire/compat';
+import { AngularFirestoreModule } from '@angular/fire/compat/firestore';
+
 import { HashLocationStrategy, LocationStrategy } from '@angular/common';
+import { environment } from 'src/environments/environment';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { PlayerListComponent } from './player-list/player-list.component';
-import { ScheduleComponent } from './schedule/schedule.component';
-import { ScoresComponent } from './scores/scores.component';
-import { ScoreEntryComponent } from './score-entry/score-entry.component';
 import { ScheduleManagerComponent } from './schedule-manager/schedule-manager.component';
+import { ScheduleComponent } from './schedule/schedule.component';
+import { ScoreEntryComponent } from './score-entry/score-entry.component';
+import { ScoresComponent } from './scores/scores.component';
 
 @NgModule({
   declarations: [
@@ -27,6 +31,8 @@ import { ScheduleManagerComponent } from './schedule-manager/schedule-manager.co
   ],
   imports: [
     AppRoutingModule,
+    AngularFireModule.initializeApp(environment.firebaseConfig),
+    AngularFirestoreModule,
     BrowserAnimationsModule,
     BrowserModule,
     MatButtonModule,
