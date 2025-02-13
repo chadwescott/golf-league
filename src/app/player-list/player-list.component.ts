@@ -8,6 +8,6 @@ import { Player } from '../models/player.model';
   styleUrls: ['./player-list.component.scss']
 })
 export class PlayerListComponent {
-  displayedColumns: string[] = ['firstName', 'lastName', 'email', 'phone'];
+  displayedColumns: string[] = ['firstName', 'lastName', 'handicap'];
   dataSource: Player[] = Players;
 }

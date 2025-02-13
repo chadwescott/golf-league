@@ -3,7 +3,7 @@ import { AngularFirestore } from "@angular/fire/compat/firestore";
 import { Schedule } from '../data/schedule';
 import { Scorecards } from '../data/scorecards';
 import { Match } from '../models/match.model';
-import { PlayerScores } from '../models/player-scores.model';
+import { Scorecard } from '../models/scorecard.model';
 
 
 @Injectable({
@@ -20,8 +20,8 @@ export class ScoreService {
         return Schedule;
     }
 
-    getScorecard(): PlayerScores {
-        return Scorecards;
+    getScorecard(): Scorecard {
+        return Scorecards[0];
     }
 
     getHandicap(score1: number, score2: number, score3: number, par: number): number {

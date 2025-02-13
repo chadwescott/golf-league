@@ -5,96 +5,84 @@ export const Players: Player[] = [
         id: '1',
         firstName: 'Chad',
         lastName: 'Wescott',
-        email: 'chadwescott@gmail.com',
-        phone: '585-813-6237',
-        imagePath: ''
+        imagePath: '',
+        handicap: 6.5
     },
     {
         id: '2',
         firstName: 'Mark',
         lastName: 'McClelland',
-        email: 'test@gmail.com',
-        phone: '555-555-5555',
-        imagePath: ''
+        imagePath: '',
+        handicap: 8.5
     },
     {
         id: '3',
         firstName: 'James',
         lastName: 'Walsh',
-        email: 'test@gmail.com',
-        phone: '555-555-5555',
-        imagePath: ''
+        imagePath: '',
+        handicap: null
     },
     {
         id: '4',
         firstName: 'Aaron',
         lastName: 'Warriner',
-        email: 'test@gmail.com',
-        phone: '555-555-5555',
-        imagePath: ''
+        imagePath: '',
+        handicap: null
     },
     {
         id: '5',
         firstName: 'Kim',
         lastName: 'Young',
-        email: 'test@gmail.com',
-        phone: '555-555-5555',
-        imagePath: ''
+        imagePath: '',
+        handicap: null
     },
     {
         id: '6',
         firstName: 'Tim',
         lastName: 'Sweeney',
-        email: 'test@gmail.com',
-        phone: '555-555-5555',
-        imagePath: ''
+        imagePath: '',
+        handicap: null
     },
     {
         id: '7',
         firstName: 'Makia',
         lastName: 'Warren',
-        email: 'test@gmail.com',
-        phone: '555-555-5555',
-        imagePath: ''
+        imagePath: '',
+        handicap: null
     },
     {
         id: '8',
         firstName: 'Craig',
         lastName: 'Cox',
-        email: 'test@gmail.com',
-        phone: '555-555-5555',
-        imagePath: ''
+        imagePath: '',
+        handicap: null
     },
     {
         id: '9',
         firstName: 'Stephanie',
         lastName: 'Parks',
-        email: 'test@gmail.com',
-        phone: '555-555-5555',
-        imagePath: ''
+        imagePath: '',
+        handicap: null
     },
     {
         id: '10',
         firstName: 'Bill',
         lastName: 'Hahn',
-        email: 'test@gmail.com',
-        phone: '555-555-5555',
-        imagePath: ''
+        imagePath: '',
+        handicap: null
     },
     {
         id: '11',
         firstName: 'Brian',
         lastName: 'Murphy',
-        email: 'test@gmail.com',
-        phone: '555-555-5555',
-        imagePath: ''
+        imagePath: '',
+        handicap: null
     },
     {
         id: '12',
         firstName: 'Sam',
         lastName: 'Rivera',
-        email: 'test@gmail.com',
-        phone: '555-555-5555',
-        imagePath: ''
+        imagePath: '',
+        handicap: null
     }
 ];

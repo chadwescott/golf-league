@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { PlayerScores } from '../models/player-scores.model';
+import { Scorecard } from '../models/scorecard.model';
 import { ScoreService } from '../services/score-service';
 
 @Component({
@@ -8,15 +8,15 @@ import { ScoreService } from '../services/score-service';
   styleUrls: ['./scores.component.scss']
 })
 export class ScoresComponent {
-  scores: PlayerScores;
+  scorecard: Scorecard;
   displayedColumns: string[] = ['hole', 'par', 'score', 'fairway'];
   totalPar = 0;
 
   constructor(private readonly scoreService: ScoreService) {
-    this.scores = this.scoreService.getScorecard();
+    this.scorecard = this.scoreService.getScorecard();
   }
 
   ngOnInit() {
-    this.totalPar = this.scores.holeScores.reduce((acc, holeScore) => acc + holeScore.hole.par, 0);
+    this.totalPar = this.scorecard.holes.reduce((acc, hole) => acc + hole.par, 0);
   }
 }
