@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
-import { Players } from '../data/players';
+import { map } from 'rxjs';
 import { Player } from '../models/player.model';
+import { ScoreService } from '../services/score-service';
 
 @Component({
   selector: 'glm-player-list',
@@ -9,5 +10,11 @@ import { Player } from '../models/player.model';
 })
 export class PlayerListComponent {
   displayedColumns: string[] = ['firstName', 'lastName', 'handicap'];
-  dataSource: Player[] = Players;
+  dataSource: Player[] = [];
+
+  constructor(private scoreService: ScoreService) {
+    this.scoreService.getPlayers()
+      .pipe(map(players => players.sort((a, b) => a.lastName < b.lastName ? -1 : a.lastName > b.lastName ? 1 : a.firstName < b.firstName ? -1 : 0)))
+      .subscribe(players => this.dataSource = players);
+  }
 }

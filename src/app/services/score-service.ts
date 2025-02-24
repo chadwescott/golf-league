@@ -1,8 +1,10 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from "@angular/fire/compat/firestore";
+import { map, Observable } from 'rxjs';
 import { Schedule } from '../data/schedule';
 import { Scorecards } from '../data/scorecards';
 import { Match } from '../models/match.model';
+import { Player } from '../models/player.model';
 import { Scorecard } from '../models/scorecard.model';
 
 
@@ -11,9 +13,23 @@ import { Scorecard } from '../models/scorecard.model';
 })
 export class ScoreService {
     constructor(private firestore: AngularFirestore) {
-        firestore.collection('scores').doc('9evVqox2CW4bn2Rx24kM').get().subscribe((doc) => {
-            console.log(doc.data());
-        });
+        // firestore.collection('scores').doc('9evVqox2CW4bn2Rx24kM').get().subscribe((doc) => {
+        //     console.log(doc.data());
+        // });
+    }
+
+    getPlayers(): Observable<Player[]> {
+        return this.firestore.collection<Player>('players').get()
+            .pipe(map(collection => collection.docs.map(doc => {
+                const player = doc.data();
+                player.id = doc.id;
+                return player;
+            })));
+    }
+
+    savePlayers() {
+        // console.log(this.firestore.createId());
+        // this.firestore.firestore.
     }
 
     getSchedule(): Match[] {

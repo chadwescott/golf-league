@@ -1,19 +1,21 @@
 <h1>Schedule</h1>
 <ng-container *ngFor="let match of schedule" class="schedule">
     <h2>Week {{ match.week }} - {{ match.date | date :'M/d/yyyy' }}</h2>
-    <div class="matchups">
-        <div *ngFor="let matchup of match.matchups" class="matchup">
-            <div>
-                <div *ngFor="let player of matchup.team1">{{ player.firstName }} {{ player.lastName }}
-                    <span *ngIf="player.handicap" class="handicap">({{ player.handicap }})</span>
-                </div>
-            </div>
-            <div>vs</div>
-            <div>
-                <div *ngFor="let player of matchup.team2">{{ player.firstName }} {{ player.lastName }}
-                    <span *ngIf="player.handicap" class="handicap">({{ player.handicap }})</span>
-                </div>
-            </div>
-        </div>
-    </div>
+    <table class="matchups">
+        <tbody>
+            <tr *ngFor="let matchup of match.matchups">
+                <td>
+                    <div *ngFor="let player of matchup.team1">{{ player.firstName }} {{ player.lastName }}
+                        <span *ngIf="player.handicap" class="handicap">({{ player.handicap }})</span>
+                    </div>
+                </td>
+                <td>vs</td>
+                <td>
+                    <div *ngFor="let player of matchup.team2">{{ player.firstName }} {{ player.lastName }}
+                        <span *ngIf="player.handicap" class="handicap">({{ player.handicap }})</span>
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
 </ng-container>

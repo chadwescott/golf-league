@@ -1,0 +1,43 @@
+<table class="scorecard">
+    <thead>
+        <tr>
+            <th>Hole</th>
+            <th *ngFor="let hole of scorecard.holes">{{ hole.holeNumber }}</th>
+            <th>Total</th>
+        </tr>
+        <tr>
+            <th>Handicap</th>
+            <th *ngFor="let hole of scorecard.holes">{{ hole.handicap }}</th>
+            <th></th>
+        </tr>
+        <tr>
+            <th>Par</th>
+            <th *ngFor="let hole of scorecard.holes">{{ hole.par }}</th>
+            <th>{{ totalPar }}</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let scores of scorecard.scores">
+            <td>
+                <div>{{ scores.player.firstName }} {{ scores.player.lastName }}</div>
+                <div *ngIf="scores.handicap" class="handicap">Handicap: {{scores.handicap}}</div>
+            </td>
+            <td *ngFor="let holeScore of scores.holeScores" [ngClass]="{ fairway: holeScore.fairwayHit  }"
+                [attr.scoreType]="holeScore.scoreType">{{
+                holeScore.score }}</td>
+            <td>
+                <div>{{ scores.totalScore }}</div>
+                <div class="handicap">({{ scores.totalScore - (scores.handicap ?? 0) }})</div>
+            </td>
+        </tr>
+    </tbody>
+    <tfoot>
+        <tr>
+            <td colspan="11">
+                <div>
+                    <mat-icon>check</mat-icon> fairway hit
+                </div>
+            </td>
+        </tr>
+    </tfoot>
+</table>

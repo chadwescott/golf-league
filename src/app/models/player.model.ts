@@ -1,5 +1,5 @@
 export interface Player {
-    id: string,
+    id: string;
     firstName: string,
     lastName: string,
     imagePath: string,

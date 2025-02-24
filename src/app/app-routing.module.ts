@@ -4,12 +4,12 @@ import { PlayerListComponent } from './player-list/player-list.component';
 import { ScheduleManagerComponent } from './schedule-manager/schedule-manager.component';
 import { ScheduleComponent } from './schedule/schedule.component';
 import { ScoreEntryComponent } from './score-entry/score-entry.component';
-import { ScoresComponent } from './scores/scores.component';
+import { ScorecardComponent } from './scorecard/scorecard.component';
 
 const routes: Routes = [
     { path: 'players', component: PlayerListComponent },
     { path: 'schedule', component: ScheduleComponent },
-    { path: 'scores', component: ScoresComponent },
+    { path: 'scores', component: ScorecardComponent },
     { path: 'schedule-manager', component: ScheduleManagerComponent },
     { path: 'score-entry', component: ScoreEntryComponent },
 ];
