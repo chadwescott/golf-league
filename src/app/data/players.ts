@@ -1,4 +1,4 @@
-import { Player } from "../models/player.model";
+import { Player } from '../models/player.model';
 
 export const Players: Player[] = [
     {
@@ -73,8 +73,8 @@ export const Players: Player[] = [
     },
     {
         id: '11',
-        firstName: 'Brian',
-        lastName: 'Murphy',
+        firstName: 'Craig',
+        lastName: 'Lefevre',
         imagePath: '',
         handicap: null
     },
@@ -82,6 +82,13 @@ export const Players: Player[] = [
         id: '12',
         firstName: 'Sam',
         lastName: 'Rivera',
+        imagePath: '',
+        handicap: null
+    },
+    {
+        id: '13',
+        firstName: 'Willie',
+        lastName: 'Baumgartner III',
         imagePath: '',
         handicap: null
     }

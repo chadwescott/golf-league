@@ -1,19 +1,23 @@
+<h2>{{scorecard.date | date: 'M/dd/yyyy'}}</h2>
 <table class="scorecard">
     <thead>
         <tr>
             <th>Hole</th>
             <th *ngFor="let hole of scorecard.holes">{{ hole.holeNumber }}</th>
             <th>Total</th>
+            <th>Points</th>
         </tr>
         <tr>
             <th>Handicap</th>
             <th *ngFor="let hole of scorecard.holes">{{ hole.handicap }}</th>
+            <th></th>
             <th></th>
         </tr>
         <tr>
             <th>Par</th>
             <th *ngFor="let hole of scorecard.holes">{{ hole.par }}</th>
             <th>{{ totalPar }}</th>
+            <th></th>
         </tr>
     </thead>
     <tbody>
@@ -29,11 +33,12 @@
                 <div>{{ scores.totalScore }}</div>
                 <div class="handicap">({{ scores.totalScore - (scores.handicap ?? 0) }})</div>
             </td>
+            <td>{{ getPoints(scores.holeScores)}}</td>
         </tr>
     </tbody>
     <tfoot>
         <tr>
-            <td colspan="11">
+            <td colspan="12">
                 <div>
                     <mat-icon>check</mat-icon> fairway hit
                 </div>

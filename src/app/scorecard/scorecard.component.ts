@@ -1,4 +1,6 @@
 import { Component } from '@angular/core';
+
+import { HoleScore } from '../models/hole-score.model';
 import { Scorecard } from '../models/scorecard.model';
 import { ScoreService } from '../services/score-service';
 
@@ -17,5 +19,9 @@ export class ScorecardComponent {
 
   ngOnInit() {
     this.totalPar = this.scorecard.holes.reduce((acc, hole) => acc + hole.par, 0);
+  }
+
+  getPoints(scores: HoleScore[]): number {
+    return this.scoreService.getPoints(scores);
   }
 }

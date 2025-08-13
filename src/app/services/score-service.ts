@@ -1,10 +1,13 @@
 import { Injectable } from '@angular/core';
-import { AngularFirestore } from "@angular/fire/compat/firestore";
+import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { map, Observable } from 'rxjs';
+
 import { Schedule } from '../data/schedule';
 import { Scorecards } from '../data/scorecards';
+import { HoleScore } from '../models/hole-score.model';
 import { Match } from '../models/match.model';
 import { Player } from '../models/player.model';
+import { ScoreType } from '../models/score-type.enum';
 import { Scorecard } from '../models/scorecard.model';
 
 
@@ -38,6 +41,34 @@ export class ScoreService {
 
     getScorecard(): Scorecard {
         return Scorecards[0];
+    }
+
+    getPoints(scores: HoleScore[]): number {
+        let points = 0;
+        scores.forEach(score => {
+            if (score.fairwayHit) {
+                points++;
+            }
+
+            switch (score.scoreType) {
+                case ScoreType.Eagle:
+                    points += 4;
+                    break;
+                case ScoreType.Birdie:
+                    points += 3;
+                    break;
+                case ScoreType.Par:
+                    points += 2;
+                    break;
+                case ScoreType.Bogey:
+                    points += 1;
+                    break;
+                default:
+                    break;
+            }
+        });
+
+        return points;
     }
 
     getHandicap(score1: number, score2: number, score3: number, par: number): number {
