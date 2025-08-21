@@ -1,0 +1,126 @@
+.scorecard {
+    border: solid 1px black;
+    border-spacing: 0;
+
+    .course-header {
+        text-align: center;
+        background: rgb(115, 60, 0);
+        color: white;
+        font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+        letter-spacing: .075em;
+        font-size: 1.5em;
+    }
+
+    tr > th:not(:first-child),
+    tr > td:not(:first-child) {
+        text-align: center;
+    }
+
+    th,
+    td {
+        text-align: start;
+        padding: 10px 15px;
+        border: solid 1px black;
+        position: relative;
+        background: white;
+    }
+
+    .handicap {
+        font-size: 12px;
+    }
+
+    [scoreType='albatross'],
+    [scoreType='eagle'],
+    [scoreType='birdie'] {
+        color: red;
+    }
+
+    [scoreType='albatross']::before,
+    [scoreType='eagle']::before {
+        --size: 1.25em;
+        content: '';
+        border-radius: 50%;
+        border: double calc(var(--size) * 0.3) red;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        height: var(--size);
+        width: var(--size);
+    }
+
+    [scoreType='birdie']::before {
+        --size: 1.25em;
+        content: '';
+        border-radius: 50%;
+        border: solid calc(var(--size) * 0.125) red;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        height: calc(var(--size) * 1.25);
+        width: calc(var(--size) * 1.25);
+    }
+
+    [scoreType='bogey']::before {
+        --size: 1.25em;
+        content: '';
+        border: solid 2px black;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        height: calc(var(--size) * 1.25);
+        width: calc(var(--size) * 1.25);
+    }
+
+    [scoreType='double-bogey']::before,
+    [scoreType='other']::before {
+        --size: 1.25em;
+        content: '';
+        border: double calc(var(--size) * 0.3) black;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        height: var(--size);
+        width: var(--size);
+    }
+
+    .fairway::after {
+        content: '\e5ca';
+        font-family: 'Material Icons';
+        font-size: 24px;
+        font-weight: 800;
+        color: green;
+        position: absolute;
+        bottom: -2px;
+        right: -2px;
+    }
+
+    tfoot {
+        td {
+            padding-block-start: 2px;
+            padding-block-end: 2px;
+            margin-inline-end: 10px;
+            margin-inline-start: 10px;
+
+            > div {
+                display: flex;
+                justify-content: end;
+                align-items: center;
+            }
+            font-size: 14px;
+
+            mat-icon {
+                font-size: 14px;
+                height: 14px;
+                width: 14px;
+                font-weight: 800;
+                color: green;
+                margin-inline-end: 8px;
+            }
+        }
+    }
+}
+

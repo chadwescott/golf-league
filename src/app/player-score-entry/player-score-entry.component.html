@@ -1,0 +1,24 @@
+<ng-container [formGroup]="holeScoresGroup">
+    <td>
+        <div>{{ scores.player.firstName }} {{ scores.player.lastName }}</div>
+        <div *ngIf="scores.handicap" class="handicap">Handicap: {{scores.handicap}}</div>
+    </td>
+    <ng-container formArrayName="holeScores">
+        <ng-container *ngFor="let holeScore of holeScoresArray.controls; let i = index" [formGroupName]="i">
+            <td class="score">
+                <div>
+                    <input type="number" matInput formControlName="score" min="1" max="12" (change)="calculateScore()">
+                </div>
+                <div *ngIf="holeScore.get('par')?.value > 3">
+                    <mat-checkbox matCheckbox formControlName="fairwayHit" [checked]="holeScore.get('fairwayHit')"
+                        (change)="calculateScore()"></mat-checkbox>
+                </div>
+            </td>
+        </ng-container>
+    </ng-container>
+    <td>
+        <div>{{ scores.totalScore }}</div>
+        <div class="handicap">({{ holeScoresGroup.get('totalScore')?.value - (scores.handicap ?? 0) }})</div>
+    </td>
+    <td>{{ holeScoresGroup.get('points')?.value }}</td>
+</ng-container>

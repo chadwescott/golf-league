@@ -12,39 +12,53 @@ export class ScheduleManagerComponent {
 
   scores = [
     {
-      score1: 52,
-      score2: 45,
-      score3: 46,
+      player: 'Craig (Ace)',
+      scores: [68, 60, 62, 58, 65, 58, 59, 61],
       handicap: 0
     },
     {
-      score1: 50,
-      score2: 51,
-      score3: 48,
+      player: 'Chad',
+      scores: [47, 47, 50, 44, 43, 43, 43, 41, 43],
       handicap: 0
     },
     {
-      score1: 67,
-      score2: 62,
-      score3: 63,
+      player: 'Kim',
+      scores: [53, 49, 49, 53, 51, 51, 47, 44, 47],
       handicap: 0
     },
     {
-      score1: 57,
-      score2: 59,
-      score3: 56,
+      player: 'Bill',
+      scores: [48, 52, 46, 47, 51, 51],
       handicap: 0
     },
     {
-      score1: 50,
-      score2: 57,
-      score3: 54,
+      player: 'Willie',
+      scores: [57, 56, 57, 62, 54, 55, 57, 55],
       handicap: 0
     },
     {
-      score1: 63,
-      score2: 63,
-      score3: 51,
+      player: 'Mark',
+      scores: [51, 48, 53, 49, 49, 47, 50],
+      handicap: 0
+    },
+    {
+      player: 'Tim',
+      scores: [54, 53, 54, 57, 60, 54, 56, 57, 54],
+      handicap: 0
+    },
+    {
+      player: 'James',
+      scores: [49, 48, 45, 47, 48, 45, 47, 49, 46],
+      handicap: 0
+    },
+    {
+      player: 'Makia',
+      scores: [50, 60, 56, 57, 56, 55, 57, 59, 58],
+      handicap: 0
+    },
+    {
+      player: 'Steph',
+      scores: [52, 54, 52, 56, 56, 50, 50, 52, 49, 51],
       handicap: 0
     }
   ]
@@ -53,7 +67,7 @@ export class ScheduleManagerComponent {
     this.schedule = this.scoreService.getSchedule();
 
     this.scores.forEach(score => {
-      score.handicap = this.scoreService.getHandicap(score.score1, score.score2, score.score3, 36);
+      score.handicap = this.scoreService.getHandicap(score.scores, 36);
     });
   }
 }

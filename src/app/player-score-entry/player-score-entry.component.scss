@@ -1,0 +1,30 @@
+tr > th:not(:first-child),
+tr > td:not(:first-child) {
+    text-align: center;
+}
+
+th,
+td {
+    text-align: start;
+    padding: 10px 15px;
+    border: solid 1px black;
+    position: relative;
+    background: white;
+}
+
+input {
+    width: 2rem;
+}
+
+.score {
+    vertical-align: top;;
+
+    > div {
+        display: flex;
+        justify-content: flex-end;
+    }
+}
+
+.handicap {
+    font-size: 12px;
+}

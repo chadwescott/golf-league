@@ -2,6 +2,11 @@
 <table class="scorecard">
     <thead>
         <tr>
+            <th colspan="12" class="course-header">
+                {{ scorecard.course.name }}
+            </th>
+        </tr>
+        <tr>
             <th>Hole</th>
             <th *ngFor="let hole of scorecard.holes">{{ hole.holeNumber }}</th>
             <th>Total</th>

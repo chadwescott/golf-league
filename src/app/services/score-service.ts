@@ -71,7 +71,7 @@ export class ScoreService {
         return points;
     }
 
-    getHandicap(score1: number, score2: number, score3: number, par: number): number {
-        return ((Math.floor((score1 + score2 + score3) / 3)) - par) * .95;
+    getHandicap(scores: number[], par: number): number {
+        return ((Math.floor((scores.reduce((acc, curr) => acc + curr)) / scores.length)) - par) * .95;
     }
 }

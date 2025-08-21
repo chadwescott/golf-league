@@ -1,1 +1,58 @@
-<p>score-entry works!</p>
+<form [formGroup]="formGroup">
+    <h2>{{scorecard.date | date: 'M/dd/yyyy'}}</h2>
+    <div>
+        <mat-form-field>
+            <mat-select>
+                <mat-option [value]="player" *ngFor="let player of players" (onSelectionChange)="selectPlayer(player)">
+                    {{player.firstName}} {{player.lastName}}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+        <button mat-button [disabled]="!selectedPlayer" primary color="primary" (click)="addPlayer()">Add
+            Player</button>
+    </div>
+    <table class="scorecard">
+        <thead>
+            <tr>
+                <th colspan="12" class="course-header">
+                    {{ scorecard.course.name }}
+                </th>
+            </tr>
+            <tr>
+                <th>Hole</th>
+                <th *ngFor="let hole of scorecard.holes">{{ hole.holeNumber }}</th>
+                <th>Total</th>
+                <th>Points</th>
+            </tr>
+            <tr>
+                <th>Handicap</th>
+                <th *ngFor="let hole of scorecard.holes">{{ hole.handicap }}</th>
+                <th></th>
+                <th></th>
+            </tr>
+            <tr>
+                <th>Par</th>
+                <th *ngFor="let hole of scorecard.holes">{{ hole.par }}</th>
+                <th>{{ totalPar }}</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr glm-player-score-entry *ngFor="let scores of scorecard.scores" [formGroup]="formGroup"
+                [scores]="scores">
+            </tr>
+        </tbody>
+        <tfoot>
+            <tr>
+                <td colspan="12">
+                    <div>
+                        <mat-icon>check</mat-icon> fairway hit
+                    </div>
+                </td>
+            </tr>
+        </tfoot>
+    </table>
+    <button mat-button (click)="editPlayerScore()">
+        <mat-icon>edit</mat-icon>
+    </button>
+</form>

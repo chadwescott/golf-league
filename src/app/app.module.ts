@@ -17,7 +17,6 @@ import { AppComponent } from './app.component';
 import { PlayerListComponent } from './player-list/player-list.component';
 import { ScheduleManagerComponent } from './schedule-manager/schedule-manager.component';
 import { ScheduleComponent } from './schedule/schedule.component';
-import { ScoreEntryComponent } from './score-entry/score-entry.component';
 import { ScorecardComponent } from './scorecard/scorecard.component';
 
 @NgModule({
@@ -26,7 +25,6 @@ import { ScorecardComponent } from './scorecard/scorecard.component';
     PlayerListComponent,
     ScheduleComponent,
     ScorecardComponent,
-    ScoreEntryComponent,
     ScheduleManagerComponent
   ],
   imports: [

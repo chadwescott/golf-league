@@ -12,5 +12,9 @@
 </div>
 
 <div *ngFor="let score of scores">
-    <div>{{ score.score1 }}, {{ score.score2 }}, {{ score.score3 }}: {{ score.handicap | number:'1.2-2' }}</div>
+    <div>{{ score.player }} scores: <ng-container *ngFor="let s of score.scores.sort(); let i = index">{{ s
+            }}<ng-container *ngIf="i != score.scores.length - 1">, </ng-container>
+        </ng-container>
+        (hdcp: {{ score.handicap | number:'1.2-2' }})
+    </div>
 </div>
