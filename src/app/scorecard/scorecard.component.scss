@@ -2,6 +2,15 @@
     border: solid 1px black;
     border-spacing: 0;
 
+    .course-header {
+        text-align: center;
+        background: rgb(115, 60, 0);
+        color: white;
+        font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+        letter-spacing: .075em;
+        font-size: 1.5em;
+    }
+
     tr > th:not(:first-child),
     tr > td:not(:first-child) {
         text-align: center;
