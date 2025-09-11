@@ -4,6 +4,7 @@ import { FormArray, FormBuilder, FormGroup, ReactiveFormsModule } from '@angular
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { PlayerScores } from '../models/player-scores.model';
+import { RoundHoles } from '../models/round-holes.enum';
 import { ScoreType } from '../models/score-type.enum';
 
 @Component({
@@ -25,6 +26,10 @@ export class PlayerScoreEntryComponent {
   @Input()
   scores!: PlayerScores;
 
+  @Input()
+  roundHoles!: RoundHoles;
+
+  roundHolesEnum = RoundHoles;
   holeScoresGroup!: FormGroup;
 
   get holeScoresArray(): FormArray {
@@ -41,11 +46,23 @@ export class PlayerScoreEntryComponent {
   calculateScore() {
     let totalScore = 0;
     let points = 0;
+    let inScore = 0;
+    let outScore = 0;
 
     this.holeScoresArray.controls.forEach((holeScore, index) => {
       const score = holeScore.get('score')?.value;
       const par = holeScore.get('par')?.value;
       if (score === null) { return; }
+
+      if (index < 9) {
+        if (this.roundHoles === RoundHoles.Back) {
+          inScore += score;
+        } else {
+          outScore += score;
+        }
+      } else {
+        inScore += score;
+      }
 
       totalScore += score;
       if (holeScore.get('fairwayHit')?.value) {
@@ -81,6 +98,12 @@ export class PlayerScoreEntryComponent {
       }
     });
 
+    this.scores.outScore = outScore;
+    this.scores.inScore = inScore;
+    this.scores.totalScore = totalScore;
+    this.scores.points = points;
+    this.holeScoresGroup.get('outScore')?.setValue(outScore);
+    this.holeScoresGroup.get('inScore')?.setValue(inScore);
     this.holeScoresGroup.get('totalScore')?.setValue(totalScore);
     this.holeScoresGroup.get('points')?.setValue(points);
   }

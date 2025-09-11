@@ -14,11 +14,21 @@
                         (change)="calculateScore()"></mat-checkbox>
                 </div>
             </td>
+            @if (i === 8) {
+            @if (roundHoles === roundHolesEnum.Back) {
+            <td>{{ scores.inScore }}</td>
+            } @else {
+            <td>{{ scores.outScore }}</td>
+            }
+            }
+            @if (i === 17) {
+            <td>{{ scores.inScore }}</td>
+            }
         </ng-container>
     </ng-container>
     <td>
         <div>{{ scores.totalScore }}</div>
-        <div class="handicap">({{ holeScoresGroup.get('totalScore')?.value - (scores.handicap ?? 0) }})</div>
+        <div class="handicap">({{ scores.totalScore - (scores.handicap ?? 0) }})</div>
     </td>
-    <td>{{ holeScoresGroup.get('points')?.value }}</td>
+    <td>{{ scores.points }}</td>
 </ng-container>

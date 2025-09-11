@@ -6,12 +6,15 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSelectModule } from '@angular/material/select';
+import { CdkAriaLive } from "../../../node_modules/@angular/cdk/a11y/index";
 import { Courses } from '../data/courses';
 import { Players } from '../data/players';
 import { Course } from '../models/course.model';
 import { Player } from '../models/player.model';
+import { RoundHoles } from '../models/round-holes.enum';
 import { Scorecard } from '../models/scorecard.model';
 import { PlayerScoreEntryComponent } from '../player-score-entry/player-score-entry.component';
+import { ScoreService } from '../services/score-service';
 
 @Component({
   selector: 'glm-score-entry',
@@ -27,7 +30,8 @@ import { PlayerScoreEntryComponent } from '../player-score-entry/player-score-en
     MatIconModule,
     MatSelectModule,
     ReactiveFormsModule,
-    PlayerScoreEntryComponent
+    PlayerScoreEntryComponent,
+    CdkAriaLive
   ]
 })
 export class ScoreEntryComponent {
@@ -38,20 +42,14 @@ export class ScoreEntryComponent {
   players = Players;
   selectedPlayer: Player | null = null;
   scores: FormArray | null = null;
+  roundHoles = RoundHoles;
 
-  constructor(private readonly fb: FormBuilder) { }
+  constructor(private readonly scoreService: ScoreService, private readonly fb: FormBuilder) { }
 
   ngOnInit() {
     this.course = Courses[0];
-    const holes = this.course.holes.splice(0, 9);
 
-    this.scorecard = {
-      course: this.course,
-      date: new Date(),
-      holes: holes,
-      id: 'sample-scorecard-id',
-      scores: []
-    };
+    this.scorecard = this.scoreService.createScorecard(this.course, RoundHoles.Front);
     this.initializeForm();
 
     this.totalPar = this.scorecard.holes.reduce((acc, hole) => acc + hole.par, 0);
@@ -76,6 +74,8 @@ export class ScoreEntryComponent {
       const score = {
         player: this.selectedPlayer,
         handicap: this.selectedPlayer.handicap,
+        inScore: 0,
+        outScore: 0,
         totalScore: 0,
         points: 0,
         holeScores: this.scorecard.holes.map(hole => ({
@@ -93,6 +93,8 @@ export class ScoreEntryComponent {
       const holeScoresGroup = this.fb.group({
         player: score.player,
         handicap: score.player.handicap,
+        outScore: 0,
+        inScore: 0,
         totalScore: 0,
         points: 0,
         holeScores: this.fb.array(score.holeScores.map(holeScore => (
@@ -111,9 +113,8 @@ export class ScoreEntryComponent {
     }
   }
 
-  editPlayerScore(): void {
-    console.log(this.formGroup);
+  savePlayerScore(): void {
     this.scorecard.scores = this.formGroup.get('scores')?.value || [];
-    console.log(this.scorecard);
+    this.scoreService.saveScores(this.scorecard);
   }
 }

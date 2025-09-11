@@ -5,5 +5,8 @@ export interface PlayerScores {
     player: Player,
     holeScores: HoleScore[],
     handicap: number | null,
-    totalScore: number
+    inScore: number,
+    outScore: number,
+    totalScore: number,
+    points: number
 }

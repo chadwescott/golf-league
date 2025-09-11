@@ -1,5 +1,6 @@
 :root {
     --mat-menu-container-color: #fff;
+    --vertical-margin: 15px;
 }
 
 html,
@@ -27,4 +28,18 @@ h2 {
     font-size: 1.25rem;
     font-weight: 500;
     text-decoration: underline;
+}
+
+button[mat-raised-button] {
+    border: solid 1px black;
+}
+
+table, form {
+    margin: var(--vertical-margin) 0;
+}
+
+.row {
+    display: flex;
+    align-items: center;
+    gap: 15px;
 }

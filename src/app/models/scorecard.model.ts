@@ -1,10 +1,11 @@
-import { Course } from './course.model';
 import { Hole } from './hole.model';
 import { PlayerScores } from './player-scores.model';
+import { RoundHoles } from './round-holes.enum';
 
 export interface Scorecard {
-    course: Course,
+    courseId: number,
     date: Date;
+    roundHoles: RoundHoles;
     holes: Hole[];
     id: string,
     scores: PlayerScores[]

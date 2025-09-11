@@ -1,6 +1,6 @@
 <form [formGroup]="formGroup">
     <h2>{{scorecard.date | date: 'M/dd/yyyy'}}</h2>
-    <div>
+    <div class="row">
         <mat-form-field>
             <mat-select>
                 <mat-option [value]="player" *ngFor="let player of players" (onSelectionChange)="selectPlayer(player)">
@@ -8,43 +8,67 @@
                 </mat-option>
             </mat-select>
         </mat-form-field>
-        <button mat-button [disabled]="!selectedPlayer" primary color="primary" (click)="addPlayer()">Add
+        <button mat-button mat-raised-button [disabled]="!selectedPlayer" primary color="primary"
+            (click)="addPlayer()">Add
             Player</button>
     </div>
     <table class="scorecard">
         <thead>
             <tr>
-                <th colspan="12" class="course-header">
-                    {{ scorecard.course.name }}
+                <th [attr.colspan]="scorecard.holes.length + (scorecard.roundHoles === roundHoles.All ? 5 : 4)"
+                    class="course-header">
+                    {{ course.name }}
                 </th>
             </tr>
             <tr>
                 <th>Hole</th>
-                <th *ngFor="let hole of scorecard.holes">{{ hole.holeNumber }}</th>
+                <ng-container *ngFor="let hole of scorecard.holes; let i = index">
+                    <th>{{ hole.holeNumber }}</th>
+                    @if (i === 8) {
+                    @if (scorecard.roundHoles === roundHoles.Back) {
+                    <th>In</th>
+                    } @else {
+                    <th>Out</th>
+                    }
+                    }
+                    @if (i === 17) {
+                    <th>In</th>
+                    }
+                </ng-container>
                 <th>Total</th>
                 <th>Points</th>
             </tr>
             <tr>
                 <th>Handicap</th>
-                <th *ngFor="let hole of scorecard.holes">{{ hole.handicap }}</th>
+                <ng-container *ngFor="let hole of scorecard.holes; let i = index">
+                    <th>{{ hole.handicap }}</th>
+                    @if ((i + 1) % 9 === 0) {
+                    <th></th>
+                    }
+                </ng-container>
                 <th></th>
                 <th></th>
             </tr>
             <tr>
                 <th>Par</th>
-                <th *ngFor="let hole of scorecard.holes">{{ hole.par }}</th>
+                <ng-container *ngFor="let hole of scorecard.holes; let i = index">
+                    <th>{{ hole.par }}</th>
+                    @if ((i + 1) % 9 === 0) {
+                    <th></th>
+                    }
+                </ng-container>
                 <th>{{ totalPar }}</th>
                 <th></th>
             </tr>
         </thead>
         <tbody>
-            <tr glm-player-score-entry *ngFor="let scores of scorecard.scores" [formGroup]="formGroup"
-                [scores]="scores">
+            <tr glm-player-score-entry *ngFor="let scores of scorecard.scores" [formGroup]="formGroup" [scores]="scores"
+                [roundHoles]="scorecard.roundHoles">
             </tr>
         </tbody>
         <tfoot>
             <tr>
-                <td colspan="12">
+                <td [attr.colspan]="scorecard.holes.length + (scorecard.roundHoles === roundHoles.All ? 5 : 4)">
                     <div>
                         <mat-icon>check</mat-icon> fairway hit
                     </div>
@@ -52,7 +76,10 @@
             </tr>
         </tfoot>
     </table>
-    <button mat-button (click)="editPlayerScore()">
-        <mat-icon>edit</mat-icon>
-    </button>
+    <div class="row">
+        <button mat-button mat-raised-button primary color="primary" (click)="savePlayerScore()">
+            Save
+            <mat-icon>save</mat-icon>
+        </button>
+    </div>
 </form>

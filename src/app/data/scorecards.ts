@@ -1,3 +1,4 @@
+import { RoundHoles } from '../models/round-holes.enum';
 import { ScoreType } from '../models/score-type.enum';
 import { Scorecard } from '../models/scorecard.model';
 import { Courses } from './courses';
@@ -6,8 +7,9 @@ import { Players } from './players';
 
 export const Scorecards: Scorecard[] = [
     {
-        course: Courses[0],
+        courseId: Courses[0].id,
         date: new Date('5/8/2025'),
+        roundHoles: RoundHoles.Front,
         holes: Courses[0].holes.slice(0, 9),
         id: '1',
         scores: [
@@ -70,7 +72,10 @@ export const Scorecards: Scorecard[] = [
                     }
                 ],
                 handicap: 0,
-                totalScore: 47
+                inScore: 0,
+                outScore: 0,
+                totalScore: 47,
+                points: 0
             },
             {
                 player: Players[2],
@@ -131,7 +136,10 @@ export const Scorecards: Scorecard[] = [
                     }
                 ],
                 handicap: 0,
-                totalScore: 49
+                inScore: 0,
+                outScore: 0,
+                totalScore: 49,
+                points: 0
             },
             {
                 player: Players[1],
@@ -192,7 +200,10 @@ export const Scorecards: Scorecard[] = [
                     }
                 ],
                 handicap: 0,
-                totalScore: 51
+                inScore: 0,
+                outScore: 0,
+                totalScore: 51,
+                points: 0
             },
             {
                 player: Players[8],
@@ -253,7 +264,10 @@ export const Scorecards: Scorecard[] = [
                     }
                 ],
                 handicap: 0,
-                totalScore: 52
+                inScore: 0,
+                outScore: 0,
+                totalScore: 52,
+                points: 0
             },
             {
                 player: Players[9],
@@ -314,7 +328,10 @@ export const Scorecards: Scorecard[] = [
                     }
                 ],
                 handicap: 0,
-                totalScore: 53
+                inScore: 0,
+                outScore: 0,
+                totalScore: 53,
+                points: 0
             },
             {
                 player: Players[11],
@@ -375,7 +392,10 @@ export const Scorecards: Scorecard[] = [
                     }
                 ],
                 handicap: 0,
-                totalScore: 53
+                inScore: 0,
+                outScore: 0,
+                totalScore: 53,
+                points: 0
             },
             {
                 player: Players[4],
@@ -436,7 +456,10 @@ export const Scorecards: Scorecard[] = [
                     }
                 ],
                 handicap: 0,
-                totalScore: 55
+                inScore: 0,
+                outScore: 0,
+                totalScore: 55,
+                points: 0
             },
             {
                 player: Players[10],
@@ -497,7 +520,10 @@ export const Scorecards: Scorecard[] = [
                     }
                 ],
                 handicap: 0,
-                totalScore: 61
+                inScore: 0,
+                outScore: 0,
+                totalScore: 61,
+                points: 0
             },
             {
                 player: Players[5],
@@ -558,7 +584,10 @@ export const Scorecards: Scorecard[] = [
                     }
                 ],
                 handicap: 0,
-                totalScore: 63
+                inScore: 0,
+                outScore: 0,
+                totalScore: 63,
+                points: 0
             },
             {
                 player: Players[12],
@@ -619,7 +648,10 @@ export const Scorecards: Scorecard[] = [
                     }
                 ],
                 handicap: 0,
-                totalScore: 67
+                inScore: 0,
+                outScore: 0,
+                totalScore: 67,
+                points: 0
             },
             {
                 player: Players[7],
@@ -680,7 +712,10 @@ export const Scorecards: Scorecard[] = [
                     }
                 ],
                 handicap: 0,
-                totalScore: 70
+                inScore: 0,
+                outScore: 0,
+                totalScore: 70,
+                points: 0
             }
         ]
     }
