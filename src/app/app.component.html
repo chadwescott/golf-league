@@ -8,15 +8,19 @@
   </div>
 </mat-toolbar>
 <mat-menu #menu="matMenu">
-  <button mat-menu-item [routerLink]="'players'">
+  <button mat-menu-item [routerLink]="paths.leagues">
+    <mat-icon>group_work</mat-icon>
+    <span>League</span>
+  </button>
+  <button mat-menu-item [routerLink]="paths.players">
     <mat-icon>groups</mat-icon>
     <span>Players</span>
   </button>
-  <button mat-menu-item [routerLink]="'schedule'">
+  <button mat-menu-item [routerLink]="paths.schedules">
     <mat-icon>calendar_month</mat-icon>
     <span>Schedule</span>
   </button>
-  <button mat-menu-item [routerLink]="'scores'">
+  <button mat-menu-item [routerLink]="paths.scores">
     <mat-icon>golf_course</mat-icon>
     <span>Scores</span>
   </button>

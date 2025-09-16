@@ -5,7 +5,7 @@ import { Course } from '../models/course.model';
 import { HoleScore } from '../models/hole-score.model';
 import { RoundHoles } from '../models/round-holes.enum';
 import { Scorecard } from '../models/scorecard.model';
-import { ScoreService } from '../services/score-service';
+import { ScoreService } from '../services/score.service';
 
 @Component({
   selector: 'glm-scorecard',

@@ -14,7 +14,7 @@ import { Player } from '../models/player.model';
 import { RoundHoles } from '../models/round-holes.enum';
 import { Scorecard } from '../models/scorecard.model';
 import { PlayerScoreEntryComponent } from '../player-score-entry/player-score-entry.component';
-import { ScoreService } from '../services/score-service';
+import { ScoreService } from '../services/score.service';
 
 @Component({
   selector: 'glm-score-entry',

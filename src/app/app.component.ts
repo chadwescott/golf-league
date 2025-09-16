@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { Paths } from './app-routing.module';
 
 @Component({
   selector: 'glm-root',
@@ -6,5 +7,6 @@ import { Component } from '@angular/core';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
+  paths = Paths;
   title = 'golf-league';
 }
