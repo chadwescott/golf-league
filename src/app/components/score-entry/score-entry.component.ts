@@ -6,15 +6,14 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSelectModule } from '@angular/material/select';
-import { CdkAriaLive } from "../../../node_modules/@angular/cdk/a11y/index";
-import { Courses } from '../data/courses';
-import { Players } from '../data/players';
-import { Course } from '../models/course.model';
-import { Player } from '../models/player.model';
-import { RoundHoles } from '../models/round-holes.enum';
-import { Scorecard } from '../models/scorecard.model';
+import { Courses } from '../../data/courses';
+import { Players } from '../../data/players';
+import { Course } from '../../models/course.model';
+import { Player } from '../../models/player.model';
+import { RoundHoles } from '../../models/round-holes.enum';
+import { Scorecard } from '../../models/scorecard.model';
+import { ScoreService } from '../../services/score.service';
 import { PlayerScoreEntryComponent } from '../player-score-entry/player-score-entry.component';
-import { ScoreService } from '../services/score.service';
 
 @Component({
   selector: 'glm-score-entry',
@@ -30,8 +29,7 @@ import { ScoreService } from '../services/score.service';
     MatIconModule,
     MatSelectModule,
     ReactiveFormsModule,
-    PlayerScoreEntryComponent,
-    CdkAriaLive
+    PlayerScoreEntryComponent
   ]
 })
 export class ScoreEntryComponent {

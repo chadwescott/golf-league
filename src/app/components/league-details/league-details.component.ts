@@ -7,8 +7,9 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatTableModule } from '@angular/material/table';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { LeagueYear } from '../models/league-year.model';
-import { LeagueService } from '../services/league.service';
+import { Paths } from '../../app-routing.module';
+import { LeagueYear } from '../../models/league-year.model';
+import { LeagueService } from '../../services/league.service';
 
 @UntilDestroy()
 @Component({
@@ -27,6 +28,7 @@ import { LeagueService } from '../services/league.service';
   styleUrl: './league-details.component.scss',
 })
 export class LeagueDetailsComponent {
+  paths = Paths;
   formGroup!: FormGroup;
   displayedColumns: string[] = ['year'];
   dataSource: LeagueYear[] = [];

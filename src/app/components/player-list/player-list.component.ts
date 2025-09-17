@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { map } from 'rxjs';
-import { Player } from '../models/player.model';
-import { PlayerService } from '../services/player.service';
+import { Player } from '../../models/player.model';
+import { PlayerService } from '../../services/player.service';
 
 @Component({
   selector: 'glm-player-list',

@@ -3,9 +3,9 @@ import { Component, Input } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { PlayerScores } from '../models/player-scores.model';
-import { RoundHoles } from '../models/round-holes.enum';
-import { ScoreType } from '../models/score-type.enum';
+import { PlayerScores } from '../../models/player-scores.model';
+import { RoundHoles } from '../../models/round-holes.enum';
+import { ScoreType } from '../../models/score-type.enum';
 
 @Component({
   selector: '[glm-player-score-entry]',

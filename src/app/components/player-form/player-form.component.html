@@ -1,0 +1,28 @@
+<form [formGroup]="formGroup" (ngSubmit)="addPlayer()">
+    <div class="row">
+        <mat-form-field appearance="outline">
+            <mat-label>First Name</mat-label>
+            <input matInput formControlName="firstName" placeholder="First Name">
+        </mat-form-field>
+    </div>
+
+    <div class="row">
+        <mat-form-field appearance="outline">
+            <mat-label>Last Name</mat-label>
+            <input matInput formControlName="lastName" placeholder="Last Name">
+        </mat-form-field>
+    </div>
+
+    <div class="row">
+        <mat-form-field appearance="outline">
+            <mat-label>Image Path</mat-label>
+            <input matInput formControlName="imagePath" placeholder="Image Path (optional)">
+        </mat-form-field>
+    </div>
+
+    <div class="row">
+        <button mat-raised-button color="primary" type="submit" [disabled]="formGroup.invalid">
+            Add Player <mat-icon>person_add</mat-icon>
+        </button>
+    </div>
+</form>

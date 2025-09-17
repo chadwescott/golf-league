@@ -7,9 +7,9 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatTableModule } from '@angular/material/table';
 import { RouterLink } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { Paths } from '../app-routing.module';
-import { League } from '../models/league.model';
-import { LeagueService } from '../services/league.service';
+import { Paths } from '../../app-routing.module';
+import { League } from '../../models/league.model';
+import { LeagueService } from '../../services/league.service';
 
 @UntilDestroy()
 @Component({

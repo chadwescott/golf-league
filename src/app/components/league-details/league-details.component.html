@@ -13,7 +13,8 @@
 <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
     <ng-container matColumnDef="year">
         <th mat-header-cell *matHeaderCellDef> Year </th>
-        <td mat-cell *matCellDef="let element"> <a [routerLink]="element.id">{{element.year}}</a>
+        <td mat-cell *matCellDef="let element">
+            <a [routerLink]="'/' + paths.leagueYears + '/' + element.id">{{element.year}}</a>
         </td>
     </ng-container>
 
