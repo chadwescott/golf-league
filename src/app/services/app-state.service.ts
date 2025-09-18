@@ -32,7 +32,11 @@ export class AppStateService {
 
   setActiveLeague(league: League | null): void {
     this.activeLeague.set(league);
-    localStorage.setItem(this._leagueKey, JSON.stringify(league));
+    if (league) {
+      localStorage.setItem(this._leagueKey, JSON.stringify(league));
+    } else {
+      localStorage.removeItem(this._leagueKey);
+    }
   }
 
   setActiveLeagueEvent(leagueEvent: LeagueEvent | null): void {

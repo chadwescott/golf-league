@@ -1,10 +1,13 @@
-<form [formGroup]="formGroup">
+<form [formGroup]="formGroup" (ngSubmit)="addLeagueYear()">
     <div class="row">
-        <label for="name">Year</label>
-        <input type="number" placeholder="Year" formControlName="year">
+        <mat-form-field appearance="outline">
+            <mat-label>Year</mat-label>
+            <input matInput type="number" formControlName="year" placeholder="Year">
+        </mat-form-field>
     </div>
     <div class="row">
-        <button mat-button mat-raised-button (click)="addLeagueYear()">Create League Year
+        <button mat-button mat-raised-button color="primary" type="submit" [disabled]="formGroup.invalid">
+            Create League Year
             <mat-icon>add</mat-icon>
         </button>
     </div>
@@ -21,3 +24,6 @@
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
     <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
 </table>
+
+<glm-player-form (playerAdded)="addLeaguePlayer($event)"></glm-player-form>
+<glm-player-table [players]="players()" (deletePlayer)="deleteLeaguePlayer($event)"></glm-player-table>

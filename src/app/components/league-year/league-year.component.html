@@ -1,1 +1,14 @@
-<p>league-year works!</p>
+<div class="row">
+    <mat-form-field>
+        <mat-select>
+            <mat-option [value]="player" *ngFor="let player of leaguePlayers()"
+                (onSelectionChange)="selectPlayer(player)">
+                {{player.firstName}} {{player.lastName}}
+            </mat-option>
+        </mat-select>
+    </mat-form-field>
+    <button mat-button mat-raised-button [disabled]="!selectedPlayer" primary color="primary"
+        (click)="addLeagueYearPlayer(selectedPlayer)">Add
+        Player</button>
+</div>
+<glm-player-table [players]="leagueYearPlayers()" (deletePlayer)="deleteLeagueYearPlayer($event)"></glm-player-table>

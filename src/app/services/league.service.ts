@@ -1,21 +1,17 @@
-import { Injectable } from '@angular/core';
+import { Injectable, signal } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
-import { BehaviorSubject, map, Observable, switchMap, tap } from 'rxjs';
+import { map, Observable, tap } from 'rxjs';
 
-import { LeaguePlayer } from '../models/league-player.model';
-import { LeagueYearPlayer } from '../models/league-year-player.model';
 import { LeagueYear } from '../models/league-year.model';
 import { League } from '../models/league.model';
-import { Player } from '../models/player.model';
+import { FirestorPaths } from './firestore-paths';
 
 @Injectable({
     providedIn: 'root'
 })
 export class LeagueService {
-    leagues$ = new BehaviorSubject<League[]>([]);
-    leagueYears$ = new BehaviorSubject<LeagueYear[]>([]);
-    leaguePlayers$ = new BehaviorSubject<Player[]>([]);
-    leagueYearPlayers$ = new BehaviorSubject<Player[]>([]);
+    leagues = signal<League[]>([]);
+    leagueYears = signal<LeagueYear[]>([]);
 
     constructor(private firestore: AngularFirestore) {
     }
@@ -30,20 +26,32 @@ export class LeagueService {
                 }),
                 ),
                 map(leagues => leagues.sort((a, b) => a.name < b.name ? -1 : a.name > b.name ? 1 : 0)),
-                tap((leagues) => this.leagues$.next(leagues))
+                tap((leagues) => this.leagues.set(leagues))
+            );
+    }
+
+    getLeague(id: string): Observable<League | null> {
+        return this.firestore.doc<League>(`${FirestorPaths.leagues}/${id}`).get()
+            .pipe(
+                map(doc => {
+                    const league = doc.data();
+                    if (!league) { return null; }
+                    league.id = doc.id;
+                    return league;
+                })
             );
     }
 
     addLeague(league: League): void {
-        this.firestore.collection<League>('leagues').add(league)
+        this.firestore.collection<League>(FirestorPaths.leagues).add(league)
             .then((doc) => {
                 league.id = doc.id;
-                this.leagues$.next([...this.leagues$.value, league]);
+                this.leagues.update(l => [...l, league]);
             });
     }
 
     getLeagueYears(leagueId: string): Observable<LeagueYear[]> {
-        return this.firestore.collection<LeagueYear>('league-years', ref => ref.where('leagueId', '==', leagueId)).get()
+        return this.firestore.collection<LeagueYear>(FirestorPaths.leagueYears, ref => ref.where('leagueId', '==', leagueId)).get()
             .pipe(
                 map(collection => collection.docs.map(doc => {
                     const year = doc.data();
@@ -52,71 +60,15 @@ export class LeagueService {
                 }),
                 ),
                 map(years => years.sort((a, b) => a.year < b.year ? 1 : a.year > b.year ? -1 : 0)),
-                tap((years) => this.leagueYears$.next(years))
+                tap((years) => this.leagueYears.set(years))
             );
     }
 
     addLeagueYear(leagueYear: LeagueYear): void {
-        this.firestore.collection<LeagueYear>('league-years').add(leagueYear)
+        this.firestore.collection<LeagueYear>(FirestorPaths.leagueYears).add(leagueYear)
             .then((doc) => {
                 leagueYear.id = doc.id;
-                this.leagueYears$.next([...this.leagueYears$.value, leagueYear]);
+                this.leagueYears.update(ly => [...ly, leagueYear]);
             });
-    }
-
-    getLeaguePlayers(leagueId: string): Observable<Player[]> {
-        return this.firestore.collection<LeaguePlayer>('league-players', ref => ref.where('leagueId', '==', leagueId)).get()
-            .pipe(
-                map(collection => collection.docs.map(doc => {
-                    const lp = doc.data();
-                    lp.id = doc.id;
-                    return lp;
-                }),
-                ),
-                switchMap(leaguePlayers => {
-                    const playerIds = leaguePlayers.map(lp => lp.playerId);
-                    if (playerIds.length === 0) {
-                        return [[]];
-                    }
-                    return this.firestore.collection<Player>('players', ref => ref.where('id', 'in', playerIds)).get()
-                        .pipe(
-                            map(collection => collection.docs.map(doc => {
-                                const player = doc.data();
-                                player.id = doc.id;
-                                return player;
-                            })),
-                            map(players => players.sort((a, b) => a.lastName.localeCompare(b.lastName))),
-                            tap(players => this.leaguePlayers$.next(players))
-                        );
-                })
-            );
-    }
-
-    getLeagueYearPlayers(leagueYearId: string): Observable<Player[]> {
-        return this.firestore.collection<LeagueYearPlayer>('league-year-players', ref => ref.where('leagueYearId', '==', leagueYearId)).get()
-            .pipe(
-                map(collection => collection.docs.map(doc => {
-                    const lyp = doc.data();
-                    lyp.id = doc.id;
-                    return lyp;
-                }),
-                ),
-                switchMap(lyp => {
-                    const playerIds = lyp.map(lp => lp.playerId);
-                    if (playerIds.length === 0) {
-                        return [[]];
-                    }
-                    return this.firestore.collection<Player>('players', ref => ref.where('id', 'in', playerIds)).get()
-                        .pipe(
-                            map(collection => collection.docs.map(doc => {
-                                const player = doc.data();
-                                player.id = doc.id;
-                                return player;
-                            })),
-                            map(players => players.sort((a, b) => a.lastName.localeCompare(b.lastName))),
-                            tap(players => this.leagueYearPlayers$.next(players))
-                        );
-                })
-            );
     }
 }

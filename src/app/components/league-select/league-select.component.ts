@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, effect } from '@angular/core';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -35,9 +35,9 @@ export class LeagueSelectComponent {
   dataSource: League[] = [];
 
   constructor(private leagueService: LeagueService) {
-    this.leagueService.leagues$
-      .pipe(untilDestroyed(this))
-      .subscribe(leagues => this.dataSource = leagues);
+    effect(() => {
+      this.dataSource = this.leagueService.leagues();
+    })
 
     this.leagueService.getLeagues()
       .pipe(untilDestroyed(this))

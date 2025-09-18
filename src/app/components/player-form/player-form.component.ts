@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -24,6 +24,7 @@ import { PlayerService } from '../../services/player.service';
   styleUrl: './player-form.component.scss'
 })
 export class PlayerFormComponent {
+  @Output() playerAdded = new EventEmitter<Player>();
   formGroup!: FormGroup;
 
   constructor(private readonly playerService: PlayerService) { }
@@ -43,16 +44,8 @@ export class PlayerFormComponent {
   addPlayer(): void {
     if (this.formGroup.invalid) { return; }
 
-    const value = this.formGroup.value;
-    const player: Player = {
-      id: '', // Firestore will assign id
-      firstName: value.firstName,
-      lastName: value.lastName,
-      imagePath: value.imagePath ?? '',
-      handicap: value.handicap === null || value.handicap === '' ? null : Number(value.handicap)
-    };
+    const player = this.formGroup.value as Player;
 
-    this.playerService.addPlayer(player);
-    this.formGroup.reset({ handicap: null });
+    this.playerService.addPlayer(player).then((created) => this.playerAdded.emit(created));
   }
 }
