@@ -9,17 +9,17 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatTableModule } from '@angular/material/table';
 import { ActivatedRoute } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { LeagueSeasonPlayer } from 'src/app/models/league-season-player.model';
+import { LeagueSeason } from 'src/app/models/league-season.model';
 import { AppStateService } from 'src/app/services/app-state.service';
 import { Paths } from '../../app-routing.module';
-import { LeagueYearPlayer } from '../../models/league-year-player.model';
-import { LeagueYear } from '../../models/league-year.model';
 import { Player } from '../../models/player.model';
 import { PlayerService } from '../../services/player.service';
 import { PlayerTableComponent } from '../player-table/player-table.component';
 
 @UntilDestroy()
 @Component({
-  selector: 'glm-league-year',
+  selector: 'glm-league-season',
   standalone: true,
   imports: [
     CommonModule,
@@ -32,17 +32,17 @@ import { PlayerTableComponent } from '../player-table/player-table.component';
     MatTableModule,
     ReactiveFormsModule,
     PlayerTableComponent],
-  templateUrl: './league-year.component.html',
-  styleUrl: './league-year.component.scss'
+  templateUrl: './league-season.component.html',
+  styleUrl: './league-season.component.scss'
 })
-export class LeagueYearComponent {
+export class LeagueSeasonComponent {
   paths = Paths;
   formGroup!: FormGroup;
-  displayedColumns: string[] = ['year'];
-  dataSource: LeagueYear[] = [];
-  leagueYearId: string = '';
-  leaguePlayers = computed(() => this.playerService.leaguePlayers().filter((lp) => !this.playerService.leagueYearPlayers().find(lyp => lyp.id === lp.id)));
-  leagueYearPlayers = signal<Player[]>([]);
+  displayedColumns: string[] = ['season'];
+  dataSource: LeagueSeason[] = [];
+  leagueSeasonId: string = '';
+  leaguePlayers = computed(() => this.playerService.leaguePlayers().filter((lp) => !this.playerService.leagueSeasonPlayers().find(lyp => lyp.id === lp.id)));
+  leagueSeasonPlayers = signal<Player[]>([]);
 
   selectedPlayer: Player | null = null;
 
@@ -52,12 +52,12 @@ export class LeagueYearComponent {
     private appStateService: AppStateService) {
 
     effect(() => {
-      this.leagueYearPlayers = this.playerService.leagueYearPlayers;
+      this.leagueSeasonPlayers = this.playerService.leagueSeasonPlayers;
     });
   }
 
   ngOnInit() {
-    this.leagueYearId = this.route.snapshot.params['id'];
+    this.leagueSeasonId = this.route.snapshot.params['id'];
 
     if (this.appStateService.activeLeague()?.id) {
       this.playerService.getLeaguePlayers(this.appStateService.activeLeague()!.id)
@@ -65,7 +65,7 @@ export class LeagueYearComponent {
         .subscribe();
     }
 
-    this.playerService.getLeagueYearPlayers(this.leagueYearId)
+    this.playerService.getLeagueSeasonPlayers(this.leagueSeasonId)
       .pipe(untilDestroyed(this))
       .subscribe();
 
@@ -74,7 +74,7 @@ export class LeagueYearComponent {
 
   initializeForm() {
     const params: any = {
-      year: new FormControl(new Date().getFullYear(), Validators.required)
+      season: new FormControl(new Date().getFullYear(), Validators.required)
     };
 
     this.formGroup = new FormGroup(params);
@@ -84,15 +84,15 @@ export class LeagueYearComponent {
     this.selectedPlayer = player;
   }
 
-  addLeagueYearPlayer(player: Player | null) {
+  addLeagueSeasonPlayer(player: Player | null) {
     if (!player) { return; }
 
-    const leaguePlayer = { playerId: player.id, leagueYearId: this.leagueYearId } as LeagueYearPlayer;
-    this.playerService.addLeagueYearPlayer(leaguePlayer).then(() => this.leagueYearPlayers.update(prev => [...prev, player]));
+    const leaguePlayer = { playerId: player.id, leagueSeasonId: this.leagueSeasonId } as LeagueSeasonPlayer;
+    this.playerService.addLeagueSeasonPlayer(leaguePlayer).then(() => this.leagueSeasonPlayers.update(prev => [...prev, player]));
     this.selectedPlayer = null;
   }
 
-  deleteLeagueYearPlayer(player: Player) {
-    this.playerService.deleteLeagueYearPlayer(player).then(() => this.leagueYearPlayers.update(prev => prev.filter(p => p.id !== player.id)));
+  deleteLeagueSeasonPlayer(player: Player) {
+    this.playerService.deleteLeagueSeasonPlayer(player).then(() => this.leagueSeasonPlayers.update(prev => prev.filter(p => p.id !== player.id)));
   }
 }

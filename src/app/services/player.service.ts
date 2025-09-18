@@ -3,7 +3,7 @@ import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { firstValueFrom, forkJoin, map, Observable, switchMap, tap } from 'rxjs';
 
 import { LeaguePlayer } from '../models/league-player.model';
-import { LeagueYearPlayer } from '../models/league-year-player.model';
+import { LeagueSeasonPlayer } from '../models/league-season-player.model';
 
 import { Player } from '../models/player.model';
 import { AppStateService } from './app-state.service';
@@ -14,8 +14,8 @@ import { FirestorPaths } from './firestore-paths';
 })
 export class PlayerService {
     players = signal<Player[]>([]);
-    leaguePlayers = signal<Player[]>([]);
-    leagueYearPlayers = signal<Player[]>([]);
+    leaguePlayers = signal<Player[]>([])
+    leagueSeasonPlayers = signal<Player[]>([]);
 
     constructor(private readonly firestore: AngularFirestore, private readonly appStateService: AppStateService) {
     }
@@ -103,7 +103,7 @@ export class PlayerService {
     }
 
     deleteLeaguePlayer(player: Player): Promise<void> {
-        return this.deleteLeagueYearPlayer(player).then(() =>
+        return this.deleteLeagueSeasonPlayer(player).then(() =>
             firstValueFrom(this.firestore.collection<LeaguePlayer>(FirestorPaths.leaguePlayers, ref => ref.where('playerId', '==', player.id)).get()
                 .pipe(
                     tap(collection => collection.docs.forEach(x => this.firestore.doc(`${FirestorPaths.leaguePlayers}/${x.id}`).delete())
@@ -113,8 +113,8 @@ export class PlayerService {
         );
     }
 
-    getLeagueYearPlayers(leagueYearId: string): Observable<Player[]> {
-        return this.firestore.collection<LeagueYearPlayer>(FirestorPaths.leagueYearPlayers, ref => ref.where('leagueYearId', '==', leagueYearId)).get()
+    getLeagueSeasonPlayers(leagueSeasonId: string): Observable<Player[]> {
+        return this.firestore.collection<LeagueSeasonPlayer>(FirestorPaths.leagueSeasonPlayers, ref => ref.where('leagueSeasonId', '==', leagueSeasonId)).get()
             .pipe(
                 map(collection => collection.docs.map(doc => {
                     const lyp = doc.data();
@@ -125,7 +125,7 @@ export class PlayerService {
                 switchMap(lyp => {
                     const playerIds = lyp.map(lp => lp.playerId);
                     if (playerIds.length === 0) {
-                        this.leagueYearPlayers.set([]);
+                        this.leagueSeasonPlayers.set([]);
                         return [];
                     }
 
@@ -143,21 +143,21 @@ export class PlayerService {
                     return forkJoin(playerDocs$).pipe(
                         map(players => players.filter((p): p is Player => p !== null)),
                         map(players => this.sort(players)),
-                        tap(players => this.leagueYearPlayers.set(players))
+                        tap(players => this.leagueSeasonPlayers.set(players))
                     );
                 })
             );
     }
 
-    addLeagueYearPlayer(leagueYearPlayer: LeagueYearPlayer): Promise<void> {
-        return this.firestore.collection<LeagueYearPlayer>(FirestorPaths.leagueYearPlayers).add(leagueYearPlayer)
+    addLeagueSeasonPlayer(leagueSeasonPlayer: LeagueSeasonPlayer): Promise<void> {
+        return this.firestore.collection<LeagueSeasonPlayer>(FirestorPaths.leagueSeasonPlayers).add(leagueSeasonPlayer)
             .then((doc) => { });
     }
 
-    deleteLeagueYearPlayer(player: Player): Promise<void> {
-        return firstValueFrom(this.firestore.collection<LeagueYearPlayer>(FirestorPaths.leagueYearPlayers, ref => ref.where('playerId', '==', player.id)).get()
+    deleteLeagueSeasonPlayer(player: Player): Promise<void> {
+        return firstValueFrom(this.firestore.collection<LeagueSeasonPlayer>(FirestorPaths.leagueSeasonPlayers, ref => ref.where('playerId', '==', player.id)).get()
             .pipe(
-                tap(collection => collection.docs.forEach(x => this.firestore.doc(`${FirestorPaths.leagueYearPlayers}/${x.id}`).delete())
+                tap(collection => collection.docs.forEach(x => this.firestore.doc(`${FirestorPaths.leagueSeasonPlayers}/${x.id}`).delete())
                 ),
                 map(() => void 0)
             ));

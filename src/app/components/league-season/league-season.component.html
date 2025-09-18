@@ -8,7 +8,8 @@
         </mat-select>
     </mat-form-field>
     <button mat-button mat-raised-button [disabled]="!selectedPlayer" primary color="primary"
-        (click)="addLeagueYearPlayer(selectedPlayer)">Add
+        (click)="addLeagueSeasonPlayer(selectedPlayer)">Add
         Player</button>
 </div>
-<glm-player-table [players]="leagueYearPlayers()" (deletePlayer)="deleteLeagueYearPlayer($event)"></glm-player-table>
+<glm-player-table [players]="leagueSeasonPlayers()"
+    (deletePlayer)="deleteLeagueSeasonPlayer($event)"></glm-player-table>

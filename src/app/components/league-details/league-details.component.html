@@ -1,4 +1,4 @@
-<form [formGroup]="formGroup" (ngSubmit)="addLeagueYear()">
+<form [formGroup]="formGroup" (ngSubmit)="addLeagueSeason()">
     <div class="row">
         <mat-form-field appearance="outline">
             <mat-label>Year</mat-label>
@@ -7,7 +7,7 @@
     </div>
     <div class="row">
         <button mat-button mat-raised-button color="primary" type="submit" [disabled]="formGroup.invalid">
-            Create League Year
+            Create League Season
             <mat-icon>add</mat-icon>
         </button>
     </div>
@@ -17,7 +17,7 @@
     <ng-container matColumnDef="year">
         <th mat-header-cell *matHeaderCellDef> Year </th>
         <td mat-cell *matCellDef="let element">
-            <a [routerLink]="'/' + paths.leagueYears + '/' + element.id">{{element.year}}</a>
+            <a [routerLink]="'/' + paths.leagueSeasons + '/' + element.id">{{element.year}}</a>
         </td>
     </ng-container>
 

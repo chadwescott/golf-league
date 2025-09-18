@@ -1,7 +1,7 @@
 export const FirestorPaths = {
     players: 'players',
     leagues: 'leagues',
-    leagueYears: 'league-years',
+    leagueSeasons: 'league-seasons',
     leaguePlayers: 'league-players',
-    leagueYearPlayers: 'league-year-players',
+    leagueSeasonPlayers: 'league-season-players',
 }

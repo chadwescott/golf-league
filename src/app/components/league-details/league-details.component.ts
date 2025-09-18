@@ -11,7 +11,7 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { AppStateService } from 'src/app/services/app-state.service';
 import { Paths } from '../../app-routing.module';
 import { LeaguePlayer } from '../../models/league-player.model';
-import { LeagueYear } from '../../models/league-year.model';
+import { LeagueSeason } from '../../models/league-season.model';
 import { Player } from '../../models/player.model';
 import { LeagueService } from '../../services/league.service';
 import { PlayerService } from '../../services/player.service';
@@ -42,7 +42,7 @@ export class LeagueDetailsComponent {
   paths = Paths;
   formGroup!: FormGroup;
   displayedColumns: string[] = ['year'];
-  dataSource: LeagueYear[] = [];
+  dataSource: LeagueSeason[] = [];
   leagueId: string = '';
   players = signal<Player[]>([]);
 
@@ -52,7 +52,7 @@ export class LeagueDetailsComponent {
     private readonly playerService: PlayerService,
     private readonly appStateService: AppStateService) {
     effect(() => {
-      this.dataSource = this.leagueService.leagueYears();
+      this.dataSource = this.leagueService.leagueSeasons();
       this.players = this.playerService.leaguePlayers;
     });
   }
@@ -66,7 +66,7 @@ export class LeagueDetailsComponent {
       this.appStateService.setActiveLeague(league);
     });
 
-    this.leagueService.getLeagueYears(this.leagueId)
+    this.leagueService.getLeagueSeasons(this.leagueId)
       .pipe(untilDestroyed(this))
       .subscribe();
 
@@ -94,9 +94,9 @@ export class LeagueDetailsComponent {
     this.playerService.deleteLeaguePlayer(player).then(() => this.players.update(prev => prev.filter(p => p.id !== player.id)));
   }
 
-  addLeagueYear() {
-    const leagueYear = this.formGroup.value as LeagueYear;
-    leagueYear.leagueId = this.leagueId;
-    this.leagueService.addLeagueYear(leagueYear);
+  addLeagueSeason() {
+    const leagueSeason = this.formGroup.value as LeagueSeason;
+    leagueSeason.leagueId = this.leagueId;
+    this.leagueService.addLeagueSeason(leagueSeason);
   }
 }
