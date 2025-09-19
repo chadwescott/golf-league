@@ -4,7 +4,7 @@
         <span *ngFor="let team of matchup.teams; let i = index">
             <strong>Team {{i + 1}}:</strong>
             <span *ngFor="let playerId of team.playerIds; let j = index">
-                {{ playerId }}<span *ngIf="j < team.length - 1">, </span>
+                {{ playerId }}<span *ngIf="j < team.playerIds.length">, </span>
             </span>
             <span *ngIf="i < matchup.teams.length - 1"> | </span>
         </span>

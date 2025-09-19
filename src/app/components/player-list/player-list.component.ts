@@ -30,7 +30,7 @@ export class PlayerListComponent {
   }
 
   deletePlayer(player: Player) {
-    this.playerService.deletePlayer(player)
+    this.playerService.deletePlayer(player.id)
       .then(() => this.players.update(prev => prev.filter(p => p.id !== player.id)));
   }
 }

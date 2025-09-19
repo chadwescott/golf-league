@@ -15,7 +15,8 @@ import { LeagueEventService } from '../../services/league-event.service';
   styleUrl: './league-event-list.component.scss'
 })
 export class LeagueEventListComponent implements OnInit {
-  @Input() leagueSeasonId!: string;
+  @Input() leagueId!: string;
+  @Input() seasonId!: string;
   @Output() eventSelected = new EventEmitter<LeagueEvent>();
 
   events = signal<LeagueEvent[]>([]);
@@ -24,8 +25,8 @@ export class LeagueEventListComponent implements OnInit {
   constructor(private leagueEventService: LeagueEventService) { }
 
   ngOnInit() {
-    if (this.leagueSeasonId) {
-      this.leagueEventService.getLeagueEvents(this.leagueSeasonId).subscribe(events => {
+    if (this.seasonId) {
+      this.leagueEventService.getLeagueEvents(this.leagueId, this.seasonId).subscribe(events => {
         this.events = this.leagueEventService.leagueEvents;
       });
     }

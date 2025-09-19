@@ -21,7 +21,8 @@ import { LeagueEvent } from '../../models/league-event.model';
   styleUrl: './league-event-form.component.scss'
 })
 export class LeagueEventFormComponent implements OnChanges {
-  @Input() leagueSeasonId!: string;
+  @Input() leagueId!: string;
+  @Input() seasonId!: string;
   @Input() leagueEvent: LeagueEvent | null = null;
 
   form: FormGroup;
@@ -47,12 +48,12 @@ export class LeagueEventFormComponent implements OnChanges {
   saveEvent() {
     if (this.form.invalid) return;
     const leagueEvent = this.form.value as LeagueEvent;
-    leagueEvent.leagueSeasonId = this.leagueSeasonId;
+    leagueEvent.leagueSeasonId = this.seasonId;
 
     if (this.leagueEvent?.id) {
-      this.leagueEventService.updateLeagueEvent(this.leagueEvent.id, leagueEvent);
+      this.leagueEventService.updateLeagueEvent(this.leagueId, this.seasonId, this.leagueEvent.id, leagueEvent);
     } else {
-      this.leagueEventService.addLeagueEvent(leagueEvent);
+      this.leagueEventService.addLeagueEvent(this.leagueId, this.seasonId, leagueEvent);
     }
     this.form.reset();
   }

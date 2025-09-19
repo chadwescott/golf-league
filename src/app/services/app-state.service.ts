@@ -1,8 +1,8 @@
 import { Injectable, signal } from '@angular/core';
 import { LeagueEvent } from '../models/league-event.model';
-import { LeagueSeason } from '../models/league-season.model';
 import { League } from '../models/league.model';
 import { Player } from '../models/player.model';
+import { Season } from '../models/season.model';
 
 @Injectable({
   providedIn: 'root'
@@ -10,7 +10,7 @@ import { Player } from '../models/player.model';
 export class AppStateService {
   activeLeague = signal<League | null>(null);
   activeLeagueEvent = signal<LeagueEvent | null>(null);
-  activeLeagueYear = signal<LeagueSeason | null>(null);
+  activeLeagueYear = signal<Season | null>(null);
   activePlayers = signal<Player[] | null>(null);
 
   private readonly _leagueKey = 'league';
@@ -21,7 +21,7 @@ export class AppStateService {
   constructor() {
     this.activeLeague.set(this.loadDataFromStorage<League>(this._leagueKey));
     this.activeLeagueEvent.set(this.loadDataFromStorage<LeagueEvent>(this._leagueEventKey));
-    this.activeLeagueYear.set(this.loadDataFromStorage<LeagueSeason>(this._leagueYearKey));
+    this.activeLeagueYear.set(this.loadDataFromStorage<Season>(this._leagueYearKey));
     this.activePlayers.set(this.loadDataFromStorage<Player[]>(this._playersKey));
   }
 
@@ -44,7 +44,7 @@ export class AppStateService {
     localStorage.setItem(this._leagueEventKey, JSON.stringify(leagueEvent));
   }
 
-  setActiveLeagueYear(leagueYear: LeagueSeason | null): void {
+  setActiveLeagueYear(leagueYear: Season | null): void {
     this.activeLeagueYear.set(leagueYear);
     localStorage.setItem(this._leagueYearKey, JSON.stringify(leagueYear));
   }

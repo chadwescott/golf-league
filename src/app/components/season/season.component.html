@@ -16,9 +16,10 @@
             (deletePlayer)="deleteLeagueSeasonPlayer($event)"></glm-player-table>
     </mat-tab>
     <mat-tab label="Events">
-        <glm-league-event-list [leagueSeasonId]="leagueSeasonId"
+        <glm-league-event-list [leagueId]="leagueId" [seasonId]="seasonId"
             (eventSelected)="onEventSelected($event)"></glm-league-event-list>
-        <glm-league-event-form [leagueSeasonId]="leagueSeasonId" [leagueEvent]="selectedEvent"></glm-league-event-form>
+        <glm-league-event-form [leagueId]="leagueId" [seasonId]="seasonId"
+            [leagueEvent]="selectedEvent"></glm-league-event-form>
         <glm-league-event-matchups *ngIf="selectedEvent" [leagueEvent]="selectedEvent"></glm-league-event-matchups>
     </mat-tab>
 </mat-tab-group>

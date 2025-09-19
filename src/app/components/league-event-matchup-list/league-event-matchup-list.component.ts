@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, OnInit, signal } from '@angular/core';
+import { Component, input } from '@angular/core';
 import { MatListModule } from '@angular/material/list';
-import { LeagueEventService } from '../../services/league-event.service';
+import { EventMatchup } from 'src/app/models/event-matchup.model';
 
 @Component({
     selector: 'glm-league-event-matchup-list',
@@ -13,19 +13,8 @@ import { LeagueEventService } from '../../services/league-event.service';
     templateUrl: './league-event-matchup-list.component.html',
     styleUrl: './league-event-matchup-list.component.scss'
 })
-export class LeagueEventMatchupListComponent implements OnInit {
-    @Input() leagueEventId!: string;
+export class LeagueEventMatchupListComponent {
+    matchups = input.required<EventMatchup[]>();
 
-    matchups = signal<any[]>([]);
-
-    constructor(private leagueEventService: LeagueEventService) { }
-
-    ngOnInit() {
-        if (this.leagueEventId) {
-            this.leagueEventService.getLeagueEventMatchups(this.leagueEventId).subscribe(matchups => {
-                console.log(matchups);
-                this.matchups.set(matchups);
-            });
-        }
-    }
+    constructor() { }
 }

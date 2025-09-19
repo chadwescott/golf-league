@@ -2,8 +2,8 @@ import { Injectable, signal } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { map, Observable, tap } from 'rxjs';
 
-import { LeagueSeason } from '../models/league-season.model';
 import { League } from '../models/league.model';
+import { Season } from '../models/season.model';
 import { FirestorePaths } from './firestore-paths';
 
 @Injectable({
@@ -11,7 +11,7 @@ import { FirestorePaths } from './firestore-paths';
 })
 export class LeagueService {
     leagues = signal<League[]>([]);
-    leagueSeasons = signal<LeagueSeason[]>([]);
+    seasons = signal<Season[]>([]);
 
     constructor(private firestore: AngularFirestore) {
     }
@@ -50,8 +50,8 @@ export class LeagueService {
             });
     }
 
-    getLeagueSeasons(leagueId: string): Observable<LeagueSeason[]> {
-        return this.firestore.collection<LeagueSeason>(FirestorePaths.leagueSeasons, ref => ref.where('leagueId', '==', leagueId)).get()
+    getSeasons(leagueId: string): Observable<Season[]> {
+        return this.firestore.collection<Season>(`${FirestorePaths.leagues}/${leagueId}/${FirestorePaths.seasons}`).get()
             .pipe(
                 map(collection => collection.docs.map(doc => {
                     const year = doc.data();
@@ -60,15 +60,15 @@ export class LeagueService {
                 }),
                 ),
                 map(years => years.sort((a, b) => a.year < b.year ? 1 : a.year > b.year ? -1 : 0)),
-                tap((years) => this.leagueSeasons.set(years))
+                tap((years) => this.seasons.set(years))
             );
     }
 
-    addLeagueSeason(leagueSeason: LeagueSeason): void {
-        this.firestore.collection<LeagueSeason>(FirestorePaths.leagueSeasons).add(leagueSeason)
+    addSeason(leagueId: string, season: Season): void {
+        this.firestore.collection<Season>(`${FirestorePaths.leagues}/${leagueId}/${FirestorePaths.seasons}`).add(season)
             .then((doc) => {
-                leagueSeason.id = doc.id;
-                this.leagueSeasons.update(ly => [...ly, leagueSeason]);
+                season.id = doc.id;
+                this.seasons.update(ly => [...ly, season]);
             });
     }
 }
