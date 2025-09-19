@@ -1,0 +1,20 @@
+<div class="row">
+    <mat-form-field>
+        <mat-select (selectionChange)="player1.set($event.value)">
+            <mat-option [value]="player" *ngFor="let player of player1Options()">
+                {{player.firstName}} {{player.lastName}}
+            </mat-option>
+        </mat-select>
+    </mat-form-field>
+    <mat-form-field>
+        <mat-select (selectionChange)="player2.set($event.value)">
+            <mat-option [value]="player" *ngFor="let player of player2Options()">
+                {{player.firstName}} {{player.lastName}}
+            </mat-option>
+        </mat-select>
+    </mat-form-field>
+    <button mat-button mat-raised-button [disabled]="!player1()" primary color="primary" (click)="addMatchup()">
+        Add Matchup</button>
+</div>
+
+<glm-league-event-matchup-list [leagueEventId]="leagueEvent.id"></glm-league-event-matchup-list>

@@ -1,3 +1,6 @@
+import { Team } from "./team.model";
+
 export interface LeagueEventMatchup {
-    teams: string[][];
+    id: string;
+    teams: Team[]
 }

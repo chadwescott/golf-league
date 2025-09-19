@@ -1,18 +1,24 @@
-<div class="row">
-    <mat-form-field>
-        <mat-select>
-            <mat-option [value]="player" *ngFor="let player of leaguePlayers()"
-                (onSelectionChange)="selectPlayer(player)">
-                {{player.firstName}} {{player.lastName}}
-            </mat-option>
-        </mat-select>
-    </mat-form-field>
-    <button mat-button mat-raised-button [disabled]="!selectedPlayer" primary color="primary"
-        (click)="addLeagueSeasonPlayer(selectedPlayer)">Add
-        Player</button>
-</div>
-<glm-player-table [players]="leagueSeasonPlayers()"
-    (deletePlayer)="deleteLeagueSeasonPlayer($event)"></glm-player-table>
-
-<glm-league-event-form [leagueSeasonId]="leagueSeasonId"></glm-league-event-form>
-<glm-league-event-list [leagueSeasonId]="leagueSeasonId"></glm-league-event-list>
+<mat-tab-group>
+    <mat-tab label="Players">
+        <div class="row">
+            <mat-form-field>
+                <mat-select>
+                    <mat-option [value]="player" *ngFor="let player of leaguePlayers()"
+                        (onSelectionChange)="selectPlayer(player)">
+                        {{player.firstName}} {{player.lastName}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+            <button mat-button mat-raised-button [disabled]="!selectedPlayer" color="primary"
+                (click)="addLeagueSeasonPlayer(selectedPlayer)">Add Player</button>
+        </div>
+        <glm-player-table [players]="leagueSeasonPlayers()"
+            (deletePlayer)="deleteLeagueSeasonPlayer($event)"></glm-player-table>
+    </mat-tab>
+    <mat-tab label="Events">
+        <glm-league-event-list [leagueSeasonId]="leagueSeasonId"
+            (eventSelected)="onEventSelected($event)"></glm-league-event-list>
+        <glm-league-event-form [leagueSeasonId]="leagueSeasonId" [leagueEvent]="selectedEvent"></glm-league-event-form>
+        <glm-league-event-matchups *ngIf="selectedEvent" [leagueEvent]="selectedEvent"></glm-league-event-matchups>
+    </mat-tab>
+</mat-tab-group>

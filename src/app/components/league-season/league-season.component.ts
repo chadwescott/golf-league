@@ -7,8 +7,10 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatTableModule } from '@angular/material/table';
+import { MatTabsModule } from '@angular/material/tabs';
 import { ActivatedRoute } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { LeagueEvent } from 'src/app/models/league-event.model';
 import { LeagueSeasonPlayer } from 'src/app/models/league-season-player.model';
 import { LeagueSeason } from 'src/app/models/league-season.model';
 import { AppStateService } from 'src/app/services/app-state.service';
@@ -17,6 +19,7 @@ import { Player } from '../../models/player.model';
 import { PlayerService } from '../../services/player.service';
 import { LeagueEventFormComponent } from '../league-event-form/league-event-form.component';
 import { LeagueEventListComponent } from "../league-event-list/league-event-list.component";
+import { LeagueEventMatchupsComponent } from '../league-event-matchups/league-event-matchups.component';
 import { PlayerTableComponent } from '../player-table/player-table.component';
 
 @UntilDestroy()
@@ -32,10 +35,12 @@ import { PlayerTableComponent } from '../player-table/player-table.component';
     MatInputModule,
     MatSelectModule,
     MatTableModule,
+    MatTabsModule,
     ReactiveFormsModule,
     LeagueEventFormComponent,
     PlayerTableComponent,
-    LeagueEventListComponent
+    LeagueEventListComponent,
+    LeagueEventMatchupsComponent
   ],
   templateUrl: './league-season.component.html',
   styleUrl: './league-season.component.scss'
@@ -48,6 +53,7 @@ export class LeagueSeasonComponent {
   leagueSeasonId: string = '';
   leaguePlayers = computed(() => this.playerService.leaguePlayers().filter((lp) => !this.playerService.leagueSeasonPlayers().find(lyp => lyp.id === lp.id)));
   leagueSeasonPlayers = signal<Player[]>([]);
+  selectedEvent: LeagueEvent | null = null;
 
   selectedPlayer: Player | null = null;
 
@@ -99,5 +105,9 @@ export class LeagueSeasonComponent {
 
   deleteLeagueSeasonPlayer(player: Player) {
     this.playerService.deleteLeagueSeasonPlayer(player).then(() => this.leagueSeasonPlayers.update(prev => prev.filter(p => p.id !== player.id)));
+  }
+
+  onEventSelected(event: LeagueEvent) {
+    this.selectedEvent = event;
   }
 }

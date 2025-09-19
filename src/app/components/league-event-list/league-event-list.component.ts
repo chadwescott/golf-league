@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, OnInit, signal } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, signal } from '@angular/core';
 import { MatTableModule } from '@angular/material/table';
 import { LeagueEvent } from '../../models/league-event.model';
 import { LeagueEventService } from '../../services/league-event.service';
@@ -16,6 +16,7 @@ import { LeagueEventService } from '../../services/league-event.service';
 })
 export class LeagueEventListComponent implements OnInit {
   @Input() leagueSeasonId!: string;
+  @Output() eventSelected = new EventEmitter<LeagueEvent>();
 
   events = signal<LeagueEvent[]>([]);
   displayedColumns: string[] = ['name', 'date'];
@@ -25,8 +26,12 @@ export class LeagueEventListComponent implements OnInit {
   ngOnInit() {
     if (this.leagueSeasonId) {
       this.leagueEventService.getLeagueEvents(this.leagueSeasonId).subscribe(events => {
-        this.events.set(events);
+        this.events = this.leagueEventService.leagueEvents;
       });
     }
+  }
+
+  selectEvent(event: LeagueEvent) {
+    this.eventSelected.emit(event);
   }
 }

@@ -1,0 +1,12 @@
+<h2>Matchups</h2>
+<mat-list>
+    <mat-list-item *ngFor="let matchup of matchups()">
+        <span *ngFor="let team of matchup.teams; let i = index">
+            <strong>Team {{i + 1}}:</strong>
+            <span *ngFor="let playerId of team.playerIds; let j = index">
+                {{ playerId }}<span *ngIf="j < team.length - 1">, </span>
+            </span>
+            <span *ngIf="i < matchup.teams.length - 1"> | </span>
+        </span>
+    </mat-list-item>
+</mat-list>

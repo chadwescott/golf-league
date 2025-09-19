@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -20,9 +20,9 @@ import { LeagueEvent } from '../../models/league-event.model';
   templateUrl: './league-event-form.component.html',
   styleUrl: './league-event-form.component.scss'
 })
-export class LeagueEventFormComponent {
+export class LeagueEventFormComponent implements OnChanges {
   @Input() leagueSeasonId!: string;
-  @Input() event: LeagueEvent | null = null;
+  @Input() leagueEvent: LeagueEvent | null = null;
 
   form: FormGroup;
 
@@ -35,11 +35,11 @@ export class LeagueEventFormComponent {
     });
   }
 
-  ngOnInit() {
-    if (this.event) {
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes['leagueEvent'] && this.leagueEvent) {
       this.form.patchValue({
-        name: this.event.name,
-        date: this.event.date ? new Date(this.event.date).toISOString().substring(0, 10) : ''
+        name: this.leagueEvent.name,
+        date: this.leagueEvent.date ? new Date(this.leagueEvent.date).toISOString().substring(0, 10) : ''
       });
     }
   }
@@ -49,8 +49,8 @@ export class LeagueEventFormComponent {
     const leagueEvent = this.form.value as LeagueEvent;
     leagueEvent.leagueSeasonId = this.leagueSeasonId;
 
-    if (this.event?.id) {
-      this.leagueEventService.updateLeagueEvent(this.event.id, leagueEvent);
+    if (this.leagueEvent?.id) {
+      this.leagueEventService.updateLeagueEvent(this.leagueEvent.id, leagueEvent);
     } else {
       this.leagueEventService.addLeagueEvent(leagueEvent);
     }

@@ -1,19 +1,19 @@
 <form [formGroup]="form" (ngSubmit)="saveEvent()">
-  <div class="row">
-    <mat-form-field appearance="outline">
-      <mat-label>Event Name</mat-label>
-      <input matInput formControlName="name" placeholder="Event Name" />
-    </mat-form-field>
-  </div>
-  <div class="row">
-    <mat-form-field appearance="outline">
-      <mat-label>Date</mat-label>
-      <input matInput type="date" formControlName="date" />
-    </mat-form-field>
-  </div>
-  <div class="row">
-    <button mat-raised-button color="primary" type="submit" [disabled]="form.invalid">
-      {{ event ? 'Update' : 'Create' }} Event
-    </button>
-  </div>
+    <div class="row">
+        <mat-form-field appearance="outline">
+            <mat-label>Event Name</mat-label>
+            <input matInput formControlName="name" placeholder="Event Name" />
+        </mat-form-field>
+    </div>
+    <div class="row">
+        <mat-form-field appearance="outline">
+            <mat-label>Date</mat-label>
+            <input matInput type="date" formControlName="date" />
+        </mat-form-field>
+    </div>
+    <div class="row">
+        <button mat-raised-button color="primary" type="submit" [disabled]="form.invalid">
+            {{ leagueEvent ? 'Update' : 'Create' }} Event
+        </button>
+    </div>
 </form>
