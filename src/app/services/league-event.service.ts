@@ -1,7 +1,7 @@
 import { Injectable, signal } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { map, Observable, tap } from 'rxjs';
-import { LeagueEventMatchup } from '../models/league-event-matchup.model';
+import { EventMatchup } from '../models/event-matchup.model';
 import { LeagueEvent } from '../models/league-event.model';
 import { FirestorePaths } from './firestore-paths';
 
@@ -10,12 +10,13 @@ import { FirestorePaths } from './firestore-paths';
 })
 export class LeagueEventService {
     leagueEvents = signal<LeagueEvent[]>([]);
-    leagueEventMatchups = signal<LeagueEventMatchup[]>([]);
+    matchups = signal<EventMatchup[]>([]);
 
     constructor(private firestore: AngularFirestore) { }
 
-    getLeagueEvents(leagueSeasonId: string): Observable<LeagueEvent[]> {
-        return this.firestore.collection<LeagueEvent>(FirestorePaths.leagueEvents, ref => ref.where('leagueSeasonId', '==', leagueSeasonId)).get()
+    getLeagueEvents(leagueId: string, seasonId: string): Observable<LeagueEvent[]> {
+        return this.firestore.collection<LeagueEvent>(`${FirestorePaths.leagues}/${leagueId}/${FirestorePaths.seasons}/${seasonId}/${FirestorePaths.events}`)
+            .get()
             .pipe(
                 map(collection => collection.docs.map(doc => {
                     const event = doc.data();
@@ -27,16 +28,18 @@ export class LeagueEventService {
             );
     }
 
-    addLeagueEvent(event: LeagueEvent): Promise<void> {
-        return this.firestore.collection<LeagueEvent>(FirestorePaths.leagueEvents).add(event)
+    addLeagueEvent(leagueId: string, seasonId: string, event: LeagueEvent): Promise<void> {
+        return this.firestore.collection<LeagueEvent>(`${FirestorePaths.leagues}/${leagueId}/${FirestorePaths.seasons}/${seasonId}/${FirestorePaths.events}`)
+            .add(event)
             .then(doc => {
                 event.id = doc.id;
                 this.leagueEvents.update(evts => [...evts, event]);
             });
     }
 
-    updateLeagueEvent(eventId: string, event: Partial<LeagueEvent>): Promise<void> {
-        return this.firestore.doc<LeagueEvent>(`${FirestorePaths.leagueEvents}/${eventId}`).update(event)
+    updateLeagueEvent(leagueId: string, seasonId: string, eventId: string, event: Partial<LeagueEvent>): Promise<void> {
+        return this.firestore.doc<LeagueEvent>(`${FirestorePaths.leagues}/${leagueId}/${FirestorePaths.seasons}/${seasonId}/${FirestorePaths.events}/${eventId}`)
+            .update(event)
             .then(() => {
                 this.leagueEvents.update(evts =>
                     evts.map(e => e.id === eventId ? { ...e, ...event } : e)
@@ -45,14 +48,15 @@ export class LeagueEventService {
     }
 
     deleteLeagueEvent(id: string): Promise<void> {
-        return this.firestore.doc<LeagueEvent>(`${FirestorePaths.leagueEvents}/${id}`).delete()
+        return this.firestore.doc<LeagueEvent>(`${FirestorePaths.events}/${id}`).delete()
             .then(() => {
                 this.leagueEvents.update(evts => evts.filter(e => e.id !== id));
             });
     }
 
-    getLeagueEventMatchups(leagueEventId: string): Observable<LeagueEventMatchup[]> {
-        return this.firestore.collection<LeagueEventMatchup>(`${FirestorePaths.leagueEvents}/${leagueEventId}/${FirestorePaths.matchups}`)
+    getLeagueEventMatchups(leagueId: string, seasonId: string, eventId: string): Observable<EventMatchup[]> {
+        return this.firestore
+            .collection<EventMatchup>(`${FirestorePaths.leagues}/${leagueId}/${FirestorePaths.seasons}/${seasonId}/${FirestorePaths.events}/${eventId}/${FirestorePaths.matchups}`)
             .get()
             .pipe(
                 map(collection => collection.docs.map(doc => {
@@ -60,17 +64,17 @@ export class LeagueEventService {
                     matchup.id = doc.id;
                     return matchup;
                 })),
-                tap(matchups => this.leagueEventMatchups.set(matchups))
+                tap(matchups => this.matchups.set(matchups))
             );
     }
 
-    addLeagueEventMatchup(leagueEventId: string, matchup: LeagueEventMatchup): Promise<void> {
+    addLeagueEventMatchup(leagueId: string, seasonId: string, leagueEventId: string, matchup: EventMatchup): Promise<void> {
         return this.firestore
-            .collection(`${FirestorePaths.leagueEvents}/${leagueEventId}/${FirestorePaths.matchups}`)
+            .collection(`${FirestorePaths.leagues}/${leagueId}/${FirestorePaths.seasons}/${seasonId}/${FirestorePaths.events}/${leagueEventId}/${FirestorePaths.matchups}`)
             .add(matchup)
             .then(doc => {
                 matchup.id = doc.id;
-                this.leagueEventMatchups.update(prev => [...prev, matchup]);
+                this.matchups.update(prev => [...prev, matchup]);
             });
     }
 }

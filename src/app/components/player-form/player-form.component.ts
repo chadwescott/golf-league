@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Output } from '@angular/core';
-import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Component, EventEmitter, Input, Output, SimpleChanges } from '@angular/core';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
@@ -24,28 +24,51 @@ import { PlayerService } from '../../services/player.service';
   styleUrl: './player-form.component.scss'
 })
 export class PlayerFormComponent {
+  @Input() player: Player | null = null;
+
   @Output() playerAdded = new EventEmitter<Player>();
-  formGroup!: FormGroup;
+  @Output() playerUpdated = new EventEmitter<Player>();
 
-  constructor(private readonly playerService: PlayerService) { }
+  form!: FormGroup;
 
-  ngOnInit() {
-    this.initializeForm();
-  }
-
-  initializeForm() {
-    this.formGroup = new FormGroup({
-      firstName: new FormControl('', Validators.required),
-      lastName: new FormControl('', Validators.required),
-      imagePath: new FormControl('')
+  constructor(
+    private readonly playerService: PlayerService,
+    private readonly fb: FormBuilder
+  ) {
+    this.form = this.fb.group({
+      firstName: ['', Validators.required],
+      lastName: ['', Validators.required],
+      imagePath: ['']
     });
   }
 
-  addPlayer(): void {
-    if (this.formGroup.invalid) { return; }
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes['player'] && this.player) {
+      this.form.patchValue({
+        firstName: this.player.firstName,
+        lastName: this.player.lastName,
+        imagePath: this.player.imagePath
+      });
+    }
+  }
 
-    const player = this.formGroup.value as Player;
+  savePlayer(): void {
+    if (this.form.invalid) { return; }
+    const playerData = { ...this.player, ...this.form.value } as Player;
+    playerData.id = this.player?.id ?? '';
 
-    this.playerService.addPlayer(player).then((created) => this.playerAdded.emit(created));
+    if (playerData.id) {
+      this.playerService.updatePlayer(playerData).then((updated) => {
+        this.playerUpdated.emit(updated);
+        this.player = null;
+        this.form.reset();
+      });
+    } else {
+      this.playerService.addPlayer(playerData).then((created) => {
+        this.playerAdded.emit(created);
+        this.player = null;
+        this.form.reset();
+      });
+    }
   }
 }

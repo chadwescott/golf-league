@@ -9,10 +9,10 @@ import { MatTableModule } from '@angular/material/table';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { AppStateService } from 'src/app/services/app-state.service';
-import { Paths } from '../../app-routing.module';
+import { Paths, RouteParams } from '../../app-routing.module';
 import { LeaguePlayer } from '../../models/league-player.model';
-import { LeagueSeason } from '../../models/league-season.model';
 import { Player } from '../../models/player.model';
+import { Season } from '../../models/season.model';
 import { LeagueService } from '../../services/league.service';
 import { PlayerService } from '../../services/player.service';
 import { PlayerFormComponent } from '../player-form/player-form.component';
@@ -42,9 +42,10 @@ export class LeagueDetailsComponent {
   paths = Paths;
   formGroup!: FormGroup;
   displayedColumns: string[] = ['year'];
-  dataSource: LeagueSeason[] = [];
+  dataSource: Season[] = [];
   leagueId: string = '';
   players = signal<Player[]>([]);
+  selectedPlayer: Player | null = null;
 
   constructor(
     private readonly route: ActivatedRoute,
@@ -52,13 +53,13 @@ export class LeagueDetailsComponent {
     private readonly playerService: PlayerService,
     private readonly appStateService: AppStateService) {
     effect(() => {
-      this.dataSource = this.leagueService.leagueSeasons();
+      this.dataSource = this.leagueService.seasons();
       this.players = this.playerService.leaguePlayers;
     });
   }
 
   ngOnInit() {
-    this.leagueId = this.route.snapshot.params['id'];
+    this.leagueId = this.route.snapshot.params[RouteParams.leagueId];
 
     this.leagueService.getLeague(this.leagueId).pipe(
       untilDestroyed(this)
@@ -66,7 +67,7 @@ export class LeagueDetailsComponent {
       this.appStateService.setActiveLeague(league);
     });
 
-    this.leagueService.getLeagueSeasons(this.leagueId)
+    this.leagueService.getSeasons(this.leagueId)
       .pipe(untilDestroyed(this))
       .subscribe();
 
@@ -85,18 +86,29 @@ export class LeagueDetailsComponent {
     this.formGroup = new FormGroup(params);
   }
 
+  updateLeaguePlayer(player: Player) {
+    this.players.update(prev => {
+      const idx = prev.findIndex(p => p.id === player.id);
+      if (idx === -1) return prev;
+      const next = [...prev];
+      next[idx] = player;
+      return this.playerService.sort(next);
+    });
+  }
+
   addLeaguePlayer(player: Player) {
-    const leaguePlayer = { playerId: player.id, leagueId: this.leagueId } as LeaguePlayer;
-    this.playerService.addLeaguePlayer(leaguePlayer).then(() => this.players.update(prev => [...prev, player]));
+    const leaguePlayer = { playerId: player.id } as LeaguePlayer;
+    this.playerService.addLeaguePlayer(this.leagueId, leaguePlayer)
+      .then(() => this.players.update(prev => this.playerService.sort([...prev, player])));
   }
 
   deleteLeaguePlayer(player: Player) {
-    this.playerService.deleteLeaguePlayer(player).then(() => this.players.update(prev => prev.filter(p => p.id !== player.id)));
+    this.playerService.deleteLeaguePlayer(this.leagueId, player.id)
+      .then(() => this.players.update(prev => this.playerService.sort(prev.filter(p => p.id !== player.id))));
   }
 
-  addLeagueSeason() {
-    const leagueSeason = this.formGroup.value as LeagueSeason;
-    leagueSeason.leagueId = this.leagueId;
-    this.leagueService.addLeagueSeason(leagueSeason);
+  addSeason() {
+    const season = this.formGroup.value as Season;
+    this.leagueService.addSeason(this.leagueId, season);
   }
 }

@@ -1,9 +1,7 @@
 export const FirestorePaths = {
     players: 'players',
     leagues: 'leagues',
-    leagueEvents: 'league-events',
+    events: 'events',
     matchups: 'matchups',
-    leagueSeasons: 'league-seasons',
-    leaguePlayers: 'league-players',
-    leagueSeasonPlayers: 'league-season-players',
+    seasons: 'seasons'
 }

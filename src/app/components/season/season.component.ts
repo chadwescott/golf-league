@@ -11,10 +11,10 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { ActivatedRoute } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { LeagueEvent } from 'src/app/models/league-event.model';
-import { LeagueSeasonPlayer } from 'src/app/models/league-season-player.model';
-import { LeagueSeason } from 'src/app/models/league-season.model';
+import { SeasonPlayer } from 'src/app/models/season-player.model';
+import { Season } from 'src/app/models/season.model';
 import { AppStateService } from 'src/app/services/app-state.service';
-import { Paths } from '../../app-routing.module';
+import { Paths, RouteParams } from '../../app-routing.module';
 import { Player } from '../../models/player.model';
 import { PlayerService } from '../../services/player.service';
 import { LeagueEventFormComponent } from '../league-event-form/league-event-form.component';
@@ -24,7 +24,7 @@ import { PlayerTableComponent } from '../player-table/player-table.component';
 
 @UntilDestroy()
 @Component({
-  selector: 'glm-league-season',
+  selector: 'glm-season',
   standalone: true,
   imports: [
     CommonModule,
@@ -42,15 +42,16 @@ import { PlayerTableComponent } from '../player-table/player-table.component';
     LeagueEventListComponent,
     LeagueEventMatchupsComponent
   ],
-  templateUrl: './league-season.component.html',
-  styleUrl: './league-season.component.scss'
+  templateUrl: './season.component.html',
+  styleUrl: './season.component.scss'
 })
-export class LeagueSeasonComponent {
+export class SeasonComponent {
   paths = Paths;
   formGroup!: FormGroup;
   displayedColumns: string[] = ['season'];
-  dataSource: LeagueSeason[] = [];
-  leagueSeasonId: string = '';
+  dataSource: Season[] = [];
+  leagueId: string = '';
+  seasonId: string = '';
   leaguePlayers = computed(() => this.playerService.leaguePlayers().filter((lp) => !this.playerService.leagueSeasonPlayers().find(lyp => lyp.id === lp.id)));
   leagueSeasonPlayers = signal<Player[]>([]);
   selectedEvent: LeagueEvent | null = null;
@@ -68,7 +69,8 @@ export class LeagueSeasonComponent {
   }
 
   ngOnInit() {
-    this.leagueSeasonId = this.route.snapshot.params['id'];
+    this.leagueId = this.route.snapshot.params[RouteParams.leagueId];
+    this.seasonId = this.route.snapshot.params[RouteParams.seasonId];
 
     if (this.appStateService.activeLeague()?.id) {
       this.playerService.getLeaguePlayers(this.appStateService.activeLeague()!.id)
@@ -76,7 +78,7 @@ export class LeagueSeasonComponent {
         .subscribe();
     }
 
-    this.playerService.getLeagueSeasonPlayers(this.leagueSeasonId)
+    this.playerService.getLeagueSeasonPlayers(this.leagueId, this.seasonId)
       .pipe(untilDestroyed(this))
       .subscribe();
 
@@ -98,13 +100,15 @@ export class LeagueSeasonComponent {
   addLeagueSeasonPlayer(player: Player | null) {
     if (!player) { return; }
 
-    const leaguePlayer = { playerId: player.id, leagueSeasonId: this.leagueSeasonId } as LeagueSeasonPlayer;
-    this.playerService.addLeagueSeasonPlayer(leaguePlayer).then(() => this.leagueSeasonPlayers.update(prev => [...prev, player]));
+    const seasonPlayer = { playerId: player.id, } as SeasonPlayer;
+    this.playerService.addLeagueSeasonPlayer(this.leagueId, this.seasonId, seasonPlayer)
+      .then(() => this.leagueSeasonPlayers.update(prev => [...prev, player]));
     this.selectedPlayer = null;
   }
 
   deleteLeagueSeasonPlayer(player: Player) {
-    this.playerService.deleteLeagueSeasonPlayer(player).then(() => this.leagueSeasonPlayers.update(prev => prev.filter(p => p.id !== player.id)));
+    this.playerService.deleteLeagueSeasonPlayer(this.leagueId, this.seasonId, player.id)
+      .then(() => this.leagueSeasonPlayers.update(prev => prev.filter(p => p.id !== player.id)));
   }
 
   onEventSelected(event: LeagueEvent) {

@@ -1,4 +1,4 @@
-export interface LeaguePlayer {
+export interface SeasonPlayer {
     id: string;
     playerId: string;
 }

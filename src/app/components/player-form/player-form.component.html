@@ -1,4 +1,4 @@
-<form [formGroup]="formGroup" (ngSubmit)="addPlayer()">
+<form [formGroup]="form" (ngSubmit)="savePlayer()">
     <div class="row">
         <mat-form-field appearance="outline">
             <mat-label>First Name</mat-label>
@@ -21,8 +21,9 @@
     </div>
 
     <div class="row">
-        <button mat-raised-button color="primary" type="submit" [disabled]="formGroup.invalid">
-            Add Player <mat-icon>person_add</mat-icon>
+        <button mat-raised-button color="primary" type="submit" [disabled]="form.invalid">
+            {{ player?.id ? 'Update Player' : 'Add Player' }}
+            <mat-icon>{{ player?.id ? 'edit' : 'person_add' }}</mat-icon>
         </button>
     </div>
 </form>

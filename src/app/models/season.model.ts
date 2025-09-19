@@ -1,6 +1,5 @@
-export interface LeagueSeason {
+export interface Season {
     id: string;
-    leagueId: string;
     name: string;
     year: number;
 }

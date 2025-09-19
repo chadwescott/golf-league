@@ -28,6 +28,9 @@ export class PlayerTableComponent {
   @Output()
   deletePlayer = new EventEmitter<Player>();
 
+  @Output()
+  playerSelected = new EventEmitter<Player>();
+
   displayedColumns: string[] = ['id', 'firstName', 'lastName', 'handicap', 'delete'];
   players = input<Player[]>();
 

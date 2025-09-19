@@ -1,4 +1,16 @@
-<form [formGroup]="formGroup" (ngSubmit)="addLeagueSeason()">
+<table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+    <ng-container matColumnDef="year">
+        <th mat-header-cell *matHeaderCellDef> Year </th>
+        <td mat-cell *matCellDef="let element">
+            <a [routerLink]="paths.seasons + '/' + element.id">{{element.year}}</a>
+        </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+</table>
+
+<form [formGroup]="formGroup" (ngSubmit)="addSeason()">
     <div class="row">
         <mat-form-field appearance="outline">
             <mat-label>Year</mat-label>
@@ -7,23 +19,13 @@
     </div>
     <div class="row">
         <button mat-button mat-raised-button color="primary" type="submit" [disabled]="formGroup.invalid">
-            Create League Season
+            Create Season
             <mat-icon>add</mat-icon>
         </button>
     </div>
 </form>
 
-<table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
-    <ng-container matColumnDef="year">
-        <th mat-header-cell *matHeaderCellDef> Year </th>
-        <td mat-cell *matCellDef="let element">
-            <a [routerLink]="'/' + paths.leagueSeasons + '/' + element.id">{{element.year}}</a>
-        </td>
-    </ng-container>
-
-    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-</table>
-
-<glm-player-form (playerAdded)="addLeaguePlayer($event)"></glm-player-form>
-<glm-player-table [players]="players()" (deletePlayer)="deleteLeaguePlayer($event)"></glm-player-table>
+<glm-player-table [players]="players()" (playerSelected)="selectedPlayer = $event"
+    (deletePlayer)="deleteLeaguePlayer($event)"></glm-player-table>
+<glm-player-form (playerAdded)="addLeaguePlayer($event)" (playerUpdated)="updateLeaguePlayer($event)"
+    [player]="selectedPlayer"></glm-player-form>

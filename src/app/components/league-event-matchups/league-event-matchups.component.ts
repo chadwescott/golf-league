@@ -5,8 +5,9 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSelectModule } from '@angular/material/select';
+import { ActivatedRoute } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { LeagueEventMatchup } from 'src/app/models/league-event-matchup.model';
+import { EventMatchup } from 'src/app/models/event-matchup.model';
 import { LeagueEvent } from 'src/app/models/league-event.model';
 import { Player } from 'src/app/models/player.model';
 import { Team } from 'src/app/models/team.model';
@@ -35,13 +36,15 @@ export class LeagueEventMatchupsComponent {
   @Input()
   leagueEvent!: LeagueEvent;
 
-  leagueEventMatchups = this._leagueEventService.leagueEventMatchups;
+  leagueId: string = '';
+  seasonId: string = '';
+  matchups = this._leagueEventService.matchups;
 
-  allPlayers = this._playerService.leagueSeasonPlayers()
+  allPlayers = this._playerService.leagueSeasonPlayers;
   players = computed(() => {
-    const matchups = this.leagueEventMatchups();
+    const matchups = this.matchups();
     const teamPlayerIds = matchups?.flat().map(m => m.teams.flat()).flat().map(t => t.playerIds).flat() ?? [];
-    return this.allPlayers.filter(p => !teamPlayerIds.includes(p.id));
+    return this.allPlayers().filter(p => !teamPlayerIds.includes(p.id));
   });
 
   player1Options = computed(() => this.players().filter(p => p.id !== this.player2()?.id));
@@ -51,23 +54,31 @@ export class LeagueEventMatchupsComponent {
   player2 = signal<Player | null>(null);
 
   constructor(
+    private readonly route: ActivatedRoute,
     private readonly _leagueEventService: LeagueEventService,
     private readonly _playerService: PlayerService) {
   }
 
   ngOnInit() {
-    this._leagueEventService.getLeagueEventMatchups(this.leagueEvent.id)
+    this.leagueId = this.route.snapshot.params['leagueId'];
+    this.seasonId = this.route.snapshot.params['seasonId'];
+
+    this._leagueEventService.getLeagueEventMatchups(this.leagueId, this.seasonId, this.leagueEvent.id)
       .pipe(untilDestroyed(this))
       .subscribe();
   }
 
   addMatchup(): void {
-    this._leagueEventService.addLeagueEventMatchup(this.leagueEvent.id, {
-      teams: [
-        { playerIds: [this.player1()?.id ?? ''] } as Team,
-        { playerIds: [this.player2()?.id ?? ''] } as Team,
-      ]
-    } as LeagueEventMatchup);
+    const teams = [
+      { playerIds: [this.player1()?.id ?? ''], handicap: this.player1()?.handicap ?? 0 } as Team
+    ] as Team[];
+    if (this.player2()) {
+      teams.push({ playerIds: [this.player2()?.id ?? ''], handicap: this.player2()?.handicap ?? 0 } as Team);
+    }
+
+    this._leagueEventService.addLeagueEventMatchup(this.leagueId, this.seasonId, this.leagueEvent.id, {
+      teams: teams
+    } as EventMatchup);
     this.player1.set(null);
     this.player2.set(null);
   }
