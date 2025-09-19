@@ -12,6 +12,7 @@ body {
     margin: 0;
     font-family: Roboto, 'Helvetica Neue', sans-serif;
     background: linear-gradient(135deg, #a07340, #a88250, #a07340);
+    background-attachment: fixed;
 }
 
 mat-toolbar.mat-toolbar {

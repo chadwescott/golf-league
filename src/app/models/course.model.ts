@@ -1,7 +1,7 @@
 import { Hole } from "./hole.model";
 
 export interface Course {
-    id: number,
+    id: string,
     name: string,
     holes: Hole[],
 }

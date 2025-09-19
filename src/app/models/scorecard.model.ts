@@ -3,7 +3,7 @@ import { PlayerScores } from './player-scores.model';
 import { RoundHoles } from './round-holes.enum';
 
 export interface Scorecard {
-    courseId: number,
+    courseId: string,
     date: Date;
     roundHoles: RoundHoles;
     holes: Hole[];

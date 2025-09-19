@@ -4,7 +4,7 @@ import { map, Observable, tap } from 'rxjs';
 
 import { LeagueSeason } from '../models/league-season.model';
 import { League } from '../models/league.model';
-import { FirestorPaths } from './firestore-paths';
+import { FirestorePaths } from './firestore-paths';
 
 @Injectable({
     providedIn: 'root'
@@ -31,7 +31,7 @@ export class LeagueService {
     }
 
     getLeague(id: string): Observable<League | null> {
-        return this.firestore.doc<League>(`${FirestorPaths.leagues}/${id}`).get()
+        return this.firestore.doc<League>(`${FirestorePaths.leagues}/${id}`).get()
             .pipe(
                 map(doc => {
                     const league = doc.data();
@@ -43,7 +43,7 @@ export class LeagueService {
     }
 
     addLeague(league: League): void {
-        this.firestore.collection<League>(FirestorPaths.leagues).add(league)
+        this.firestore.collection<League>(FirestorePaths.leagues).add(league)
             .then((doc) => {
                 league.id = doc.id;
                 this.leagues.update(l => [...l, league]);
@@ -51,7 +51,7 @@ export class LeagueService {
     }
 
     getLeagueSeasons(leagueId: string): Observable<LeagueSeason[]> {
-        return this.firestore.collection<LeagueSeason>(FirestorPaths.leagueSeasons, ref => ref.where('leagueId', '==', leagueId)).get()
+        return this.firestore.collection<LeagueSeason>(FirestorePaths.leagueSeasons, ref => ref.where('leagueId', '==', leagueId)).get()
             .pipe(
                 map(collection => collection.docs.map(doc => {
                     const year = doc.data();
@@ -65,7 +65,7 @@ export class LeagueService {
     }
 
     addLeagueSeason(leagueSeason: LeagueSeason): void {
-        this.firestore.collection<LeagueSeason>(FirestorPaths.leagueSeasons).add(leagueSeason)
+        this.firestore.collection<LeagueSeason>(FirestorePaths.leagueSeasons).add(leagueSeason)
             .then((doc) => {
                 leagueSeason.id = doc.id;
                 this.leagueSeasons.update(ly => [...ly, leagueSeason]);

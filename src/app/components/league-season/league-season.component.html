@@ -13,3 +13,6 @@
 </div>
 <glm-player-table [players]="leagueSeasonPlayers()"
     (deletePlayer)="deleteLeagueSeasonPlayer($event)"></glm-player-table>
+
+<glm-league-event-form [leagueSeasonId]="leagueSeasonId"></glm-league-event-form>
+<glm-league-event-list [leagueSeasonId]="leagueSeasonId"></glm-league-event-list>

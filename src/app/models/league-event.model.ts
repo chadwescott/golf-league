@@ -1,5 +1,6 @@
 export interface LeagueEvent {
-    leagueYearId: string;
+    id: string;
+    leagueSeasonId: string;
     date: Date;
     name: string;
 }

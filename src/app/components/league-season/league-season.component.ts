@@ -15,6 +15,8 @@ import { AppStateService } from 'src/app/services/app-state.service';
 import { Paths } from '../../app-routing.module';
 import { Player } from '../../models/player.model';
 import { PlayerService } from '../../services/player.service';
+import { LeagueEventFormComponent } from '../league-event-form/league-event-form.component';
+import { LeagueEventListComponent } from "../league-event-list/league-event-list.component";
 import { PlayerTableComponent } from '../player-table/player-table.component';
 
 @UntilDestroy()
@@ -31,7 +33,10 @@ import { PlayerTableComponent } from '../player-table/player-table.component';
     MatSelectModule,
     MatTableModule,
     ReactiveFormsModule,
-    PlayerTableComponent],
+    LeagueEventFormComponent,
+    PlayerTableComponent,
+    LeagueEventListComponent
+  ],
   templateUrl: './league-season.component.html',
   styleUrl: './league-season.component.scss'
 })
