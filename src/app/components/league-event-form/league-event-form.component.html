@@ -12,6 +12,26 @@
         </mat-form-field>
     </div>
     <div class="row">
+        <mat-form-field appearance="outline">
+            <mat-label>Course</mat-label>
+            <mat-select formControlName="courseId">
+                <mat-option *ngFor="let option of courses()" [value]="option.id">
+                    {{ option.name }}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+    </div>
+    <div class="row">
+        <mat-form-field appearance="outline">
+            <mat-label>Round Holes</mat-label>
+            <mat-select formControlName="roundHoles">
+                <mat-option *ngFor="let option of roundHoleOptions" [value]="option">
+                    {{ option }}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+    </div>
+    <div class="row">
         <button mat-raised-button color="primary" type="submit" [disabled]="form.invalid">
             {{ leagueEvent ? 'Update' : 'Create' }} Event
         </button>

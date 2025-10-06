@@ -1,17 +1,6 @@
+@if (scorecard) {
 <form [formGroup]="formGroup">
     <h2>{{scorecard.date | date: 'M/dd/yyyy'}}</h2>
-    <div class="row">
-        <mat-form-field>
-            <mat-select>
-                <mat-option [value]="player" *ngFor="let player of players" (onSelectionChange)="selectPlayer(player)">
-                    {{player.firstName}} {{player.lastName}}
-                </mat-option>
-            </mat-select>
-        </mat-form-field>
-        <button mat-button mat-raised-button [disabled]="!selectedPlayer" primary color="primary"
-            (click)="addPlayer()">Add
-            Player</button>
-    </div>
     <table class="scorecard">
         <thead>
             <tr>
@@ -83,3 +72,4 @@
         </button>
     </div>
 </form>
+}

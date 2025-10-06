@@ -77,4 +77,13 @@ export class LeagueEventService {
                 this.matchups.update(prev => [...prev, matchup]);
             });
     }
+
+    deleteLeagueEventMatchup(leagueId: string, seasonId: string, eventId: string, matchupId: string): Promise<void> {
+        return this.firestore
+            .doc<EventMatchup>(`${FirestorePaths.leagues}/${leagueId}/${FirestorePaths.seasons}/${seasonId}/${FirestorePaths.events}/${eventId}/${FirestorePaths.matchups}/${matchupId}`)
+            .delete()
+            .then(() => {
+                this.matchups.update(matchups => matchups.filter(m => m.id !== matchupId));
+            });
+    }
 }

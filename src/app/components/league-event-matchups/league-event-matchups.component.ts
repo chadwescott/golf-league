@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, computed, Input, signal } from '@angular/core';
+import { Component, computed, Input, OnChanges, signal, SimpleChanges } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -32,7 +32,7 @@ import { LeagueEventMatchupListComponent } from "../league-event-matchup-list/le
   templateUrl: './league-event-matchups.component.html',
   styleUrl: './league-event-matchups.component.scss'
 })
-export class LeagueEventMatchupsComponent {
+export class LeagueEventMatchupsComponent implements OnChanges {
   @Input()
   leagueEvent!: LeagueEvent;
 
@@ -59,13 +59,19 @@ export class LeagueEventMatchupsComponent {
     private readonly _playerService: PlayerService) {
   }
 
-  ngOnInit() {
-    this.leagueId = this.route.snapshot.params['leagueId'];
-    this.seasonId = this.route.snapshot.params['seasonId'];
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes['leagueEvent'] && this.leagueEvent) {
+      this.leagueId = this.route.snapshot.params['leagueId'];
+      this.seasonId = this.route.snapshot.params['seasonId'];
 
-    this._leagueEventService.getLeagueEventMatchups(this.leagueId, this.seasonId, this.leagueEvent.id)
-      .pipe(untilDestroyed(this))
-      .subscribe();
+      this._leagueEventService.getLeagueEventMatchups(
+        this.leagueId,
+        this.seasonId,
+        this.leagueEvent.id
+      )
+        .pipe(untilDestroyed(this))
+        .subscribe();
+    }
   }
 
   addMatchup(): void {
@@ -81,5 +87,9 @@ export class LeagueEventMatchupsComponent {
     } as EventMatchup);
     this.player1.set(null);
     this.player2.set(null);
+  }
+
+  deleteMatchup(matchup: EventMatchup): void {
+    this._leagueEventService.deleteLeagueEventMatchup(this.leagueId, this.seasonId, this.leagueEvent.id, matchup.id!);
   }
 }

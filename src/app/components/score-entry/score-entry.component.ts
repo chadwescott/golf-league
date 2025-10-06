@@ -1,13 +1,12 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSelectModule } from '@angular/material/select';
-import { Courses } from '../../data/courses';
-import { Players } from '../../data/players';
+import { CourseService } from 'src/app/services/course.service';
 import { Course } from '../../models/course.model';
 import { Player } from '../../models/player.model';
 import { RoundHoles } from '../../models/round-holes.enum';
@@ -33,24 +32,34 @@ import { PlayerScoreEntryComponent } from '../player-score-entry/player-score-en
   ]
 })
 export class ScoreEntryComponent {
-  formGroup!: FormGroup;
+  @Input()
   course!: Course;
-  scorecard!: Scorecard;
+
+  @Input()
+  roundeHole: RoundHoles = RoundHoles.Front;
+
+  formGroup!: FormGroup;
+  scorecard: Scorecard | null = null;
   totalPar = 0;
-  players = Players;
   selectedPlayer: Player | null = null;
   scores: FormArray | null = null;
   roundHoles = RoundHoles;
 
-  constructor(private readonly scoreService: ScoreService, private readonly fb: FormBuilder) { }
+  constructor(
+    private readonly scoreService: ScoreService,
+    private readonly courseService: CourseService,
+    private readonly fb: FormBuilder) { }
 
   ngOnInit() {
-    this.course = Courses[0];
+    this.courseService.getCourses().subscribe(courses => {
+      if (courses.length > 0) {
+        this.course = courses[0];
+        this.scorecard = this.scoreService.createScorecard(this.course, this.roundeHole);
+        this.totalPar = this.scorecard.holes.reduce((acc, hole) => acc + hole.par, 0);
+      }
+    });
 
-    this.scorecard = this.scoreService.createScorecard(this.course, RoundHoles.Front);
     this.initializeForm();
-
-    this.totalPar = this.scorecard.holes.reduce((acc, hole) => acc + hole.par, 0);
   }
 
   initializeForm() {
@@ -67,51 +76,10 @@ export class ScoreEntryComponent {
     this.selectedPlayer = player;
   }
 
-  addPlayer() {
-    if (this.selectedPlayer && !this.scorecard.scores.some(score => score.player.id === this.selectedPlayer!.id)) {
-      const score = {
-        player: this.selectedPlayer,
-        handicap: this.selectedPlayer.handicap,
-        inScore: 0,
-        outScore: 0,
-        totalScore: 0,
-        points: 0,
-        holeScores: this.scorecard.holes.map(hole => ({
-          hole: hole,
-          score: null,
-          fairwayHit: false,
-          scoreType: null
-        }))
-      };
-
-      this.scorecard.scores.push(score);
-      this.players.splice(this.players.indexOf(this.selectedPlayer), 1);
-      this.selectedPlayer = null;
-
-      const holeScoresGroup = this.fb.group({
-        player: score.player,
-        handicap: score.player.handicap,
-        outScore: 0,
-        inScore: 0,
-        totalScore: 0,
-        points: 0,
-        holeScores: this.fb.array(score.holeScores.map(holeScore => (
-          this.fb.group({
-            hole: holeScore.hole,
-            par: holeScore.hole.par,
-            score: holeScore.score,
-            fairwayHit: holeScore.fairwayHit,
-            scoreType: holeScore.scoreType ?? null
-          })
-        )
-        ))
-      });
-
-      (this.formGroup.get('scores') as FormArray).push(holeScoresGroup);
-    }
-  }
-
   savePlayerScore(): void {
+    if (!this.scorecard) {
+      return;
+    }
     this.scorecard.scores = this.formGroup.get('scores')?.value || [];
     this.scoreService.saveScores(this.scorecard);
   }

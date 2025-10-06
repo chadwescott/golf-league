@@ -7,6 +7,9 @@
                     *ngIf="j < team.playerIds.length - 1">, </ng-container>
             </ng-container>
             (hdcp: {{ team.handicap }})
+            <button mat-icon-button color="primary" (click)="deleteMatchup.emit(matchup)">
+                <mat-icon>delete</mat-icon>
+            </button>
         </div>
         <div *ngIf="i < 0 && i < matchup.teams.length - 1">Versus</div>
     </ng-container>
