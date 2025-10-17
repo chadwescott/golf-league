@@ -1,16 +1,21 @@
 <h2>Matchups</h2>
 <div *ngFor="let matchup of matchups()">
-    <ng-container *ngFor="let team of matchup.teams; let i = index">
-        <div class="row">
-            <ng-container *ngFor="let playerId of team.playerIds; let j = index">
-                {{ findPlayer(playerId)?.firstName }} {{ findPlayer(playerId)?.lastName }}<ng-container
-                    *ngIf="j < team.playerIds.length - 1">, </ng-container>
-            </ng-container>
-            (hdcp: {{ team.handicap }})
-            <button mat-icon-button color="primary" (click)="deleteMatchup.emit(matchup)">
-                <mat-icon>delete</mat-icon>
-            </button>
-        </div>
-        <div *ngIf="i < 0 && i < matchup.teams.length - 1">Versus</div>
-    </ng-container>
+    <div class="row">
+        <ng-container *ngFor="let team of matchup.teams; let i = index">
+            <div>
+                <ng-container *ngFor="let playerId of team.playerIds; let j = index">
+                    {{ findPlayer(playerId)?.firstName }} {{ findPlayer(playerId)?.lastName }}<ng-container
+                        *ngIf="j < team.playerIds.length - 1">, </ng-container>
+                </ng-container>
+                (hdcp: {{ team.handicap }})
+            </div>
+            <div *ngIf="i < matchup.teams.length - 1">Versus</div>
+        </ng-container>
+        <button mat-icon-button color="primary" (click)="editScorecard.emit(matchup)">
+            <mat-icon>scoreboard</mat-icon>
+        </button>
+        <button mat-icon-button color="primary" (click)="deleteMatchup.emit(matchup)">
+            <mat-icon>delete</mat-icon>
+        </button>
+    </div>
 </div>

@@ -3,6 +3,8 @@ import { Component, Input } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { Players } from 'src/app/data/players';
+import { Player } from 'src/app/models/player.model';
 import { PlayerScores } from '../../models/player-scores.model';
 import { RoundHoles } from '../../models/round-holes.enum';
 import { ScoreType } from '../../models/score-type.enum';
@@ -29,6 +31,7 @@ export class PlayerScoreEntryComponent {
   @Input()
   roundHoles!: RoundHoles;
 
+  player: Player | null = null;
   roundHolesEnum = RoundHoles;
   holeScoresGroup!: FormGroup;
 
@@ -40,7 +43,9 @@ export class PlayerScoreEntryComponent {
 
   ngOnInit() {
     const playerScores = this.formGroup.get('scores') as FormArray;
-    this.holeScoresGroup = playerScores.controls.find(control => control.get('player')?.value.id === this.scores.player.id) as FormGroup;
+    this.holeScoresGroup = playerScores.controls.find(control => control.get('player')?.value.id === this.scores.playerId) as FormGroup;
+    // TODO: Update this to find the player from the player service
+    this.player = Players.find(p => p.id === this.scores.playerId) || null;
   }
 
   calculateScore() {

@@ -20,6 +20,9 @@ import { Player } from 'src/app/models/player.model';
 })
 export class LeagueEventMatchupListComponent {
     @Output()
+    editScorecard = new EventEmitter<EventMatchup>();
+
+    @Output()
     deleteMatchup = new EventEmitter<EventMatchup>();
 
     matchups = input.required<EventMatchup[]>();

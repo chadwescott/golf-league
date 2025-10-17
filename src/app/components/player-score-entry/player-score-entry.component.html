@@ -1,6 +1,6 @@
 <ng-container [formGroup]="holeScoresGroup">
     <td>
-        <div>{{ scores.player.firstName }} {{ scores.player.lastName }}</div>
+        <div>{{ player?.firstName }} {{ player?.lastName }}</div>
         <div *ngIf="scores.handicap" class="handicap">Handicap: {{scores.handicap}}</div>
     </td>
     <ng-container formArrayName="holeScores">

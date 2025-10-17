@@ -17,5 +17,5 @@
         Add Matchup</button>
 </div>
 
-<glm-league-event-matchup-list [matchups]="matchups()" [players]="allPlayers()"
+<glm-league-event-matchup-list [matchups]="matchups()" [players]="allPlayers()" (editScorecard)="editScorecard($event)"
     (deleteMatchup)="deleteMatchup($event)"></glm-league-event-matchup-list>

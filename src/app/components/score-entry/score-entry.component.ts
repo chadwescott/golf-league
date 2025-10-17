@@ -38,8 +38,10 @@ export class ScoreEntryComponent {
   @Input()
   roundeHole: RoundHoles = RoundHoles.Front;
 
-  formGroup!: FormGroup;
+  @Input()
   scorecard: Scorecard | null = null;
+
+  formGroup!: FormGroup;
   totalPar = 0;
   selectedPlayer: Player | null = null;
   scores: FormArray | null = null;

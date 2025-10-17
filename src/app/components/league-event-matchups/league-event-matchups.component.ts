@@ -89,6 +89,9 @@ export class LeagueEventMatchupsComponent implements OnChanges {
     this.player2.set(null);
   }
 
+  editScorecard(matchup: EventMatchup): void {
+  }
+
   deleteMatchup(matchup: EventMatchup): void {
     this._leagueEventService.deleteLeagueEventMatchup(this.leagueId, this.seasonId, this.leagueEvent.id, matchup.id!);
   }

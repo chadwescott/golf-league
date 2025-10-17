@@ -39,7 +39,8 @@
     <tbody>
         <tr *ngFor="let scores of scorecard.scores">
             <td>
-                <div>{{ scores.player.firstName }} {{ scores.player.lastName }}</div>
+                <!-- TODO: Find a better way to get the player so it doesn't call the getPlayer method multiple times -->
+                <div>{{ getPlayer(scores.playerId)?.firstName }} {{ getPlayer(scores.playerId)?.lastName }}</div>
                 <div *ngIf="scores.handicap" class="handicap">Handicap: {{scores.handicap}}</div>
             </td>
             <td *ngFor="let holeScore of scores.holeScores" [ngClass]="{ fairway: holeScore.fairwayHit  }"
@@ -49,6 +50,7 @@
                 <div>{{ scores.totalScore }}</div>
                 <div *ngIf="scores.handicap" class="handicap">({{ scores.totalScore - (scores.handicap) }})</div>
             </td>
+            <!-- TODO: the points should be saved when the scorecard is saved and not calculated on the fly -->
             <td>{{ getPoints(scores.holeScores)}}</td>
         </tr>
     </tbody>

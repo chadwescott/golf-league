@@ -14,7 +14,7 @@ export const Scorecards: Scorecard[] = [
         id: '1',
         scores: [
             {
-                player: Players[0],
+                playerId: Players[0].id,
                 holeScores: [
                     {
                         hole: Courses[0].holes[0],
@@ -78,7 +78,7 @@ export const Scorecards: Scorecard[] = [
                 points: 0
             },
             {
-                player: Players[2],
+                playerId: Players[2].id,
                 holeScores: [
                     {
                         hole: Courses[0].holes[0],
@@ -142,7 +142,7 @@ export const Scorecards: Scorecard[] = [
                 points: 0
             },
             {
-                player: Players[1],
+                playerId: Players[1].id,
                 holeScores: [
                     {
                         hole: Courses[0].holes[0],
@@ -206,7 +206,7 @@ export const Scorecards: Scorecard[] = [
                 points: 0
             },
             {
-                player: Players[8],
+                playerId: Players[8].id,
                 holeScores: [
                     {
                         hole: Courses[0].holes[0],
@@ -270,7 +270,7 @@ export const Scorecards: Scorecard[] = [
                 points: 0
             },
             {
-                player: Players[9],
+                playerId: Players[9].id,
                 holeScores: [
                     {
                         hole: Courses[0].holes[0],
@@ -334,7 +334,7 @@ export const Scorecards: Scorecard[] = [
                 points: 0
             },
             {
-                player: Players[11],
+                playerId: Players[11].id,
                 holeScores: [
                     {
                         hole: Courses[0].holes[0],
@@ -398,7 +398,7 @@ export const Scorecards: Scorecard[] = [
                 points: 0
             },
             {
-                player: Players[4],
+                playerId: Players[4].id,
                 holeScores: [
                     {
                         hole: Courses[0].holes[0],
@@ -462,7 +462,7 @@ export const Scorecards: Scorecard[] = [
                 points: 0
             },
             {
-                player: Players[10],
+                playerId: Players[10].id,
                 holeScores: [
                     {
                         hole: Courses[0].holes[0],
@@ -526,7 +526,7 @@ export const Scorecards: Scorecard[] = [
                 points: 0
             },
             {
-                player: Players[5],
+                playerId: Players[5].id,
                 holeScores: [
                     {
                         hole: Courses[0].holes[0],
@@ -590,7 +590,7 @@ export const Scorecards: Scorecard[] = [
                 points: 0
             },
             {
-                player: Players[12],
+                playerId: Players[12].id,
                 holeScores: [
                     {
                         hole: Courses[0].holes[0],
@@ -654,7 +654,7 @@ export const Scorecards: Scorecard[] = [
                 points: 0
             },
             {
-                player: Players[7],
+                playerId: Players[7].id,
                 holeScores: [
                     {
                         hole: Courses[0].holes[0],
