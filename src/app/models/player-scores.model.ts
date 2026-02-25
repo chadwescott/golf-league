@@ -1,0 +1,11 @@
+import { HoleScore } from "./hole-score.model";
+
+export interface PlayerScores {
+    playerId: string,
+    holeScores: HoleScore[],
+    handicap: number | null,
+    inScore: number | null,
+    outScore: number | null,
+    totalScore: number | null,
+    points: number | null
+}

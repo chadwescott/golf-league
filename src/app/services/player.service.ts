@@ -1,0 +1,91 @@
+import { inject, Injectable } from '@angular/core';
+import { map, Observable } from 'rxjs';
+
+
+import { collection, collectionData, CollectionReference, Firestore, FirestoreDataConverter, QueryDocumentSnapshot, SnapshotOptions } from '@angular/fire/firestore';
+import { LeaguePlayer } from '../models/league-player.model';
+import { Player } from '../models/player.model';
+import { SeasonPlayer } from '../models/season-player.model';
+import { FirestorePaths } from './firestore-paths';
+
+@Injectable({
+    providedIn: 'root'
+})
+export class PlayerService {
+    private readonly firestore = inject(Firestore);
+
+    readonly playerConverter: FirestoreDataConverter<Player> = {
+        toFirestore(player: Player) {
+            return {
+                id: player.id,
+                firstName: player.firstName,
+                lastName: player.lastName,
+                imagePath: player.imagePath,
+                handicap: player.handicap
+            };
+        },
+        fromFirestore(snapshot: QueryDocumentSnapshot, options: SnapshotOptions): Player {
+            const data = snapshot.data(options) as Omit<Player, 'id'>;
+            return { id: snapshot.id, ...data };
+        },
+    };
+
+    readonly leaguePlayerConverter: FirestoreDataConverter<LeaguePlayer> = {
+        toFirestore(leaguePlayer: LeaguePlayer) {
+            return {
+                id: leaguePlayer.id,
+                playerId: leaguePlayer.playerId
+            };
+        },
+        fromFirestore(snapshot: QueryDocumentSnapshot, options: SnapshotOptions): LeaguePlayer {
+            const data = snapshot.data(options) as Omit<LeaguePlayer, 'id'>;
+            return { id: snapshot.id, ...data };
+        }
+    };
+
+    readonly seasonPlayer: FirestoreDataConverter<SeasonPlayer> = {
+        toFirestore(leagueSeasonPlayer: SeasonPlayer) {
+            return {
+                id: leagueSeasonPlayer.id,
+                playerId: leagueSeasonPlayer.playerId,
+                handicap: leagueSeasonPlayer.handicap
+            };
+        },
+        fromFirestore(snapshot: QueryDocumentSnapshot, options: SnapshotOptions): SeasonPlayer {
+            const data = snapshot.data(options) as Omit<SeasonPlayer, 'id'>;
+            return { id: snapshot.id, ...data };
+        }
+    };
+
+    getPlayers(): Observable<Player[]> {
+        const playerRef = collection(this.firestore, FirestorePaths.players)
+            .withConverter(this.playerConverter) as CollectionReference<Player>;
+
+        return collectionData(playerRef)
+            .pipe(
+                map((players) => this.sort(players))
+            );
+    }
+
+    getLeaguePlayers(leagueId: string): Observable<LeaguePlayer[]> {
+        const playersRef = collection(this.firestore, `${FirestorePaths.leagues}/${leagueId}/${FirestorePaths.players}`)
+            .withConverter(this.leaguePlayerConverter) as CollectionReference<LeaguePlayer>;
+
+        return collectionData(playersRef);
+    }
+
+    getLeagueSeasonPlayers(leagueId: string, seasonId: string): Observable<SeasonPlayer[]> {
+        const playersRef = collection(this.firestore, `${FirestorePaths.leagues}/${leagueId}/${FirestorePaths.seasons}/${seasonId}/${FirestorePaths.players}`)
+            .withConverter(this.seasonPlayer) as CollectionReference<SeasonPlayer>;
+
+        return collectionData(playersRef);
+    }
+
+    sort(players: Player[]): Player[] {
+        return players.sort((a, b) =>
+            a.lastName === b.lastName
+                ? a.firstName.localeCompare(b.firstName)
+                : a.lastName.localeCompare(b.lastName)
+        );
+    }
+}
