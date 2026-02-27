@@ -1,2 +1,7 @@
-<h1>{{ leagueService.selectedLeague()?.name }}</h1>
-<router-outlet></router-outlet>
+<div class="banner">
+    <h1>{{ leagueService.selectedLeague()?.name }}</h1>
+    <button icon><span class="material-symbols-outlined">menu</span></button>
+</div>
+<div class="body">
+    <router-outlet></router-outlet>
+</div>

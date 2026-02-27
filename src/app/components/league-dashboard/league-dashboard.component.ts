@@ -17,9 +17,11 @@ export class LeagueDashboardComponent {
 
   ngOnInit(): void {
     const leagueId = this.route.snapshot.params[RouteParams.leagueId];
+
     if (!leagueId) {
       this.router.navigate(['/', Paths.leagues]);
     }
+
     this.leagueService.getLeagueById(leagueId).subscribe(league => {
       if (league) {
         this.leagueService.selectLeague(league);
