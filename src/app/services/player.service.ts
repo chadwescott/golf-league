@@ -1,18 +1,26 @@
 import { inject, Injectable } from '@angular/core';
-import { map, Observable } from 'rxjs';
+import { map, Observable, of, tap } from 'rxjs';
 
 
 import { collection, collectionData, CollectionReference, Firestore, FirestoreDataConverter, QueryDocumentSnapshot, SnapshotOptions } from '@angular/fire/firestore';
 import { LeaguePlayer } from '../models/league-player.model';
 import { Player } from '../models/player.model';
 import { SeasonPlayer } from '../models/season-player.model';
+import { AppStateService } from './app-state.service';
 import { FirestorePaths } from './firestore-paths';
 
 @Injectable({
     providedIn: 'root'
 })
 export class PlayerService {
+    private readonly appStateService = inject(AppStateService);
     private readonly firestore = inject(Firestore);
+    private readonly playerCache: Player[] = [];
+    private readonly playersKey = 'players';
+
+    constructor() {
+        this.appStateService.loadDataFromStorage<Player[]>(this.playersKey)?.map(player => this.playerCache.push(player));
+    }
 
     readonly playerConverter: FirestoreDataConverter<Player> = {
         toFirestore(player: Player) {
@@ -58,12 +66,18 @@ export class PlayerService {
     };
 
     getPlayers(): Observable<Player[]> {
+        const cachedPlayers = this.playerCache.length ? this.playerCache : null;
+        if (cachedPlayers) {
+            return of(cachedPlayers);
+        }
+
         const playerRef = collection(this.firestore, FirestorePaths.players)
             .withConverter(this.playerConverter) as CollectionReference<Player>;
 
         return collectionData(playerRef)
             .pipe(
-                map((players) => this.sort(players))
+                map((players) => this.sort(players)),
+                tap(players => { this.appStateService.saveDataToStorage(this.playersKey, players); })
             );
     }
 
