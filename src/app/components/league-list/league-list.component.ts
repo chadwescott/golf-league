@@ -17,7 +17,12 @@ export class LeagueListComponent {
   private readonly router = inject(Router);
 
   ngOnInit(): void {
-    this.leagueService.getLeagues().subscribe(leagues => this.leagues = leagues);
+    this.leagueService.getLeagues().subscribe(leagues => {
+      this.leagues = leagues;
+      if (leagues.length === 1) {
+        this.router.navigate([`/${Paths.leagues}/${leagues[0].id}`]);
+      }
+    });
   }
 
   selectLeague(league: League): void {

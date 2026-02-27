@@ -1,5 +1,5 @@
 import { inject, Injectable, signal } from '@angular/core';
-import { from, map, Observable, of } from 'rxjs';
+import { from, map, Observable, of, tap } from 'rxjs';
 
 
 import { collection, collectionData, CollectionReference, doc, Firestore, FirestoreDataConverter, getDoc, QueryDocumentSnapshot, SnapshotOptions } from '@angular/fire/firestore';
@@ -13,7 +13,7 @@ import { FirestorePaths } from './firestore-paths';
 export class LeagueService {
     private readonly appStateService = inject(AppStateService);
     private readonly firestore = inject(Firestore);
-    private readonly leagueCache: League[] = [];
+    private leagueCache: League[] = [];
     private readonly leagueKey = 'leagues';
 
     selectedLeague = signal<League | null>(null);
@@ -37,7 +37,11 @@ export class LeagueService {
 
         return collectionData(leagueRef)
             .pipe(
-                map((leagues) => this.sort(leagues))
+                map((leagues) => this.sort(leagues)),
+                tap(leagues => {
+                    this.leagueCache = leagues;
+                    this.appStateService.saveDataToStorage(this.leagueKey, this.leagueCache);
+                })
             );
     }
 
@@ -46,12 +50,12 @@ export class LeagueService {
     }
 
     getLeagueById(leagueId: string): Observable<League | undefined> {
-        const cachedLeage = this.leagueCache.find(league => league.id === leagueId);
-        if (cachedLeage) {
-            return of(cachedLeage);
+        const cachedLeague = this.leagueCache.find(league => league.id === leagueId);
+        if (cachedLeague) {
+            return of(cachedLeague);
         }
 
-        const leagueRef = doc(this.firestore, `leagues/${leagueId}`).withConverter(this.leagueConverter);
+        const leagueRef = doc(this.firestore, `${FirestorePaths.leagues}/${leagueId}`).withConverter(this.leagueConverter);
         return from(getDoc(leagueRef)).pipe(
             map(snap => {
                 if (snap.exists()) {

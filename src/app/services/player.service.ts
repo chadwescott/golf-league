@@ -16,10 +16,10 @@ export class PlayerService {
     private readonly appStateService = inject(AppStateService);
     private readonly firestore = inject(Firestore);
     private readonly playerCache: Player[] = [];
-    private readonly playersKey = 'players';
+    private readonly playerKey = 'players';
 
     constructor() {
-        this.appStateService.loadDataFromStorage<Player[]>(this.playersKey)?.map(player => this.playerCache.push(player));
+        this.appStateService.loadDataFromStorage<Player[]>(this.playerKey)?.map(player => this.playerCache.push(player));
     }
 
     readonly playerConverter: FirestoreDataConverter<Player> = {
@@ -77,7 +77,7 @@ export class PlayerService {
         return collectionData(playerRef)
             .pipe(
                 map((players) => this.sort(players)),
-                tap(players => { this.appStateService.saveDataToStorage(this.playersKey, players); })
+                tap(players => { this.appStateService.saveDataToStorage(this.playerKey, players); })
             );
     }
 

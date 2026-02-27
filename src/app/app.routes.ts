@@ -3,6 +3,7 @@ import { LeagueDashboardComponent } from './components/league-dashboard/league-d
 import { LeagueListComponent } from './components/league-list/league-list.component';
 import { PlayerListComponent } from './components/player-list/player-list.component';
 import { SeasonDashboardComponent } from './components/season-dashboard/season-dashboard.component';
+import { SeasonListComponent } from './components/season-list/season-list.component';
 
 export const Paths = {
     leagues: 'leagues',
@@ -20,9 +21,24 @@ export const RouteParams = {
 }
 
 export const routes: Routes = [
-    { path: '', redirectTo: Paths.players, pathMatch: 'full' },
+    { path: '', redirectTo: Paths.leagues, pathMatch: 'full' },
     { path: Paths.players, component: PlayerListComponent },
     { path: Paths.leagues, component: LeagueListComponent },
-    { path: `${Paths.leagues}/:${RouteParams.leagueId}`, component: LeagueDashboardComponent },
-    { path: `${Paths.leagues}/:${RouteParams.leagueId}/${Paths.seasons}/:${RouteParams.seasonId}`, component: SeasonDashboardComponent },
+    {
+        path: `${Paths.leagues}/:${RouteParams.leagueId}`, component: LeagueDashboardComponent,
+        children: [
+            {
+                path: '', redirectTo: Paths.seasons, pathMatch: 'full',
+            },
+            {
+                path: `${Paths.seasons}`, component: SeasonListComponent,
+            },
+            {
+                path: `${Paths.seasons}/:${RouteParams.seasonId}`, component: SeasonDashboardComponent,
+                children: [
+
+                ]
+            }
+        ]
+    },
 ];
