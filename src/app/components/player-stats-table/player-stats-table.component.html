@@ -16,19 +16,19 @@
             @for (stats of sortedPlayerStats(); track $index) {
             <tr>
                 <td>{{ players[stats.playerId]?.firstName }} {{ players[stats.playerId]?.lastName }}</td>
-                <td>{{ stats.albatrosses }}</td>
-                <td>{{ stats.eagles }}</td>
-                <td>{{ stats.birdies }}</td>
-                <td>{{ stats.pars }}</td>
-                <td>{{ stats.bogeys }}</td>
-                <td>{{ stats.doubleBogeys }}</td>
-                <td>{{ stats.others }}</td>
-                <td>{{ stats.fairwaysHit }}</td>
-                <td>{{ stats.grossPoints }}</td>
-                <td>{{ stats.netPoints }}</td>
-                <td>{{ stats.wins }}</td>
-                <td>{{ stats.losses }}</td>
-                <td>{{ stats.ties }}</td>
+                <td class="stat">{{ stats.albatrosses }}</td>
+                <td class="stat">{{ stats.eagles }}</td>
+                <td class="stat">{{ stats.birdies }}</td>
+                <td class="stat">{{ stats.pars }}</td>
+                <td class="stat">{{ stats.bogeys }}</td>
+                <td class="stat">{{ stats.doubleBogeys }}</td>
+                <td class="stat">{{ stats.others }}</td>
+                <td class="stat">{{ stats.fairwaysHit }}</td>
+                <td class="stat">{{ stats.grossPoints }}</td>
+                <td class="stat">{{ stats.netPoints }}</td>
+                <td class="stat">{{ stats.wins }}</td>
+                <td class="stat">{{ stats.losses }}</td>
+                <td class="stat">{{ stats.ties }}</td>
             </tr>
             }
         </tbody>

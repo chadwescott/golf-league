@@ -1,90 +1,103 @@
-<!-- <h3>{{scorecard().date | date: 'M/dd/yyyy'}}</h3> -->
-<table class="scorecard">
-    <thead>
-        <tr>
-            <th [attr.colspan]="scorecard().holes.length + (scorecard().roundHoles === roundHoles.All ? 5 : 4)"
-                class="course-header">
-                {{ course?.name }}
-            </th>
-        </tr>
-        <tr>
-            <th>Hole</th>
-            @for(hole of scorecard().holes; track $index; let i = $index) {
-            <th>{{ hole.holeNumber }}</th>
-            @if (scorecard().roundHoles === roundHoles.All) {
-            @if (i === 8) {
-            <th>Out</th>
-            }
-            @if (i === 17) {
-            <th>In</th>
-            }
-            }
-            }
-            <th>Total</th>
-            <th>Points</th>
-        </tr>
-        <tr>
-            <th>Handicap</th>
-            @for(hole of scorecard().holes; track hole.holeNumber) {
-            <th>{{ hole.handicap }}</th>
-            }
-            <th></th>
-            <th></th>
-        </tr>
-        <tr>
-            <th>Par</th>
-            @for(hole of scorecard().holes; track hole.holeNumber) {
-            <th>{{ hole.par }}</th>
-            }
-            <th>{{ totalPar }}</th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @for (scores of playerScores(); track scores.playerId) {
-        <tr class="player-score-row">
-            <td>
-                <div>{{ players[scores.playerId]?.firstName }} {{ players[scores.playerId]?.lastName }}</div>
-                @if (scores.handicap) {
-                <div class="handicap">Handicap: {{scores.handicap}}</div>
-                }
-            </td>
-            @for (holeScore of scores.holeScores; track holeScore.holeNumber) {
-            <td [ngClass]="{ fairway: holeScore.fairwayHit  }">
-                @if (scores.handicap) {
-                <div class="strokes">
-                    &nbsp;
-                    @for (_ of strokeRange(holeScore.strokes); track $index) { &#8226; }
-                </div>
-                }
-                <div class="gross-score">
-                    <div [attr.scoreType]="holeScore.scoreType">
-                        {{ holeScore.score }}
+<div class="results-table-wrapper">
+    <table class="scorecard">
+        <thead>
+            <tr>
+                <th [attr.colspan]="scorecard().holes.length + (scorecard().roundHoles === roundHoles.All ? 5 : 4)"
+                    class="course-header">
+                    <div>
+                        <div>{{ course?.name }}</div>
+                        <h3>{{scorecard().date | date: 'M/dd/yyyy'}}</h3>
                     </div>
-                </div>
-                @if (scores.handicap && holeScore.score != null && holeScore.strokes != null) {
-                <div class="net-score">({{ holeScore.score - holeScore.strokes }})</div>
+                </th>
+            </tr>
+            <tr>
+                <th>Hole</th>
+                @for(hole of scorecard().holes; track $index; let i = $index) {
+                <th>{{ hole.holeNumber }}</th>
+                @if (scorecard().roundHoles === roundHoles.All) {
+                @if (i === 8) {
+                <th>Out</th>
                 }
-            </td>
+                @if (i === 17) {
+                <th>In</th>
+                }
+                }
+                }
+                <th>Total</th>
+                <th>Points</th>
+            </tr>
+            <tr>
+                <th>Handicap</th>
+                @for(hole of scorecard().holes; track hole.holeNumber) {
+                <th>{{ hole.handicap }}</th>
+                }
+                <th></th>
+                <th></th>
+            </tr>
+            <tr>
+                <th>Par</th>
+                @for(hole of scorecard().holes; track hole.holeNumber) {
+                <th>{{ hole.par }}</th>
+                }
+                <th>{{ totalPar }}</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @for (scores of sortedPlayerScores(); track scores.playerId) {
+            <tr class="player-score-row">
+                <td>
+                    <div class="player">{{ players()[scores.playerId]?.firstName }} {{
+                        players()[scores.playerId]?.lastName
+                        }}</div>
+                    @if (scores.handicap) {
+                    <div class="handicap">Handicap: {{scores.handicap}}</div>
+                    }
+                </td>
+                @for (holeScore of scores.holeScores; track holeScore.holeNumber) {
+                <td [ngClass]="{ fairway: holeScore.fairwayHit  }">
+                    @if (scores.handicap) {
+                    <div class="strokes">
+                        &nbsp;
+                        @for (_ of strokeRange(holeScore.strokes); track $index) { &#8226; }
+                    </div>
+                    }
+                    <div class="gross-hole-score">
+                        <div [attr.scoreType]="holeScore.scoreType">
+                            {{ holeScore.score }}
+                        </div>
+                    </div>
+                    @if (scores.handicap && holeScore.score != null && holeScore.strokes != null) {
+                    <div class="net-hole-score">({{ holeScore.score - holeScore.strokes }})</div>
+                    }
+                </td>
+                }
+                <td>
+                    <div class="gross-score">{{ scores.totalScore }}</div>
+                    @if (scores.handicap && scores.totalScore) {
+                    <div class="net-score">({{ scores.totalScore -
+                        (scores.handicap) }})</div>
+                    }
+                </td>
+                <td>
+                    @if (scores.handicap && scores.totalScore != null) {
+                    <div>G: {{ scores.grossPoints }}</div>
+                    <div>N: {{ scores.netPoints }}</div>
+                    } @else {
+                    <div>{{ scores.grossPoints }}</div>
+                    }
+                </td>
+            </tr>
             }
-            <td>
-                <div>{{ scores.totalScore }}</div>
-                @if (scores.handicap && scores.totalScore) {
-                <div class="handicap">({{ scores.totalScore -
-                    (scores.handicap) }})</div>
-                }
-            </td>
-            <td>G: {{ scores.grossPoints }} N: {{ scores.netPoints }}</td>
-        </tr>
-        }
-    </tbody>
-    <tfoot>
-        <tr>
-            <td [attr.colspan]="scorecard().holes.length + (scorecard().roundHoles === roundHoles.All ? 5 : 4)">
-                <div>
-                    <span icon class="material-symbols-outlined">check</span> fairway hit
-                </div>
-            </td>
-        </tr>
-    </tfoot>
-</table>
+        </tbody>
+        <tfoot>
+            <tr>
+                <td [attr.colspan]="scorecard().holes.length + (scorecard().roundHoles === roundHoles.All ? 5 : 4)">
+                    <div>
+                        <span icon class="material-symbols-outlined">check</span> fairway hit
+                    </div>
+                </td>
+            </tr>
+        </tfoot>
+    </table>
+</div>

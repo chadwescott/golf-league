@@ -1,5 +1,6 @@
 @use './assets/scss/button';
 @use './assets/scss/colors';
+@use './assets/scss/table';
 
 :root {
 }
@@ -27,7 +28,7 @@ h1 {
 }
 
 h2 {
-    margin: .025rem 0;
+    margin: .25rem 0;
     font-size: 1rem;
 }
 
@@ -50,13 +51,18 @@ h3 {
     }
 }
 
+hr {
+    margin: 1.25rem 0;
+}
+
 .banner {
     position: sticky;
     top: 0;
+    width: 100vw;
     z-index: 1;
     background-color: var(--banner-color);
     color: white;
-    padding: .25rem .5rem;
+    padding: .25rem 1rem;
 
     display: flex;
     justify-content: space-between;
@@ -65,7 +71,7 @@ h3 {
 }
 
 .body {
-    padding: .25rem .5rem;
+    padding: .5rem 1rem;
     // position: relative;
 }
 
@@ -91,4 +97,26 @@ li {
     a:visited {
         color: blue;
     }
+}
+
+mat-select {
+    .mat-mdc-select-value,
+    .mat-mdc-select-arrow-wrapper {
+        padding: 0 .5rem;
+    }
+}
+
+.cdk-overlay-container,
+.cdk-global-overlay-wrapper {
+    z-index: 2000;
+}
+
+.cdk-overlay-pane {
+    background: white;
+    box-shadow: 0 0 4px 4px rgb(0 0 0 / 0.15);
+}
+
+.mat-mdc-form-field {
+    position: relative;
+    z-index: 2;
 }
