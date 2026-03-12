@@ -1,0 +1,5 @@
+<ul>
+    @for(match of matches(); track match.id) {
+    <li><a routerLink="{{ paths.matches }}/{{ match.id }}">{{ match.name }} - {{ match.date | date:'M/d/y' }}</a></li>
+    }
+</ul>

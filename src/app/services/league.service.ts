@@ -27,7 +27,7 @@ export class LeagueService {
         },
         fromFirestore(snapshot: QueryDocumentSnapshot, options: SnapshotOptions): League {
             const data = snapshot.data(options) as Omit<League, 'id'>;
-            return { id: snapshot.id, ...data };
+            return { ...data, id: snapshot.id };
         },
     };
 

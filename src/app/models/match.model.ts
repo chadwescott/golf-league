@@ -1,14 +1,14 @@
-import { EventTypes } from "../enums/event-types.enum";
+import { EventTypes as MatchTypes } from "../enums/match-types.enum";
 import { RoundHoles } from "../enums/round-holes.enum";
 
-export interface LeagueEvent {
+export interface Match {
     id: string;
     seasonId: string;
     date: Date;
     name: string;
     courseId: string;
     roundHoles: RoundHoles;
-    eventType: EventTypes;
+    eventType: MatchTypes;
     skinAmount: number | null;
     scorecardId: string;
 }

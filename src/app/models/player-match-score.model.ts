@@ -1,4 +1,4 @@
-export interface PlayerEventScore {
+export interface PlayerMatchScore {
     playerId: string,
     handicap: number | null,
     inScore: number | null,

@@ -1,6 +1,7 @@
 import { Routes } from '@angular/router';
 import { LeagueDashboardComponent } from './components/league-dashboard/league-dashboard.component';
 import { LeagueListComponent } from './components/league-list/league-list.component';
+import { MatchDashboardComponent } from './components/match-dashboard/match-dashboard.component';
 import { PlayerListComponent } from './components/player-list/player-list.component';
 import { SeasonDashboardComponent } from './components/season-dashboard/season-dashboard.component';
 import { SeasonListComponent } from './components/season-list/season-list.component';
@@ -8,6 +9,7 @@ import { SeasonListComponent } from './components/season-list/season-list.compon
 export const Paths = {
     leagues: 'leagues',
     seasons: 'seasons',
+    matches: 'matches',
     players: 'players',
     schedules: 'schedules',
     scorecards: 'scorecards',
@@ -17,7 +19,7 @@ export const RouteParams = {
     leagueId: 'leagueId',
     scorecardId: 'scorecardId',
     seasonId: 'seasonId',
-    eventId: 'eventId'
+    matchId: 'matchId'
 }
 
 export const routes: Routes = [
@@ -36,7 +38,7 @@ export const routes: Routes = [
             {
                 path: `${Paths.seasons}/:${RouteParams.seasonId}`, component: SeasonDashboardComponent,
                 children: [
-
+                    { path: `${Paths.matches}/:${RouteParams.matchId}`, component: MatchDashboardComponent },
                 ]
             }
         ]

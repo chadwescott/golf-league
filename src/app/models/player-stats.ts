@@ -9,7 +9,8 @@ export interface PlayerStats {
     doubleBogeys: number,
     others: number,
     fairwaysHit: number,
-    points: number,
+    grossPoints: number,
+    netPoints: number,
     wins: number,
     losses: number,
     ties: number

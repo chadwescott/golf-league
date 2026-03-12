@@ -34,7 +34,7 @@ export class PlayerService {
         },
         fromFirestore(snapshot: QueryDocumentSnapshot, options: SnapshotOptions): Player {
             const data = snapshot.data(options) as Omit<Player, 'id'>;
-            return { id: snapshot.id, ...data };
+            return { ...data, id: snapshot.id };
         },
     };
 

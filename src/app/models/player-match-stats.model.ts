@@ -1,6 +1,6 @@
 import { ResultType } from "../enums/result.enum"
 
-export interface PlayerEventStats {
+export interface PlayerMatchStats {
     playerId: string,
     leagueEventId: string,
     eventDate: Date,
@@ -16,5 +16,6 @@ export interface PlayerEventStats {
     doubleBogeys: number,
     others: number,
     fairwaysHit: number,
-    points: number
+    grossPoints: number,
+    netPoints: number
 }

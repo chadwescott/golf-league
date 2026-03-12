@@ -1,0 +1,36 @@
+<div class="results-table-wrapper">
+    <table class="results-table">
+        <thead>
+            <tr>
+                @for (column of columns; track column.key) {
+                <th>
+                    <button class="sort-button" type="button" (click)="sortBy(column.key)">
+                        <span>{{ column.label }}</span>
+                        <span class="sort-indicator">{{ getSortIndicator(column.key) }}</span>
+                    </button>
+                </th>
+                }
+            </tr>
+        </thead>
+        <tbody>
+            @for (stats of sortedPlayerMatchStats(); track $index) {
+            <tr>
+                <td>{{ players[stats.playerId]?.firstName }} {{ players[stats.playerId]?.lastName }}</td>
+                <td>{{ stats.grossScore }}</td>
+                <td>{{ stats.netScore }}</td>
+                <td>{{ stats.albatrosses }}</td>
+                <td>{{ stats.eagles }}</td>
+                <td>{{ stats.birdies }}</td>
+                <td>{{ stats.pars }}</td>
+                <td>{{ stats.bogeys }}</td>
+                <td>{{ stats.doubleBogeys }}</td>
+                <td>{{ stats.others }}</td>
+                <td>{{ stats.fairwaysHit }}</td>
+                <td>{{ stats.grossPoints }}</td>
+                <td>{{ stats.netPoints }}</td>
+                <td>{{ stats.result }}</td>
+            </tr>
+            }
+        </tbody>
+    </table>
+</div>

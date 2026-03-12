@@ -7,5 +7,6 @@ export interface PlayerScores {
     inScore: number | null,
     outScore: number | null,
     totalScore: number | null,
-    points: number | null
+    grossPoints: number | null
+    netPoints: number | null
 }

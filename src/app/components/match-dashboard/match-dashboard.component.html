@@ -1,0 +1,8 @@
+@if (match()) {
+<h3>{{ match()?.name }} - {{ match()?.date | date:'M/d/y' }} Standings</h3>
+<app-player-match-stats-table [playerMatchStats]="playerMatchStats"></app-player-match-stats-table>
+@if (scorecard() && playerScores()) {
+<h3>Scorecard</h3>
+<app-scorecard [scorecard]="scorecard()!" [playerScores]="playerScores()!"></app-scorecard>
+}
+}

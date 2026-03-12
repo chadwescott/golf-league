@@ -1,1 +1,12 @@
-<h2>{{ seasonService.selectedSeason()?.name }} {{ seasonService.selectedSeason()?.year }} Season</h2>
+<h2 class="header">{{ seasonService.selectedSeason()?.name }} {{ seasonService.selectedSeason()?.year }} Season</h2>
+@if (!!leagueId && !!seasonId) {
+<h3>
+    @if (activeMatchId() && selectedMatch()) {
+    {{ selectedMatch()!.name }} - {{ selectedMatch()!.date | date:'M/d/y' }}
+    }
+    Overall Standings
+</h3>
+<app-player-stats-table [playerStats]="playerSeasonStats()"></app-player-stats-table>
+<router-outlet></router-outlet>
+<app-match-list [matches]="matches()"></app-match-list>
+}

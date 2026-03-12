@@ -36,7 +36,7 @@ export class CourseService {
         },
         fromFirestore(snapshot: QueryDocumentSnapshot, options: SnapshotOptions): Course {
             const data = snapshot.data(options) as Omit<Course, 'id'>;
-            return { id: snapshot.id, ...data };
+            return { ...data, id: snapshot.id };
         },
     };
 
