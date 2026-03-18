@@ -1,7 +1,6 @@
 import { Component, computed, inject, input, signal } from '@angular/core';
 import { PlayerMatchStats } from '../../models/player-match-stats.model';
-import { Player } from '../../models/player.model';
-import { PlayerService } from '../../services/player.service';
+import { AppStateService } from '../../services/app-state.service';
 
 @Component({
   selector: 'app-player-match-stats-table',
@@ -10,11 +9,11 @@ import { PlayerService } from '../../services/player.service';
   styleUrl: './player-match-stats-table.component.scss',
 })
 export class PlayerMatchStatsTableComponent {
-  private readonly playerService = inject(PlayerService);
+  private readonly appStateService = inject(AppStateService);
 
   playerMatchStats = input.required<PlayerMatchStats[]>();
 
-  players: { [keyof: string]: Player } = {};
+  players = this.appStateService.playerMap();
 
   readonly columns: { key: keyof PlayerMatchStats; label: string }[] = [
     { key: 'playerId', label: 'Player' },
@@ -57,14 +56,6 @@ export class PlayerMatchStatsTableComponent {
       return String(left).localeCompare(String(right)) * modifier;
     });
   });
-
-  ngOnInit() {
-    this.playerService.getPlayers().subscribe(players => {
-      players.forEach(player => {
-        this.players[player.id] = player;
-      });
-    });
-  }
 
   sortBy(key: keyof PlayerMatchStats): void {
     if (this.sortKey() === key) {

@@ -2,7 +2,7 @@ import { Component, effect, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { Paths } from '../../app.routes';
 import { Season } from '../../models/season.model';
-import { LeagueService } from '../../services/league.service';
+import { AppStateService } from '../../services/app-state.service';
 import { SeasonService } from '../../services/season.service';
 
 @Component({
@@ -14,13 +14,13 @@ import { SeasonService } from '../../services/season.service';
 export class SeasonListComponent {
   seasons: Season[] = [];
 
-  private readonly leagueService = inject(LeagueService);
+  private readonly appStateService = inject(AppStateService);
   private readonly seasonService = inject(SeasonService);
   private readonly router = inject(Router);
 
   constructor() {
     effect(() => {
-      const league = this.leagueService.selectedLeague();
+      const league = this.appStateService.selectedLeague();
       if (!league) {
         this.router.navigate(['/', Paths.leagues]);
         return;

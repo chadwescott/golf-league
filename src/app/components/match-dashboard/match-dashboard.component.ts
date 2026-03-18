@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { of, switchMap } from 'rxjs';
@@ -7,16 +7,23 @@ import { RouteParams } from '../../app.routes';
 import { MatchService } from '../../services/match.service';
 
 import { DatePipe } from '@angular/common';
-import { Match } from '../../models/match.model';
+import { MatchTypes } from '../../enums/match-types.enum';
 import { PlayerMatchStats } from '../../models/player-match-stats.model';
+import { AppStateService } from '../../services/app-state.service';
 import { PlayerScoresService } from '../../services/player-score.service';
 import { ScorecardService } from '../../services/scorecard.service';
+import { MatchResultsComponent } from '../match-results/match-results.component';
 import { PlayerMatchStatsTableComponent } from '../player-match-stats-table/player-match-stats-table.component';
 import { ScorecardComponent } from '../scorecard/scorecard.component';
 
 @Component({
   selector: 'app-match-dashboard',
-  imports: [DatePipe, PlayerMatchStatsTableComponent, ScorecardComponent],
+  imports: [
+    DatePipe,
+    MatchResultsComponent,
+    PlayerMatchStatsTableComponent,
+    ScorecardComponent
+  ],
   templateUrl: './match-dashboard.component.html',
   styleUrl: './match-dashboard.component.scss',
 })
@@ -31,9 +38,12 @@ export class MatchDashboardComponent {
   private seasonId: string | undefined;
   private matchId: string | undefined;
 
-  match = signal<Match | undefined>(undefined);
+  readonly appStateService = inject(AppStateService);
+
+  matchTypes = MatchTypes;
+
   scorecard = toSignal(
-    toObservable(this.match).pipe(
+    toObservable(this.appStateService.selectedMatch).pipe(
       switchMap(match => {
         if (!match?.scorecardId) {
           return of(undefined);
@@ -76,8 +86,8 @@ export class MatchDashboardComponent {
   );
 
   ngOnInit(): void {
-    this.leagueId = this.route.snapshot.parent?.parent?.params[RouteParams.leagueId];
-    this.seasonId = this.route.snapshot.parent?.params[RouteParams.seasonId];
+    this.leagueId = this.appStateService.selectedLeague()?.id;
+    this.seasonId = this.appStateService.selectedSeason()?.id;
 
     if (!this.leagueId || !this.seasonId) {
       return;
@@ -104,7 +114,7 @@ export class MatchDashboardComponent {
 
   private updateMatch(): void {
     this.matchService.getMatchById(this.leagueId!, this.seasonId!, this.matchId!).subscribe(match => {
-      this.match.set(match);
+      this.appStateService.selectedMatch.set(match);
     });
   }
 
@@ -112,7 +122,6 @@ export class MatchDashboardComponent {
     this.matchService.getPlayerStatsByMatchId(this.leagueId!, this.seasonId!, this.matchId!).subscribe(playerStats => {
       this.playerMatchStats = playerStats;
     });
-
   }
 }
 

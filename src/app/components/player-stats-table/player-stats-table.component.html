@@ -15,7 +15,7 @@
         <tbody>
             @for (stats of sortedPlayerStats(); track $index) {
             <tr>
-                <td>{{ players[stats.playerId]?.firstName }} {{ players[stats.playerId]?.lastName }}</td>
+                <td class="player">{{ players[stats.playerId]?.firstName }} {{ players[stats.playerId]?.lastName }}</td>
                 <td class="stat">{{ stats.albatrosses }}</td>
                 <td class="stat">{{ stats.eagles }}</td>
                 <td class="stat">{{ stats.birdies }}</td>

@@ -1,4 +1,4 @@
-import { inject, Injectable, signal } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { from, map, Observable, of, tap } from 'rxjs';
 
 
@@ -15,8 +15,6 @@ export class LeagueService {
     private readonly firestore = inject(Firestore);
     private leagueCache: League[] = [];
     private readonly leagueKey = 'leagues';
-
-    selectedLeague = signal<League | null>(null);
 
     readonly leagueConverter: FirestoreDataConverter<League> = {
         toFirestore(league: League) {
@@ -67,9 +65,5 @@ export class LeagueService {
                     return undefined;
                 }
             }));
-    }
-
-    selectLeague(league: League | null): void {
-        this.selectedLeague.set(league);
     }
 }

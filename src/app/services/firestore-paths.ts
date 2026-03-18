@@ -5,7 +5,7 @@ export const FirestorePaths = {
     playerScores: 'player-scores',
     playerStats: 'player-stats',
     leagues: 'leagues',
-    events: 'events',
+    matches: 'events',
     eventStats: 'event-stats',
     matchups: 'matchups',
     scorecards: 'scorecards',

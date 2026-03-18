@@ -4,8 +4,8 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, NavigationEnd, Router, RouterOutlet } from '@angular/router';
 import { filter, map, startWith } from 'rxjs/operators';
 import { RouteParams } from '../../app.routes';
-import { Match } from '../../models/match.model';
 import { PlayerStats } from '../../models/player-stats';
+import { AppStateService } from '../../services/app-state.service';
 import { MatchService } from '../../services/match.service';
 import { SeasonService } from '../../services/season.service';
 import { MatchListComponent } from '../match-list/match-list.component';
@@ -23,21 +23,22 @@ import { PlayerStatsTableComponent } from '../player-stats-table/player-stats-ta
   styleUrl: './season-dashboard.component.scss',
 })
 export class SeasonDashboardComponent {
-  readonly seasonService = inject(SeasonService);
-  readonly matchService = inject(MatchService);
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
+  private readonly seasonService = inject(SeasonService);
+  private readonly matchService = inject(MatchService);
+
+  readonly appStateService = inject(AppStateService);
 
   leagueId: string | undefined;
   seasonId: string | undefined;
 
-  matches = signal<Match[]>([]);
   playerStats = signal<PlayerStats[]>([]);
 
   matchStats = computed<{ [key: string]: PlayerStats[] }>(() => {
     const results: { [key: string]: PlayerStats[] } = {};
 
-    this.matches().forEach(match => {
+    this.appStateService.seasonMatches().forEach(match => {
       const matchPlayerStats = this.playerStats().find(ps => ps.leagueEventId === match.id);
       results[match.id] = matchPlayerStats ? [matchPlayerStats] : [];
     });
@@ -45,7 +46,7 @@ export class SeasonDashboardComponent {
     return results;
   });
 
-  readonly activeMatchId = toSignal(
+  readonly selectedMatchId = toSignal(
     this.router.events.pipe(
       filter((e): e is NavigationEnd => e instanceof NavigationEnd),
       startWith(null),
@@ -61,8 +62,8 @@ export class SeasonDashboardComponent {
   );
 
   selectedMatch = computed(() => {
-    const matches = this.matches();
-    const matchId = this.activeMatchId();
+    const matches = this.appStateService.seasonMatches();
+    const matchId = this.selectedMatchId();
 
     if (!matches.length) {
       return null;
@@ -99,18 +100,19 @@ export class SeasonDashboardComponent {
   });
 
   ngOnInit(): void {
-    this.leagueId = this.route.parent?.snapshot.params[RouteParams.leagueId];
+    this.leagueId = this.appStateService.selectedLeague()?.id;
     this.seasonId = this.route.snapshot.params[RouteParams.seasonId];
 
     if (!this.leagueId || !this.seasonId) {
+      this.appStateService.selectedSeason.set(null);
       this.router.navigate(['..'], { relativeTo: this.route });
       return;
     }
 
     this.seasonService.getSeasonById(this.leagueId, this.seasonId).subscribe(season => {
       if (season) {
-        this.seasonService.selectSeason(season);
-        this.matchService.getMatchesByLeagueIdAndSeasonId(this.leagueId!, this.seasonId!).subscribe(le => this.matches.set(le));
+        this.appStateService.selectedSeason.set(season);
+        this.matchService.getMatchesByLeagueIdAndSeasonId(this.leagueId!, this.seasonId!).subscribe(le => this.appStateService.seasonMatches.set(le));
         return;
       }
 

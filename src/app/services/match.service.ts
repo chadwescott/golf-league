@@ -1,4 +1,4 @@
-import { inject, Injectable, signal } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { from, map, Observable, of, tap } from 'rxjs';
 
 
@@ -15,9 +15,7 @@ export class MatchService {
     private readonly appStateService = inject(AppStateService);
     private readonly firestore = inject(Firestore);
     private matchCache: Match[] = [];
-    private readonly matchKey = 'matchKey';
-
-    selectedMatch = signal<Match | null>(null);
+    private readonly matchKey = 'match';
 
     readonly matchConverter: FirestoreDataConverter<Match> = {
         toFirestore(match: Match) {
@@ -27,7 +25,7 @@ export class MatchService {
                 date: match.date,
                 courseId: match.courseId,
                 roundHoles: match.roundHoles,
-                eventType: match.eventType,
+                matchType: match.matchType,
                 skinAmount: match.skinAmount,
                 scorecardId: match.scorecardId
             };
@@ -62,7 +60,7 @@ export class MatchService {
     };
 
     getMatchesByLeagueIdAndSeasonId(leagueId: string, seasonId: string): Observable<Match[]> {
-        const matchRef = collection(this.firestore, `${FirestorePaths.leagues}/${leagueId}/${FirestorePaths.seasons}/${seasonId}/${FirestorePaths.events}`)
+        const matchRef = collection(this.firestore, `${FirestorePaths.leagues}/${leagueId}/${FirestorePaths.seasons}/${seasonId}/${FirestorePaths.matches}`)
             .withConverter(this.matchConverter) as CollectionReference<Match>;
 
         return collectionData(matchRef)
@@ -75,13 +73,13 @@ export class MatchService {
             );
     }
 
-    getMatchById(leagueId: string, seasonId: string, matchId: string): Observable<Match | undefined> {
+    getMatchById(leagueId: string, seasonId: string, matchId: string): Observable<Match | null> {
         const cachedMatch = this.matchCache.find(event => event.id === matchId);
         if (cachedMatch) {
             return of(cachedMatch);
         }
 
-        const eventRef = doc(this.firestore, `${FirestorePaths.leagues}/${leagueId}/${FirestorePaths.seasons}/${seasonId}/${FirestorePaths.events}/${matchId}`)
+        const eventRef = doc(this.firestore, `${FirestorePaths.leagues}/${leagueId}/${FirestorePaths.seasons}/${seasonId}/${FirestorePaths.matches}/${matchId}`)
             .withConverter(this.matchConverter);
         return from(getDoc(eventRef)).pipe(
             map(snap => {
@@ -91,17 +89,13 @@ export class MatchService {
                     this.appStateService.saveDataToStorage(this.matchKey, this.matchCache);
                     return event;
                 } else {
-                    return undefined;
+                    return null;
                 }
             }));
     }
 
     sort(matches: Match[]): Match[] {
         return matches.sort((a, b) => a.date < b.date ? -1 : 1);
-    }
-
-    selectMatch(match: Match | null): void {
-        this.selectedMatch.set(match);
     }
 
     getPlayerStatsByMatchId(leagueId: string, seasonId: string, matchId: string): Observable<PlayerMatchStats[]> {
@@ -114,4 +108,3 @@ export class MatchService {
         return collectionData(playerMatchStatsQuery);
     }
 }
-

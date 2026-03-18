@@ -77,7 +77,8 @@ export class PlayerService {
         return collectionData(playerRef)
             .pipe(
                 map((players) => this.sort(players)),
-                tap(players => { this.appStateService.saveDataToStorage(this.playerKey, players); })
+                tap(players => { this.appStateService.saveDataToStorage(this.playerKey, players); }),
+                tap(players => this.appStateService.players.set(players))
             );
     }
 

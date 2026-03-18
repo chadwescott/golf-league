@@ -1,8 +1,8 @@
 import { Component, effect, inject } from '@angular/core';
 import { Player } from '../../models/player.model';
+import { AppStateService } from '../../services/app-state.service';
 import { LeagueService } from '../../services/league.service';
 import { PlayerService } from '../../services/player.service';
-import { SeasonService } from '../../services/season.service';
 
 @Component({
   selector: 'app-player-list',
@@ -15,11 +15,11 @@ export class PlayerListComponent {
 
   private readonly playerService = inject(PlayerService);
   private readonly leagueService = inject(LeagueService);
-  private readonly seasonService = inject(SeasonService);
+  private readonly appStateService = inject(AppStateService);
 
   constructor() {
     effect(() => {
-      const selectedLeague = this.leagueService.selectedLeague();
+      const selectedLeague = this.appStateService.selectedLeague();
       if (selectedLeague) {
         this.playerService.getLeaguePlayers(selectedLeague.id).subscribe(players => console.log(players));
       }
@@ -27,7 +27,7 @@ export class PlayerListComponent {
   }
 
   ngOnInit(): void {
-    this.leagueService.getLeagues().subscribe(leagues => this.leagueService.selectLeague(leagues[0]));
+    this.leagueService.getLeagues().subscribe(leagues => this.appStateService.selectedLeague.set(leagues[0]));
     this.playerService.getPlayers().subscribe(players => this.players = players);
     // this.playerService.getLeaguePlayers('6UKtn7PjqEC2cqWaavI1').subscribe(players => console.log(players));
     // this.playerService.getLeagueSeasonPlayers('6UKtn7PjqEC2cqWaavI1', 'q4iVsYgMITiVpeKrxDsX').subscribe(players => console.log(players));

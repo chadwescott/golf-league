@@ -1,9 +1,13 @@
-<h2 class="header">{{ seasonService.selectedSeason()?.name }} {{ seasonService.selectedSeason()?.year }} Season</h2>
-<hr />
+<div class="row header">
+    <h2 class="section-header">{{ appStateService.selectedSeason()?.name }} {{ appStateService.selectedSeason()?.year }}
+        Season</h2>
+    @if (!!leagueId && !!seasonId) {
+    <app-match-list></app-match-list>
+    }
+</div>
 @if (!!leagueId && !!seasonId) {
-<app-match-list [matches]="matches()"></app-match-list>
 <h3>
-    @if (activeMatchId() && selectedMatch()) {
+    @if (selectedMatchId() && selectedMatch()) {
     {{ selectedMatch()!.name }} - {{ selectedMatch()!.date | date:'M/d/y' }}
     }
     Overall Standings

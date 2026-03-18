@@ -1,10 +1,10 @@
 import { DatePipe } from '@angular/common';
-import { Component, inject, input } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Paths } from '../../app.routes';
-import { Match } from '../../models/match.model';
+import { AppStateService } from '../../services/app-state.service';
 
 @Component({
   selector: 'app-match-list',
@@ -16,7 +16,7 @@ export class MatchListComponent {
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
 
-  matches = input.required<Match[]>();
+  readonly appStateService = inject(AppStateService);
 
   paths = Paths;
 

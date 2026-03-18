@@ -1,7 +1,7 @@
 <mat-form-field appearance="outline" class="match-select">
     <mat-label>Select Match</mat-label>
     <mat-select [value]="selectedMatchId" (selectionChange)="onMatchChange($event.value)">
-        @for(match of matches(); track match.id) {
+        @for(match of appStateService.seasonMatches(); track match.id) {
         <mat-option [value]="match.id">{{ match.name }} - {{ match.date | date:'M/d/y' }}</mat-option>
         }
     </mat-select>

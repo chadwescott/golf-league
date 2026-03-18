@@ -1,4 +1,4 @@
-import { EventTypes as MatchTypes } from "../enums/match-types.enum";
+import { MatchTypes } from "../enums/match-types.enum";
 import { RoundHoles } from "../enums/round-holes.enum";
 
 export interface Match {
@@ -8,7 +8,7 @@ export interface Match {
     name: string;
     courseId: string;
     roundHoles: RoundHoles;
-    eventType: MatchTypes;
+    matchType: MatchTypes;
     skinAmount: number | null;
     scorecardId: string;
 }

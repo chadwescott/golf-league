@@ -1,4 +1,4 @@
-export enum EventTypes {
+export enum MatchTypes {
     Practice = 'Practice',
     StrokePlay = 'Stroke Play',
     MatchPlay = 'Match Play',

@@ -1,5 +1,11 @@
-@if (match()) {
-<h3>{{ match()?.name }} - {{ match()?.date | date:'M/d/y' }} Standings</h3>
+@if (appStateService.selectedMatch()) {
+<h2 class="section-header">{{ appStateService.selectedMatch()?.name }} - {{ appStateService.selectedMatch()?.date |
+    date:'M/d/y' }}</h2>
+@if (appStateService.selectedMatch()?.matchType === matchTypes.StrokePlay) {
+<h3>Versus Results</h3>
+<app-match-results></app-match-results>
+}
+<h3>Weekly Standings</h3>
 <app-player-match-stats-table [playerMatchStats]="playerMatchStats"></app-player-match-stats-table>
 @if (scorecard() && playerScores()) {
 <h3>Scorecard</h3>

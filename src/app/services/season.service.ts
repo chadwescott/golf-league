@@ -1,4 +1,4 @@
-import { inject, Injectable, signal } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { from, map, Observable, of, tap } from 'rxjs';
 
 
@@ -17,8 +17,6 @@ export class SeasonService {
     private readonly seasonKey = 'seasons';
 
     private seasonCache: Season[] = [];
-
-    selectedSeason = signal<Season | null>(null);
 
     readonly seasonConverter: FirestoreDataConverter<Season> = {
         toFirestore(season: Season) {
@@ -95,10 +93,6 @@ export class SeasonService {
 
     sort(seasons: Season[]): Season[] {
         return seasons.sort((a, b) => b.name.localeCompare(a.name));
-    }
-
-    selectSeason(season: Season | null): void {
-        this.selectedSeason.set(season);
     }
 
     getPlayerStatsBySeasonId(leagueId: string, seasonId: string): Observable<PlayerStats[]> {
