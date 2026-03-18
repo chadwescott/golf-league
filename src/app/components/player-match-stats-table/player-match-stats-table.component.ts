@@ -1,4 +1,5 @@
 import { Component, computed, inject, input, signal } from '@angular/core';
+import { MatchTypes } from '../../enums/match-types.enum';
 import { PlayerMatchStats } from '../../models/player-match-stats.model';
 import { AppStateService } from '../../services/app-state.service';
 
@@ -9,29 +10,37 @@ import { AppStateService } from '../../services/app-state.service';
   styleUrl: './player-match-stats-table.component.scss',
 })
 export class PlayerMatchStatsTableComponent {
-  private readonly appStateService = inject(AppStateService);
+  readonly appStateService = inject(AppStateService);
 
   playerMatchStats = input.required<PlayerMatchStats[]>();
 
   players = this.appStateService.playerMap();
 
-  readonly columns: { key: keyof PlayerMatchStats; label: string }[] = [
-    { key: 'playerId', label: 'Player' },
-    { key: 'grossScore', label: 'Gross Score' },
-    { key: 'netScore', label: 'Net Score' },
-    { key: 'albatrosses', label: 'Albatrosses' },
-    { key: 'eagles', label: 'Eagles' },
-    { key: 'birdies', label: 'Birdies' },
-    { key: 'pars', label: 'Pars' },
-    { key: 'bogeys', label: 'Bogeys' },
-    { key: 'doubleBogeys', label: 'Double Bogeys' },
-    { key: 'others', label: 'Others' },
-    { key: 'fairwaysHit', label: 'Fairways Hit' },
-    { key: 'grossPoints', label: 'Gross Points' },
-    { key: 'netPoints', label: 'Net Points' },
-    { key: 'result', label: 'Result' }
-  ];
+  readonly columns = computed<{ key: keyof PlayerMatchStats; label: string }[]>(() => {
+    const result: { key: keyof PlayerMatchStats; label: string }[] = [
+      { key: 'playerId', label: 'Player' },
+      { key: 'grossScore', label: 'Gross Score' },
+      { key: 'netScore', label: 'Net Score' },
+      { key: 'albatrosses', label: 'Albatrosses' },
+      { key: 'eagles', label: 'Eagles' },
+      { key: 'birdies', label: 'Birdies' },
+      { key: 'pars', label: 'Pars' },
+      { key: 'bogeys', label: 'Bogeys' },
+      { key: 'doubleBogeys', label: 'Double Bogeys' },
+      { key: 'others', label: 'Others' },
+      { key: 'fairwaysHit', label: 'Fairways Hit' },
+      { key: 'grossPoints', label: 'Gross Points' },
+      { key: 'netPoints', label: 'Net Points' }
+    ];
 
+    if (this.appStateService.selectedMatch()?.matchType === MatchTypes.StrokePlay) {
+      result.push({ key: 'result', label: 'Result' });
+    }
+
+    return result;
+  });
+
+  readonly matchTypes = MatchTypes;
   readonly sortKey = signal<keyof PlayerMatchStats>('netPoints');
   readonly sortDirection = signal<'asc' | 'desc'>('desc');
 

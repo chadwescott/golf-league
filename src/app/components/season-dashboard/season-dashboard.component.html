@@ -1,17 +1,14 @@
-<div class="row header">
-    <h2 class="section-header">{{ appStateService.selectedSeason()?.name }} {{ appStateService.selectedSeason()?.year }}
-        Season</h2>
-    @if (!!leagueId && !!seasonId) {
+@if (!!appStateService.selectedLeague() && !!appStateService.selectedSeason()) {
+<div class="row">
+    <div>
+        @if (!appStateService.selectedMatch()) {
+        <h3>
+            Overall Standings
+        </h3>
+        <app-player-stats-table [playerStats]="appStateService.playerSeasonStats()"></app-player-stats-table>
+        }
+        <router-outlet></router-outlet>
+    </div>
     <app-match-list></app-match-list>
-    }
 </div>
-@if (!!leagueId && !!seasonId) {
-<h3>
-    @if (selectedMatchId() && selectedMatch()) {
-    {{ selectedMatch()!.name }} - {{ selectedMatch()!.date | date:'M/d/y' }}
-    }
-    Overall Standings
-</h3>
-<app-player-stats-table [playerStats]="playerSeasonStats()"></app-player-stats-table>
-<router-outlet></router-outlet>
 }

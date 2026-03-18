@@ -1,5 +1,5 @@
-import { Component, inject } from '@angular/core';
-import { toObservable, toSignal } from '@angular/core/rxjs-interop';
+import { Component, DestroyRef, inject } from '@angular/core';
+import { takeUntilDestroyed, toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { of, switchMap } from 'rxjs';
 import { filter, map, startWith } from 'rxjs/operators';
@@ -12,16 +12,20 @@ import { PlayerMatchStats } from '../../models/player-match-stats.model';
 import { AppStateService } from '../../services/app-state.service';
 import { PlayerScoresService } from '../../services/player-score.service';
 import { ScorecardService } from '../../services/scorecard.service';
+import { MatchListComponent } from '../match-list/match-list.component';
 import { MatchResultsComponent } from '../match-results/match-results.component';
 import { PlayerMatchStatsTableComponent } from '../player-match-stats-table/player-match-stats-table.component';
+import { PlayerStatsTableComponent } from '../player-stats-table/player-stats-table.component';
 import { ScorecardComponent } from '../scorecard/scorecard.component';
 
 @Component({
   selector: 'app-match-dashboard',
   imports: [
     DatePipe,
+    MatchListComponent,
     MatchResultsComponent,
     PlayerMatchStatsTableComponent,
+    PlayerStatsTableComponent,
     ScorecardComponent
   ],
   templateUrl: './match-dashboard.component.html',
@@ -33,6 +37,7 @@ export class MatchDashboardComponent {
   private readonly matchService = inject(MatchService);
   private readonly scorecardService = inject(ScorecardService);
   private readonly playerScoresService = inject(PlayerScoresService);
+  private readonly destroyRef = inject(DestroyRef);
 
   private leagueId: string | undefined;
   private seasonId: string | undefined;
@@ -70,21 +75,6 @@ export class MatchDashboardComponent {
 
   playerMatchStats: PlayerMatchStats[] = [];
 
-  private readonly activeMatchId = toSignal(
-    this.router.events.pipe(
-      filter((e): e is NavigationEnd => e instanceof NavigationEnd),
-      startWith(null),
-      map(() => {
-        let r: ActivatedRoute | null = this.route;
-        while (r?.firstChild) {
-          r = r.firstChild;
-        }
-        return r?.snapshot.paramMap.get(RouteParams.matchId) ?? null;
-      })
-    ),
-    { initialValue: null }
-  );
-
   ngOnInit(): void {
     this.leagueId = this.appStateService.selectedLeague()?.id;
     this.seasonId = this.appStateService.selectedSeason()?.id;
@@ -94,6 +84,7 @@ export class MatchDashboardComponent {
     }
 
     this.router.events.pipe(
+      takeUntilDestroyed(this.destroyRef),
       filter((e): e is NavigationEnd => e instanceof NavigationEnd),
       startWith(null),
       map(() => {
@@ -110,6 +101,10 @@ export class MatchDashboardComponent {
         this.updateMatch();
         this.updatePlayerStatsForMatch();
       });
+  }
+
+  ngOnDestroy(): void {
+    this.appStateService.selectedMatch.set(null);
   }
 
   private updateMatch(): void {

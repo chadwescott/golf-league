@@ -22,15 +22,16 @@ export class AppStateService {
 
     selectedLeague = signal<League | null>(null);
     selectedSeason = signal<Season | null>(null);
-    seasonMatches = signal<Match[]>([]);
     selectedMatch = signal<Match | null>(null);
+    seasonMatches = signal<Match[]>([]);
+    playerStats = signal<PlayerStats[]>([]);
+    playerMatchStats = signal<{ [key: string]: PlayerStats[] }>({});
     playerSeasonStats = signal<PlayerStats[]>([]);
     cumulativeMatchPlayerStats = signal<PlayerStats[]>([]);
     matchMatchups = signal<MatchMatchup[]>([]);
 
     private readonly selectedLeagueKey = 'selectedLeague';
     private readonly selectedSeasonKey = 'selectedSeason';
-    private readonly selectedMatchKey = 'selectedMatch';
 
     constructor() {
         effect(() => {
@@ -45,7 +46,6 @@ export class AppStateService {
 
         effect(() => {
             const selectedMatch = this.selectedMatch();
-            this.saveOrDeleteDataInStorage(this.selectedMatchKey, selectedMatch);
         });
 
         const storedLeague = this.loadDataFromStorage<League>(this.selectedLeagueKey);
@@ -56,11 +56,6 @@ export class AppStateService {
         const storedSeason = this.loadDataFromStorage<Season>(this.selectedSeasonKey);
         if (storedSeason) {
             this.selectedSeason.set(storedSeason);
-        }
-
-        const storedMatch = this.loadDataFromStorage<Match>(this.selectedMatchKey);
-        if (storedMatch) {
-            this.selectedMatch.set(storedMatch);
         }
     }
 

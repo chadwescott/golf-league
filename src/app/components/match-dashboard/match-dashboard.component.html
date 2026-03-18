@@ -1,12 +1,25 @@
 @if (appStateService.selectedMatch()) {
-<h2 class="section-header">{{ appStateService.selectedMatch()?.name }} - {{ appStateService.selectedMatch()?.date |
-    date:'M/d/y' }}</h2>
+<div class="row">
+    <h2 class="section-header">{{ appStateService.selectedMatch()?.name }} - {{ appStateService.selectedMatch()?.date |
+        date:'M/d/y' }}</h2>
+</div>
+
 @if (appStateService.selectedMatch()?.matchType === matchTypes.StrokePlay) {
 <h3>Versus Results</h3>
 <app-match-results></app-match-results>
 }
-<h3>Weekly Standings</h3>
+
+<h3>Versus Standings</h3>
+<app-player-stats-table [playerStats]="appStateService.playerSeasonStats()"
+    [displayedColumns]="['playerId', 'wins', 'losses', 'ties']" [defaultSortColumn]="'wins'"></app-player-stats-table>
+
+<h3>Weekly Statistics</h3>
 <app-player-match-stats-table [playerMatchStats]="playerMatchStats"></app-player-match-stats-table>
+
+<h3>Overall Statistics</h3>
+<app-player-stats-table [playerStats]="appStateService.playerSeasonStats()"
+    [displayedColumns]="['playerId', 'albatrosses', 'eagles', 'birdies', 'pars', 'bogeys', 'doubleBogeys', 'others', 'fairwaysHit', 'grossPoints', 'netPoints']"></app-player-stats-table>
+
 @if (scorecard() && playerScores()) {
 <h3>Scorecard</h3>
 <app-scorecard [scorecard]="scorecard()!" [playerScores]="playerScores()!"></app-scorecard>

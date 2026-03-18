@@ -1,4 +1,4 @@
-<mat-form-field appearance="outline" class="match-select">
+<mat-form-field appearance="outline" class="match-select" subscriptSizing="dynamic">
     <mat-label>Select Match</mat-label>
     <mat-select [value]="selectedMatchId" (selectionChange)="onMatchChange($event.value)">
         @for(match of appStateService.seasonMatches(); track match.id) {

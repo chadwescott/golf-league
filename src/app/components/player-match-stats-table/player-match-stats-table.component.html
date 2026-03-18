@@ -2,7 +2,7 @@
     <table class="results-table">
         <thead>
             <tr>
-                @for (column of columns; track column.key) {
+                @for (column of columns(); track column.key) {
                 <th>
                     <button class="sort-button" type="button" (click)="sortBy(column.key)">
                         <span>{{ column.label }}</span>
@@ -17,7 +17,7 @@
             <tr>
                 <td class="player">{{ players[stats.playerId]?.firstName }} {{ players[stats.playerId]?.lastName }}</td>
                 <td class="stat">{{ stats.grossScore }}</td>
-                <td class="stat">{{ stats.netScore }}</td>
+                <td class="stat">{{ stats.netScore ?? '-' }}</td>
                 <td class="stat">{{ stats.albatrosses }}</td>
                 <td class="stat">{{ stats.eagles }}</td>
                 <td class="stat">{{ stats.birdies }}</td>
@@ -28,7 +28,9 @@
                 <td class="stat">{{ stats.fairwaysHit }}</td>
                 <td class="stat">{{ stats.grossPoints }}</td>
                 <td class="stat">{{ stats.netPoints }}</td>
-                <td class="result">{{ stats.result }}</td>
+                @if (appStateService.selectedMatch()?.matchType === matchTypes.StrokePlay) {
+                <td class="result">{{ stats.result ?? '-' }}</td>
+                }
             </tr>
             }
         </tbody>

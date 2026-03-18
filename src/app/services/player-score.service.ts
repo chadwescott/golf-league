@@ -31,7 +31,6 @@ export class PlayerScoresService {
     };
 
     getPlayerScoresByScorecardId(scorecardId: string): Observable<PlayerScores[] | undefined> {
-        console.log(`Fetching player scores for scorecard ID: ${scorecardId}`);
         const playerScoresRef = collection(this.firestore, `${FirestorePaths.scorecards}/${scorecardId}/${FirestorePaths.playerScores}`).withConverter(this.playerScoresConverter);
         return collectionData(playerScoresRef);
     }

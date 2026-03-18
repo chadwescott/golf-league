@@ -2,7 +2,7 @@
     <table class="results-table">
         <thead>
             <tr>
-                @for (column of columns; track column.key) {
+                @for (column of columns(); track column.key) {
                 <th>
                     <button class="sort-button" type="button" (click)="sortBy(column.key)">
                         <span>{{ column.label }}</span>
@@ -15,20 +15,11 @@
         <tbody>
             @for (stats of sortedPlayerStats(); track $index) {
             <tr>
-                <td class="player">{{ players[stats.playerId]?.firstName }} {{ players[stats.playerId]?.lastName }}</td>
-                <td class="stat">{{ stats.albatrosses }}</td>
-                <td class="stat">{{ stats.eagles }}</td>
-                <td class="stat">{{ stats.birdies }}</td>
-                <td class="stat">{{ stats.pars }}</td>
-                <td class="stat">{{ stats.bogeys }}</td>
-                <td class="stat">{{ stats.doubleBogeys }}</td>
-                <td class="stat">{{ stats.others }}</td>
-                <td class="stat">{{ stats.fairwaysHit }}</td>
-                <td class="stat">{{ stats.grossPoints }}</td>
-                <td class="stat">{{ stats.netPoints }}</td>
-                <td class="stat">{{ stats.wins }}</td>
-                <td class="stat">{{ stats.losses }}</td>
-                <td class="stat">{{ stats.ties }}</td>
+                @for (column of columns(); track column.key) {
+                <td [class.player]="column.key === 'playerId'" [class.stat]="column.key !== 'playerId'">
+                    {{ getColumnValue(stats, column.key) }}
+                </td>
+                }
             </tr>
             }
         </tbody>

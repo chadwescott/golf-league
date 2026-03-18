@@ -66,7 +66,7 @@ hr {
     z-index: 10;
     background-color: var(--banner-color);
     color: white;
-    padding: .25rem 1rem;
+    padding: .5em 1em;
 
     display: flex;
     justify-content: space-between;
@@ -75,26 +75,12 @@ hr {
 }
 
 .body {
-    margin: .5rem 1rem;
-    // position: relative;
-    // border: solid 2px blue;
-    // overflow-y: auto;
-    // max-height: 100%;
-}
-
-.wrapper {
-    position: relative;;
-    // inset: 0;
-}
-
-.header {
-    // position: sticky;
-    // top: 0;
+    margin: .5em 1em;
 }
 
 li {
-    margin-top: .25rem;
-    margin-bottom: .25rem;
+    margin-top: .25em;
+    margin-bottom: .25em;
 
     &:has(a) {
         list-style-type: none;
@@ -106,16 +92,19 @@ li {
     }
 }
 
+mat-form-field {
+    margin-top: .5em;
+}
 mat-select {
     .mat-mdc-select-value,
     .mat-mdc-select-arrow-wrapper {
-        padding: 0 .5rem;
+        padding: 0 .5em;
     }
 }
 
 .cdk-overlay-container,
 .cdk-global-overlay-wrapper {
-    z-index: 2000;
+    z-index: 1;
 }
 
 .cdk-overlay-pane {
@@ -132,4 +121,6 @@ mat-select {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
+    max-width: 100%;
+    overflow-x: auto;
 }

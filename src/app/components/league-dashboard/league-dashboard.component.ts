@@ -3,10 +3,11 @@ import { ActivatedRoute, Router, RouterOutlet } from '@angular/router';
 import { Paths, RouteParams } from '../../app.routes';
 import { AppStateService } from '../../services/app-state.service';
 import { LeagueService } from '../../services/league.service';
+import { MatchListComponent } from '../match-list/match-list.component';
 
 @Component({
   selector: 'app-league-dashboard',
-  imports: [RouterOutlet],
+  imports: [RouterOutlet, MatchListComponent],
   templateUrl: './league-dashboard.component.html',
   styleUrl: './league-dashboard.component.scss',
 })

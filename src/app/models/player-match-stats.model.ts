@@ -6,7 +6,7 @@ export interface PlayerMatchStats {
     eventDate: Date,
     grossScore: number,
     handicap: number,
-    netScore: number,
+    netScore: number | null,
     result: ResultType | null,
     albatrosses: number,
     eagles: number,
