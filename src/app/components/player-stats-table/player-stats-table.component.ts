@@ -1,7 +1,6 @@
 import { Component, computed, effect, inject, input, signal } from '@angular/core';
 import { PlayerStats } from '../../models/player-stats';
-import { Player } from '../../models/player.model';
-import { PlayerService } from '../../services/player.service';
+import { AppStateService } from '../../services/app-state.service';
 
 type PlayerStatsColumnKey = keyof PlayerStats;
 type PlayerStatsColumn = { key: PlayerStatsColumnKey; label: string };
@@ -15,6 +14,7 @@ const ALL_COLUMNS: PlayerStatsColumn[] = [
   { key: 'bogeys', label: 'Bogeys' },
   { key: 'doubleBogeys', label: 'Double Bogeys' },
   { key: 'others', label: 'Others' },
+  { key: 'doublePars', label: 'Double Pars' },
   { key: 'fairwaysHit', label: 'Fairways Hit' },
   { key: 'grossPoints', label: 'Gross Points' },
   { key: 'netPoints', label: 'Net Points' },
@@ -30,15 +30,13 @@ const ALL_COLUMNS: PlayerStatsColumn[] = [
   styleUrl: './player-stats-table.component.scss',
 })
 export class PlayerStatsTableComponent {
-  private readonly playerService = inject(PlayerService);
+  readonly appService = inject(AppStateService);
 
   displayedColumns = input<PlayerStatsColumnKey[]>([]);
   defaultSortColumn = input<keyof PlayerStats>('netPoints');
   defaultSortDirection = input<'asc' | 'desc'>('desc');
 
-  playerStats = input.required<PlayerStats[]>();
-
-  players: { [keyof: string]: Player } = {};
+  players = this.appService.playerMap();
 
   readonly columns = computed<PlayerStatsColumn[]>(() => {
     const keys = this.displayedColumns();
@@ -47,8 +45,8 @@ export class PlayerStatsTableComponent {
       return ALL_COLUMNS;
     }
 
-    const keySet = new Set(keys);
-    return ALL_COLUMNS.filter(column => keySet.has(column.key));
+    const columnMap = new Map(ALL_COLUMNS.map(column => [column.key, column]));
+    return keys.map(key => columnMap.get(key)).filter(column => column !== undefined);
   });
 
   readonly activeSortKey = computed<PlayerStatsColumnKey>(() => {
@@ -61,14 +59,14 @@ export class PlayerStatsTableComponent {
   });
 
   readonly sortKey = signal<keyof PlayerStats>(this.defaultSortColumn());
-  readonly sortDirection = signal<'asc' | 'desc'>('desc');
+  readonly sortDirection = signal<'asc' | 'desc'>(this.defaultSortDirection());
 
   readonly sortedPlayerStats = computed<PlayerStats[]>(() => {
     const key = this.activeSortKey();
     const direction = this.sortDirection();
     const modifier = direction === 'asc' ? 1 : -1;
 
-    return [...this.playerStats()].sort((a, b) => {
+    return [...this.appService.playerSeasonStats()].sort((a, b) => {
       let left: string | number | Date | null = a[key];
       let right: string | number | Date | null = b[key];
 
@@ -111,14 +109,6 @@ export class PlayerStatsTableComponent {
   constructor() {
     effect(() => {
       this.sortKey.set(this.defaultSortColumn());
-    });
-  }
-
-  ngOnInit() {
-    this.playerService.getPlayers().subscribe(players => {
-      players.forEach(player => {
-        this.players[player.id] = player;
-      });
     });
   }
 

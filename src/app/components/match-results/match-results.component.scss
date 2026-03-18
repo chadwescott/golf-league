@@ -1,39 +1,52 @@
-.matchup {
-    display: flex;
-    flex-direction: row;
-    gap: 1rem;
-    align-items:  center;
+.matches {
+    border: solid 1px black;
+    background: white;
+    display: table;
 
-    > * {
-        margin: .5rem 0;
+    :nth-child(even).matchup {
+        background: rgb(0 0 0 / 0.1);
     }
 
-    .team {
+    .matchup {
         display: flex;
-        flex-direction: column;
+        flex-direction: row;
+        gap: 2em;
+        align-items:  center;
+        justify-content: space-between;
 
-        .player {
-            font-family: var(--player-font-family);
-            font-weight: bold;
-            font-size: 1.25em;
+		padding: 0.5em 0.75em;
+		text-align: left;
+		white-space: nowrap;
+        
+        &:not(:last-child) {
+            border-bottom: 1px solid black;
         }
 
-        .total-score {
-            font-weight: bold;
+        .team {
+
+            .player {
+                font-family: var(--player-font-family);
+                font-weight: bold;
+                font-size: 1.25em;
+            }
+
+            .total-score {
+                font-weight: bold;
+            }
+
+            .net-score {
+                font-style: italic;
+            }
         }
 
-        .net-score {
+        .def {
             font-style: italic;
         }
-    }
 
-    .def {
-        font-style: italic;
-    }
-
-    .result {
-        font-weight: bold;
-        // font-style: italic;
-        align-self: flex-start;
+        .result {
+            font-weight: bold;
+            // font-style: italic;
+            align-self: flex-start;
+        }
     }
 }

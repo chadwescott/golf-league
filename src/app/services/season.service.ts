@@ -1,4 +1,4 @@
-import { inject, Injectable } from '@angular/core';
+import { EnvironmentInjector, inject, Injectable, runInInjectionContext } from '@angular/core';
 import { from, map, Observable, of, tap } from 'rxjs';
 
 
@@ -13,6 +13,7 @@ import { FirestorePaths } from './firestore-paths';
 })
 export class SeasonService {
     private readonly appStateService = inject(AppStateService);
+    private readonly environmentInjector = inject(EnvironmentInjector);
     private readonly firestore = inject(Firestore);
     private readonly seasonKey = 'seasons';
 
@@ -57,10 +58,12 @@ export class SeasonService {
     };
 
     getSeasonsByLeagueId(leagueId: string): Observable<Season[]> {
-        const seasonRef = collection(this.firestore, `${FirestorePaths.leagues}/${leagueId}/${FirestorePaths.seasons}`)
-            .withConverter(this.seasonConverter) as CollectionReference<Season>;
+        return runInInjectionContext(this.environmentInjector, () => {
+            const seasonRef = collection(this.firestore, `${FirestorePaths.leagues}/${leagueId}/${FirestorePaths.seasons}`)
+                .withConverter(this.seasonConverter) as CollectionReference<Season>;
 
-        return collectionData(seasonRef)
+            return collectionData(seasonRef);
+        })
             .pipe(
                 map(seasons => this.sort(seasons)),
                 tap(seasons => console.log(seasons)),
@@ -77,18 +80,23 @@ export class SeasonService {
             return of(cachedSeason);
         }
 
-        const seasonRef = doc(this.firestore, `${FirestorePaths.leagues}/${leagueId}/${FirestorePaths.seasons}/${seasonId}`).withConverter(this.seasonConverter);
-        return from(getDoc(seasonRef)).pipe(
-            map(snap => {
-                if (snap.exists()) {
-                    const season = snap.data();
-                    this.seasonCache.push(season);
-                    this.appStateService.saveDataToStorage(this.seasonKey, this.seasonCache);
-                    return season;
-                } else {
-                    return undefined;
-                }
-            }));
+        return runInInjectionContext(this.environmentInjector, () => {
+            const seasonRef = doc(this.firestore, `${FirestorePaths.leagues}/${leagueId}/${FirestorePaths.seasons}/${seasonId}`)
+                .withConverter(this.seasonConverter);
+
+            return from(getDoc(seasonRef)).pipe(
+                map(snap => {
+                    if (snap.exists()) {
+                        const season = snap.data();
+                        this.seasonCache.push(season);
+                        this.appStateService.saveDataToStorage(this.seasonKey, this.seasonCache);
+                        return season;
+                    } else {
+                        return undefined;
+                    }
+                })
+            );
+        });
     }
 
     sort(seasons: Season[]): Season[] {
@@ -96,9 +104,11 @@ export class SeasonService {
     }
 
     getPlayerStatsBySeasonId(leagueId: string, seasonId: string): Observable<PlayerStats[]> {
-        const playerResultsRef = collection(this.firestore, `${FirestorePaths.leagues}/${leagueId}/${FirestorePaths.seasons}/${seasonId}/${FirestorePaths.playerStats}`)
-            .withConverter(this.playerResultsConverter);;
+        return runInInjectionContext(this.environmentInjector, () => {
+            const playerResultsRef = collection(this.firestore, `${FirestorePaths.leagues}/${leagueId}/${FirestorePaths.seasons}/${seasonId}/${FirestorePaths.playerStats}`)
+                .withConverter(this.playerResultsConverter);
 
-        return collectionData(playerResultsRef)
+            return collectionData(playerResultsRef);
+        });
     }
 }

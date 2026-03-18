@@ -1,4 +1,4 @@
-import { inject, Injectable } from '@angular/core';
+import { EnvironmentInjector, inject, Injectable, runInInjectionContext } from '@angular/core';
 import { from, map, Observable, of, tap } from 'rxjs';
 
 
@@ -12,6 +12,7 @@ import { FirestorePaths } from './firestore-paths';
 })
 export class LeagueService {
     private readonly appStateService = inject(AppStateService);
+    private readonly environmentInjector = inject(EnvironmentInjector);
     private readonly firestore = inject(Firestore);
     private leagueCache: League[] = [];
     private readonly leagueKey = 'leagues';
@@ -30,10 +31,12 @@ export class LeagueService {
     };
 
     getLeagues(): Observable<League[]> {
-        const leagueRef = collection(this.firestore, FirestorePaths.leagues)
-            .withConverter(this.leagueConverter) as CollectionReference<League>;
+        return runInInjectionContext(this.environmentInjector, () => {
+            const leagueRef = collection(this.firestore, FirestorePaths.leagues)
+                .withConverter(this.leagueConverter) as CollectionReference<League>;
 
-        return collectionData(leagueRef)
+            return collectionData(leagueRef);
+        })
             .pipe(
                 map((leagues) => this.sort(leagues)),
                 tap(leagues => {
@@ -53,17 +56,22 @@ export class LeagueService {
             return of(cachedLeague);
         }
 
-        const leagueRef = doc(this.firestore, `${FirestorePaths.leagues}/${leagueId}`).withConverter(this.leagueConverter);
-        return from(getDoc(leagueRef)).pipe(
-            map(snap => {
-                if (snap.exists()) {
-                    const league = snap.data();
-                    this.leagueCache.push(league);
-                    this.appStateService.saveDataToStorage(this.leagueKey, this.leagueCache);
-                    return league;
-                } else {
-                    return undefined;
-                }
-            }));
+        return runInInjectionContext(this.environmentInjector, () => {
+            const leagueRef = doc(this.firestore, `${FirestorePaths.leagues}/${leagueId}`)
+                .withConverter(this.leagueConverter);
+
+            return from(getDoc(leagueRef)).pipe(
+                map(snap => {
+                    if (snap.exists()) {
+                        const league = snap.data();
+                        this.leagueCache.push(league);
+                        this.appStateService.saveDataToStorage(this.leagueKey, this.leagueCache);
+                        return league;
+                    } else {
+                        return undefined;
+                    }
+                })
+            );
+        });
     }
 }

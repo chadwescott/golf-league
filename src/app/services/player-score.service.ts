@@ -1,4 +1,4 @@
-import { inject, Injectable } from '@angular/core';
+import { EnvironmentInjector, inject, Injectable, runInInjectionContext } from '@angular/core';
 import { Observable } from 'rxjs';
 
 
@@ -10,6 +10,7 @@ import { FirestorePaths } from './firestore-paths';
     providedIn: 'root'
 })
 export class PlayerScoresService {
+    private readonly environmentInjector = inject(EnvironmentInjector);
     private readonly firestore = inject(Firestore);
 
     readonly playerScoresConverter: FirestoreDataConverter<PlayerScores> = {
@@ -31,8 +32,12 @@ export class PlayerScoresService {
     };
 
     getPlayerScoresByScorecardId(scorecardId: string): Observable<PlayerScores[] | undefined> {
-        const playerScoresRef = collection(this.firestore, `${FirestorePaths.scorecards}/${scorecardId}/${FirestorePaths.playerScores}`).withConverter(this.playerScoresConverter);
-        return collectionData(playerScoresRef);
+        return runInInjectionContext(this.environmentInjector, () => {
+            const playerScoresRef = collection(this.firestore, `${FirestorePaths.scorecards}/${scorecardId}/${FirestorePaths.playerScores}`)
+                .withConverter(this.playerScoresConverter);
+
+            return collectionData(playerScoresRef);
+        });
     }
 }
 

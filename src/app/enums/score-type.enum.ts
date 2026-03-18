@@ -5,5 +5,6 @@ export enum ScoreType {
     Par = 'par',
     Bogey = 'bogey',
     DoubleBogey = 'double-bogey',
-    Other = 'other'
+    Other = 'other',
+    DoublePar = 'double-par'
 }

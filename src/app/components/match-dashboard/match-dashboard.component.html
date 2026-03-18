@@ -7,18 +7,25 @@
 @if (appStateService.selectedMatch()?.matchType === matchTypes.StrokePlay) {
 <h3>Versus Results</h3>
 <app-match-results></app-match-results>
+<hr />
 }
 
-<h3>Versus Standings</h3>
-<app-player-stats-table [playerStats]="appStateService.playerSeasonStats()"
-    [displayedColumns]="['playerId', 'wins', 'losses', 'ties']" [defaultSortColumn]="'wins'"></app-player-stats-table>
-
 <h3>Weekly Statistics</h3>
-<app-player-match-stats-table [playerMatchStats]="playerMatchStats"></app-player-match-stats-table>
+<app-player-match-stats-table [playerMatchStats]="playerMatchStats"
+    [displayedColumns]="['playerId', 'grossScore', 'handicap', 'netScore', 'eagles', 'birdies', 'pars', 'bogeys', 'doublePars', 'fairwaysHit', 'grossPoints', 'netPoints']"></app-player-match-stats-table>
+<hr />
+
+@if (appStateService.selectedMatch()?.matchType === matchTypes.StrokePlay) {
+<h3>Versus Standings</h3>
+<app-player-stats-table [displayedColumns]="['playerId', 'wins', 'losses', 'ties']"
+    [defaultSortColumn]="'wins'"></app-player-stats-table>
+<hr />
+}
 
 <h3>Overall Statistics</h3>
-<app-player-stats-table [playerStats]="appStateService.playerSeasonStats()"
-    [displayedColumns]="['playerId', 'albatrosses', 'eagles', 'birdies', 'pars', 'bogeys', 'doubleBogeys', 'others', 'fairwaysHit', 'grossPoints', 'netPoints']"></app-player-stats-table>
+<app-player-stats-table
+    [displayedColumns]="['playerId', 'eagles', 'birdies', 'pars', 'bogeys', 'doublePars', 'fairwaysHit', 'grossPoints', 'netPoints']"></app-player-stats-table>
+<hr />
 
 @if (scorecard() && playerScores()) {
 <h3>Scorecard</h3>

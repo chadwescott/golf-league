@@ -1,4 +1,4 @@
-import { inject, Injectable } from '@angular/core';
+import { EnvironmentInjector, inject, Injectable, runInInjectionContext } from '@angular/core';
 import { map, Observable, of, tap } from 'rxjs';
 
 
@@ -14,6 +14,7 @@ import { FirestorePaths } from './firestore-paths';
 })
 export class PlayerService {
     private readonly appStateService = inject(AppStateService);
+    private readonly environmentInjector = inject(EnvironmentInjector);
     private readonly firestore = inject(Firestore);
     private readonly playerCache: Player[] = [];
     private readonly playerKey = 'players';
@@ -71,10 +72,12 @@ export class PlayerService {
             return of(cachedPlayers);
         }
 
-        const playerRef = collection(this.firestore, FirestorePaths.players)
-            .withConverter(this.playerConverter) as CollectionReference<Player>;
+        return runInInjectionContext(this.environmentInjector, () => {
+            const playerRef = collection(this.firestore, FirestorePaths.players)
+                .withConverter(this.playerConverter) as CollectionReference<Player>;
 
-        return collectionData(playerRef)
+            return collectionData(playerRef);
+        })
             .pipe(
                 map((players) => this.sort(players)),
                 tap(players => { this.appStateService.saveDataToStorage(this.playerKey, players); }),
@@ -83,17 +86,21 @@ export class PlayerService {
     }
 
     getLeaguePlayers(leagueId: string): Observable<LeaguePlayer[]> {
-        const playersRef = collection(this.firestore, `${FirestorePaths.leagues}/${leagueId}/${FirestorePaths.players}`)
-            .withConverter(this.leaguePlayerConverter) as CollectionReference<LeaguePlayer>;
+        return runInInjectionContext(this.environmentInjector, () => {
+            const playersRef = collection(this.firestore, `${FirestorePaths.leagues}/${leagueId}/${FirestorePaths.players}`)
+                .withConverter(this.leaguePlayerConverter) as CollectionReference<LeaguePlayer>;
 
-        return collectionData(playersRef);
+            return collectionData(playersRef);
+        });
     }
 
     getLeagueSeasonPlayers(leagueId: string, seasonId: string): Observable<SeasonPlayer[]> {
-        const playersRef = collection(this.firestore, `${FirestorePaths.leagues}/${leagueId}/${FirestorePaths.seasons}/${seasonId}/${FirestorePaths.players}`)
-            .withConverter(this.seasonPlayer) as CollectionReference<SeasonPlayer>;
+        return runInInjectionContext(this.environmentInjector, () => {
+            const playersRef = collection(this.firestore, `${FirestorePaths.leagues}/${leagueId}/${FirestorePaths.seasons}/${seasonId}/${FirestorePaths.players}`)
+                .withConverter(this.seasonPlayer) as CollectionReference<SeasonPlayer>;
 
-        return collectionData(playersRef);
+            return collectionData(playersRef);
+        });
     }
 
     sort(players: Player[]): Player[] {

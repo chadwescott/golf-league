@@ -15,6 +15,7 @@ export interface PlayerMatchStats {
     bogeys: number,
     doubleBogeys: number,
     others: number,
+    doublePars: number,
     fairwaysHit: number,
     grossPoints: number,
     netPoints: number

@@ -1,4 +1,4 @@
-import { inject, Injectable, signal } from '@angular/core';
+import { EnvironmentInjector, inject, Injectable, runInInjectionContext, signal } from '@angular/core';
 import { from, map, Observable, of } from 'rxjs';
 
 
@@ -12,6 +12,7 @@ import { FirestorePaths } from './firestore-paths';
 })
 export class ScorecardService {
     private readonly appStateService = inject(AppStateService);
+    private readonly environmentInjector = inject(EnvironmentInjector);
     private readonly firestore = inject(Firestore);
     private readonly scorecardKey = 'scorecards';
 
@@ -42,18 +43,20 @@ export class ScorecardService {
             return of(cachedScorecard);
         }
 
-        const scorecardRef = doc(this.firestore, `${FirestorePaths.scorecards}/${scorecardId}`).withConverter(this.scorecardConverter);
-        return from(getDoc(scorecardRef)).pipe(
-            map(snap => {
-                if (snap.exists()) {
-                    const scorecard = snap.data();
-                    this.scorecardCache.push(scorecard);
-                    this.appStateService.saveDataToStorage(this.scorecardKey, this.scorecardCache);
-                    return scorecard;
-                } else {
-                    return undefined;
-                }
-            }));
+        return runInInjectionContext(this.environmentInjector, () => {
+            const scorecardRef = doc(this.firestore, `${FirestorePaths.scorecards}/${scorecardId}`).withConverter(this.scorecardConverter);
+            return from(getDoc(scorecardRef)).pipe(
+                map(snap => {
+                    if (snap.exists()) {
+                        const scorecard = snap.data();
+                        this.scorecardCache.push(scorecard);
+                        this.appStateService.saveDataToStorage(this.scorecardKey, this.scorecardCache);
+                        return scorecard;
+                    } else {
+                        return undefined;
+                    }
+                }))
+        });
     }
 }
 

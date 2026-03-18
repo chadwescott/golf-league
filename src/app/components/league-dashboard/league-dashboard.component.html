@@ -1,8 +1,9 @@
 <div class="banner">
-    <h1>{{ appStateService.selectedLeague()?.name }}
+    <h1>
         @if (appStateService.selectedSeason()) {
-        - {{ appStateService.selectedSeason()?.name }} {{ appStateService.selectedSeason()?.year }} Season
+        {{ appStateService.selectedSeason()?.name }} {{ appStateService.selectedSeason()?.year }}
         }
+        {{ appStateService.selectedLeague()?.name }}
     </h1>
     <!-- <button icon><span class="material-symbols-outlined">menu</span></button> -->
 </div>

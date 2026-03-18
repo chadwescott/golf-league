@@ -118,7 +118,8 @@
     }
 
     [scoreType='double-bogey']::before,
-    [scoreType='other']::before {
+    [scoreType='other']::before,
+    [scoreType='double-par']::before {
         content: '';
         border: double calc(var(--size) * 0.25) black;
         position: absolute;

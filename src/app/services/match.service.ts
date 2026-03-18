@@ -1,4 +1,4 @@
-import { inject, Injectable } from '@angular/core';
+import { EnvironmentInjector, inject, Injectable, runInInjectionContext } from '@angular/core';
 import { from, map, Observable, of, tap } from 'rxjs';
 
 
@@ -13,6 +13,7 @@ import { FirestorePaths } from './firestore-paths';
 })
 export class MatchService {
     private readonly appStateService = inject(AppStateService);
+    private readonly environmentInjector = inject(EnvironmentInjector);
     private readonly firestore = inject(Firestore);
     private matchCache: Match[] = [];
     private readonly matchKey = 'match';
@@ -48,6 +49,7 @@ export class MatchService {
                 bogeys: stats.bogeys,
                 doubleBogeys: stats.doubleBogeys,
                 others: stats.others,
+                doublePars: stats.doublePars,
                 fairwaysHit: stats.fairwaysHit,
                 grossPoints: stats.grossPoints,
                 netPoints: stats.netPoints,
@@ -60,10 +62,12 @@ export class MatchService {
     };
 
     getMatchesByLeagueIdAndSeasonId(leagueId: string, seasonId: string): Observable<Match[]> {
-        const matchRef = collection(this.firestore, `${FirestorePaths.leagues}/${leagueId}/${FirestorePaths.seasons}/${seasonId}/${FirestorePaths.matches}`)
-            .withConverter(this.matchConverter) as CollectionReference<Match>;
+        return runInInjectionContext(this.environmentInjector, () => {
+            const matchRef = collection(this.firestore, `${FirestorePaths.leagues}/${leagueId}/${FirestorePaths.seasons}/${seasonId}/${FirestorePaths.matches}`)
+                .withConverter(this.matchConverter) as CollectionReference<Match>;
 
-        return collectionData(matchRef)
+            return collectionData(matchRef);
+        })
             .pipe(
                 map(matches => this.sort(matches)),
                 tap(matches => {
@@ -79,19 +83,23 @@ export class MatchService {
             return of(cachedMatch);
         }
 
-        const eventRef = doc(this.firestore, `${FirestorePaths.leagues}/${leagueId}/${FirestorePaths.seasons}/${seasonId}/${FirestorePaths.matches}/${matchId}`)
-            .withConverter(this.matchConverter);
-        return from(getDoc(eventRef)).pipe(
-            map(snap => {
-                if (snap.exists()) {
-                    const event = snap.data();
-                    this.matchCache.push(event);
-                    this.appStateService.saveDataToStorage(this.matchKey, this.matchCache);
-                    return event;
-                } else {
-                    return null;
-                }
-            }));
+        return runInInjectionContext(this.environmentInjector, () => {
+            const eventRef = doc(this.firestore, `${FirestorePaths.leagues}/${leagueId}/${FirestorePaths.seasons}/${seasonId}/${FirestorePaths.matches}/${matchId}`)
+                .withConverter(this.matchConverter);
+
+            return from(getDoc(eventRef)).pipe(
+                map(snap => {
+                    if (snap.exists()) {
+                        const event = snap.data();
+                        this.matchCache.push(event);
+                        this.appStateService.saveDataToStorage(this.matchKey, this.matchCache);
+                        return event;
+                    } else {
+                        return null;
+                    }
+                })
+            );
+        });
     }
 
     sort(matches: Match[]): Match[] {
@@ -99,12 +107,14 @@ export class MatchService {
     }
 
     getPlayerStatsByMatchId(leagueId: string, seasonId: string, matchId: string): Observable<PlayerMatchStats[]> {
-        const playerMatchStatsCollection = collection(this.firestore,
-            `${FirestorePaths.leagues}/${leagueId}/${FirestorePaths.seasons}/${seasonId}/${FirestorePaths.eventStats}`)
-            .withConverter(this.playerMatchStatsConverter);
+        return runInInjectionContext(this.environmentInjector, () => {
+            const playerMatchStatsCollection = collection(this.firestore,
+                `${FirestorePaths.leagues}/${leagueId}/${FirestorePaths.seasons}/${seasonId}/${FirestorePaths.eventStats}`)
+                .withConverter(this.playerMatchStatsConverter);
 
-        const playerMatchStatsQuery = query(playerMatchStatsCollection, where('leagueEventId', '==', matchId));
+            const playerMatchStatsQuery = query(playerMatchStatsCollection, where('leagueEventId', '==', matchId));
 
-        return collectionData(playerMatchStatsQuery);
+            return collectionData(playerMatchStatsQuery);
+        });
     }
 }

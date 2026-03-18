@@ -3,9 +3,9 @@
     <div>
         @if (!appStateService.selectedMatch()) {
         <h3>
-            Overall Standings
+            Overall Statistics
         </h3>
-        <app-player-stats-table [playerStats]="appStateService.playerSeasonStats()"></app-player-stats-table>
+        <app-player-stats-table></app-player-stats-table>
         }
         <router-outlet></router-outlet>
     </div>

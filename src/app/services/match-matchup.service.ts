@@ -1,4 +1,4 @@
-import { inject, Injectable } from '@angular/core';
+import { EnvironmentInjector, inject, Injectable, runInInjectionContext } from '@angular/core';
 import { Observable } from 'rxjs';
 
 
@@ -12,6 +12,7 @@ import { FirestorePaths } from './firestore-paths';
 })
 export class MatchMatchupService {
     private readonly appStateService = inject(AppStateService);
+    private readonly environmentInjector = inject(EnvironmentInjector);
     private readonly firestore = inject(Firestore);
 
     readonly matchMatchupConverter: FirestoreDataConverter<MatchMatchup> = {
@@ -27,11 +28,13 @@ export class MatchMatchupService {
     };
 
     getMatchupsByMatchId(leagueId: string, seasonId: string, matchId: string): Observable<MatchMatchup[]> {
-        const playerMatchStatsCollection = collection(this.firestore,
-            `${FirestorePaths.leagues}/${leagueId}/${FirestorePaths.seasons}/${seasonId}/${FirestorePaths.matches}/${matchId}/${FirestorePaths.matchups}`)
-            .withConverter(this.matchMatchupConverter);
+        return runInInjectionContext(this.environmentInjector, () => {
+            const playerMatchStatsCollection = collection(this.firestore,
+                `${FirestorePaths.leagues}/${leagueId}/${FirestorePaths.seasons}/${seasonId}/${FirestorePaths.matches}/${matchId}/${FirestorePaths.matchups}`)
+                .withConverter(this.matchMatchupConverter);
 
-        return collectionData(playerMatchStatsCollection);
+            return collectionData(playerMatchStatsCollection);
+        });
     }
 }
 
