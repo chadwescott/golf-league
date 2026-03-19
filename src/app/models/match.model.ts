@@ -9,6 +9,6 @@ export interface Match {
     courseId: string;
     roundHoles: RoundHoles;
     matchType: MatchTypes;
-    skinAmount: number | null;
+    skinFee: number | null;
     scorecardId: string;
 }

@@ -1,3 +1,4 @@
+import { CurrencyPipe } from '@angular/common';
 import { Component, computed, effect, inject, input, signal } from '@angular/core';
 import { PlayerStats } from '../../models/player-stats';
 import { AppStateService } from '../../services/app-state.service';
@@ -18,6 +19,10 @@ const ALL_COLUMNS: PlayerStatsColumn[] = [
   { key: 'fairwaysHit', label: 'Fairways Hit' },
   { key: 'grossPoints', label: 'Gross Points' },
   { key: 'netPoints', label: 'Net Points' },
+  { key: 'grossSkins', label: 'Gross Skins' },
+  { key: 'netSkins', label: 'Net Skins' },
+  { key: 'grossSkinAmount', label: 'Gross Skin Winnings' },
+  { key: 'netSkinAmount', label: 'Net Skin Winnings' },
   { key: 'wins', label: 'Wins' },
   { key: 'losses', label: 'Losses' },
   { key: 'ties', label: 'Ties' }
@@ -25,7 +30,7 @@ const ALL_COLUMNS: PlayerStatsColumn[] = [
 
 @Component({
   selector: 'app-player-stats-table',
-  imports: [],
+  imports: [CurrencyPipe],
   templateUrl: './player-stats-table.component.html',
   styleUrl: './player-stats-table.component.scss',
 })

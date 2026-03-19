@@ -4,8 +4,8 @@
 </h2>
 <div class="match-info">
     <span class="match-type">{{ appStateService.selectedMatch()?.matchType }}</span>
-    @if (appStateService.selectedMatch()?.skinAmount) {
-    - ${{ appStateService.selectedMatch()?.skinAmount }} skin entry fee
+    @if (appStateService.selectedMatch()?.skinFee) {
+    - ${{ appStateService.selectedMatch()?.skinFee }} skin entry fee
     }
 </div>
 
@@ -19,6 +19,12 @@
 <app-player-match-stats-table [displayedColumns]="displayedColumns()"></app-player-match-stats-table>
 <hr />
 
+<h3>Skins</h3>
+<app-player-match-stats-table
+    [displayedColumns]="['playerId', 'grossSkins', 'netSkins', 'grossSkinAmount', 'netSkinAmount']"
+    [defaultSortColumn]="'netSkinAmount'"></app-player-match-stats-table>
+<hr />
+
 @if (appStateService.selectedMatch()?.matchType === matchTypes.StrokePlay) {
 <h3>Versus Standings</h3>
 <app-player-stats-table [displayedColumns]="['playerId', 'wins', 'losses', 'ties']"
@@ -28,7 +34,7 @@
 
 <h3>Overall Statistics</h3>
 <app-player-stats-table
-    [displayedColumns]="['playerId', 'eagles', 'birdies', 'pars', 'bogeys', 'doublePars', 'fairwaysHit', 'grossPoints', 'netPoints']"></app-player-stats-table>
+    [displayedColumns]="['playerId', 'eagles', 'birdies', 'pars', 'bogeys', 'doublePars', 'fairwaysHit', 'grossPoints', 'netPoints', 'grossSkins', 'netSkins', 'grossSkinAmount', 'netSkinAmount']"></app-player-stats-table>
 <hr />
 
 @if (scorecard() && playerScores()) {

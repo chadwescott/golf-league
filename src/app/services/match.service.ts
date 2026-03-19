@@ -27,7 +27,7 @@ export class MatchService {
                 courseId: match.courseId,
                 roundHoles: match.roundHoles,
                 matchType: match.matchType,
-                skinAmount: match.skinAmount,
+                skinAmount: match.skinFee,
                 scorecardId: match.scorecardId
             };
         },
@@ -37,6 +37,7 @@ export class MatchService {
         },
     };
 
+    // TODO: Move to PlayerMatchStatsService
     readonly playerMatchStatsConverter: FirestoreDataConverter<PlayerMatchStats> = {
         toFirestore(stats: PlayerMatchStats) {
             return {
@@ -53,6 +54,10 @@ export class MatchService {
                 fairwaysHit: stats.fairwaysHit,
                 grossPoints: stats.grossPoints,
                 netPoints: stats.netPoints,
+                grossSkins: stats.grossSkins,
+                netSkins: stats.netSkins,
+                grossSkinAmount: stats.grossSkinAmount,
+                netSkinAmount: stats.netSkinAmount,
                 result: stats.result
             };
         },

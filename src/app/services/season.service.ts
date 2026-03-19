@@ -33,6 +33,7 @@ export class SeasonService {
         },
     };
 
+    // TODO: Move to PlayerStatsService
     readonly playerResultsConverter: FirestoreDataConverter<PlayerStats> = {
         toFirestore(stat: PlayerStats) {
             return {
@@ -49,7 +50,11 @@ export class SeasonService {
                 points: stat.netPoints,
                 wins: stat.wins,
                 losses: stat.losses,
-                ties: stat.ties
+                ties: stat.ties,
+                grossSkins: stat.grossSkins,
+                netSkins: stat.netSkins,
+                grossSkinAmount: stat.grossSkinAmount,
+                netSkinAmount: stat.netSkinAmount
             };
         },
         fromFirestore(snapshot: QueryDocumentSnapshot, options: SnapshotOptions): PlayerStats {

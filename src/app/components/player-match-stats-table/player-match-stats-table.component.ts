@@ -1,4 +1,5 @@
-import { Component, computed, inject, input, signal } from '@angular/core';
+import { CurrencyPipe } from '@angular/common';
+import { Component, computed, effect, inject, input, signal } from '@angular/core';
 import { PlayerMatchStats } from '../../models/player-match-stats.model';
 import { AppStateService } from '../../services/app-state.service';
 
@@ -21,12 +22,16 @@ const ALL_COLUMNS: PlayerMatchStatsColumn[] = [
   { key: 'fairwaysHit', label: 'Fairways Hit' },
   { key: 'grossPoints', label: 'Gross Points' },
   { key: 'netPoints', label: 'Net Points' },
+  { key: 'grossSkins', label: 'Gross Skins' },
+  { key: 'netSkins', label: 'Net Skins' },
+  { key: 'grossSkinAmount', label: 'Gross Skin Winnings' },
+  { key: 'netSkinAmount', label: 'Net Skin Winnings' },
   { key: 'result', label: 'Result' }
 ];
 
 @Component({
   selector: 'app-player-match-stats-table',
-  imports: [],
+  imports: [CurrencyPipe],
   templateUrl: './player-match-stats-table.component.html',
   styleUrl: './player-match-stats-table.component.scss',
 })
@@ -84,6 +89,13 @@ export class PlayerMatchStatsTableComponent {
       return String(left).localeCompare(String(right)) * modifier;
     });
   });
+
+  constructor() {
+    effect(() => {
+      this.sortKey.set(this.defaultSortColumn());
+      this.sortDirection.set(this.defaultSortDirection());
+    });
+  }
 
   sortBy(key: keyof PlayerMatchStats): void {
     if (this.sortKey() === key) {

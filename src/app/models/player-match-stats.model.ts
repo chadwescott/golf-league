@@ -18,5 +18,9 @@ export interface PlayerMatchStats {
     doublePars: number,
     fairwaysHit: number,
     grossPoints: number,
-    netPoints: number
+    netPoints: number,
+    grossSkins: number,
+    netSkins: number,
+    grossSkinAmount: number,
+    netSkinAmount: number
 }

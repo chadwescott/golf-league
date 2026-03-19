@@ -5,6 +5,8 @@
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
+    "build:pages": "ng build --base-href /golf-league/",
+    "deploy:pages": "npx angular-cli-ghpages --dir=dist/golf-league/browser",
     "watch": "ng build --watch --configuration development",
     "test": "ng test"
   },

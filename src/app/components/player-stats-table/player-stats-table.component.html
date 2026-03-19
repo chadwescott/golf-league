@@ -17,7 +17,11 @@
             <tr>
                 @for (column of columns(); track column.key) {
                 <td [class.player]="column.key === 'playerId'" [class.stat]="column.key !== 'playerId'">
+                    @if (column.key === 'netSkinAmount' || column.key === 'grossSkinAmount') {
+                    {{ stats[column.key] | currency }}
+                    } @else {
                     {{ getColumnValue(stats, column.key) }}
+                    }
                 </td>
                 }
             </tr>
