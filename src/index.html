@@ -6,6 +6,21 @@
   <title>Golf League</title>
   <base href="/">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <script>
+    (function (location) {
+      if (!location.search.startsWith('?/')) {
+        return;
+      }
+
+      const decodedPath = location.search
+        .slice(2)
+        .split('&')
+        .map(part => part.replace(/~and~/g, '&'))
+        .join('?');
+
+      window.history.replaceState(null, '', `${location.pathname}${decodedPath}${location.hash}`);
+    }(window.location));
+  </script>
   <link rel="icon" type="image/x-icon" href="favicon.ico">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>

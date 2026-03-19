@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>Golf League</title>
+    <script>
+        (function (location) {
+            const segmentCount = 1;
+            const basePath = location.pathname.split('/').slice(0, 1 + segmentCount).join('/');
+            const routePath = location.pathname.slice(1).split('/').slice(segmentCount).join('/');
+            const query = location.search ? `&${location.search.slice(1).replace(/&/g, '~and~')}` : '';
+            const redirectPath = routePath ? `/${routePath}` : '';
+
+            location.replace(
+                `${location.protocol}//${location.hostname}${location.port ? `:${location.port}` : ''}${basePath}/?${redirectPath.replace(/&/g, '~and~')}${query}${location.hash}`
+            );
+        }(window.location));
+    </script>
+</head>
+
+<body></body>
+
+</html>
