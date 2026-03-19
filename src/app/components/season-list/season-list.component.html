@@ -1,1 +1,4 @@
-<p>season-list works!</p>
+<h2>Seasons</h2>
+@for (season of seasons; track season.id) {
+<div (click)="selectSeason(season)">{{ season.year }}</div>
+}

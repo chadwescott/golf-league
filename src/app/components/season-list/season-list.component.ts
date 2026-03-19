@@ -29,13 +29,13 @@ export class SeasonListComponent {
       this.seasonService.getSeasonsByLeagueId(league.id).subscribe(seasons => {
         this.seasons = seasons;
         if (seasons.length === 1) {
-          // this.router.navigate([`${Paths.seasons}/${seasons[0].id}`], { relativeTo: this.router.routerState.root.firstChild });
+          this.router.navigate([`${Paths.seasons}/${seasons[0].id}`], { relativeTo: this.router.routerState.root.firstChild });
         }
       });
     });
   }
 
   selectSeason(season: Season): void {
-    this.router.navigate([`/${Paths.seasons}/${season.id}`], { relativeTo: this.router.routerState.root.firstChild });
+    this.router.navigate([`${Paths.seasons}/${season.id}`], { relativeTo: this.router.routerState.root.firstChild });
   }
 }

@@ -1,9 +1,7 @@
-import { DatePipe } from '@angular/common';
-import { Component, computed, DestroyRef, inject } from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
 import { ActivatedRoute, Router, RouterOutlet } from '@angular/router';
-import { RouteParams } from '../../app.routes';
+import { Paths, RouteParams } from '../../app.routes';
 import { AppStateService } from '../../services/app-state.service';
-import { MatchService } from '../../services/match.service';
 import { SeasonService } from '../../services/season.service';
 import { MatchListComponent } from '../match-list/match-list.component';
 import { PlayerStatsTableComponent } from '../player-stats-table/player-stats-table.component';
@@ -11,7 +9,6 @@ import { PlayerStatsTableComponent } from '../player-stats-table/player-stats-ta
 @Component({
   selector: 'app-season-dashboard',
   imports: [
-    DatePipe,
     RouterOutlet,
     MatchListComponent,
     PlayerStatsTableComponent
@@ -23,8 +20,6 @@ export class SeasonDashboardComponent {
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
   private readonly seasonService = inject(SeasonService);
-  private readonly matchService = inject(MatchService);
-  private readonly destroyRef = inject(DestroyRef);
 
   readonly appStateService = inject(AppStateService);
 
@@ -66,5 +61,19 @@ export class SeasonDashboardComponent {
 
       this.router.navigate(['..'], { relativeTo: this.route });
     });
+  }
+
+  goBackToSeason(): void {
+    // this.appStateService.selectedMatch.set(null);
+
+    const leagueId = this.appStateService.selectedLeague()?.id ?? this.leagueId;
+    const seasonId = this.appStateService.selectedSeason()?.id ?? this.seasonId;
+
+    if (!leagueId || !seasonId) {
+      this.router.navigate(['..'], { relativeTo: this.route });
+      return;
+    }
+
+    this.router.navigate(['/', Paths.leagues, leagueId, Paths.seasons, seasonId]);
   }
 }

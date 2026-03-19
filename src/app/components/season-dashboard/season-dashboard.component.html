@@ -9,6 +9,13 @@
         }
         <router-outlet></router-outlet>
     </div>
-    <app-match-list></app-match-list>
+    <div class="match-select">
+        <div>
+            <app-match-list></app-match-list>
+        </div>
+        @if (!!appStateService.selectedMatch()) {
+        <div><a (click)="goBackToSeason()">Season Dashboard</a></div>
+        }
+    </div>
 </div>
 }

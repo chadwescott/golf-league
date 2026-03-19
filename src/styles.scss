@@ -94,6 +94,13 @@ li {
     }
 }
 
+a,
+a:visited {
+    color: blue;
+    cursor: pointer;
+    text-decoration: underline;
+}
+
 mat-form-field {
     margin-top: .5em;
 }
