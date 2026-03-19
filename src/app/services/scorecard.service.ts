@@ -27,7 +27,8 @@ export class ScorecardService {
                 courseId: scorecard.courseId,
                 date: scorecard.date,
                 roundHoles: scorecard.roundHoles,
-                holes: scorecard.holes
+                holes: scorecard.holes,
+                skinAmount: scorecard.skinAmount
             };
         },
         fromFirestore(snapshot: QueryDocumentSnapshot, options: SnapshotOptions): Scorecard {

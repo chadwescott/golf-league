@@ -18,7 +18,6 @@ export class ScorecardComponent {
   scorecard = input.required<Scorecard>();
   playerScores = input.required<PlayerScores[]>();
   sortedPlayerScores = computed<PlayerScores[]>(() => {
-    // return this.sortPlayerScoresByTotalScore();
     return this.sortPlayerScoresByPlayerName();
   });
 

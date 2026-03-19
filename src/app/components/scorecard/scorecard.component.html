@@ -55,7 +55,10 @@
                     }
                 </td>
                 @for (holeScore of scores.holeScores; track holeScore.holeNumber) {
-                <td [ngClass]="{ fairway: holeScore.fairwayHit  }">
+                <td>
+                    <div class="symbol"
+                        [ngClass]="{ fairway: holeScore.fairwayHit, 'gross-skin': holeScore.grossSkin && scorecard().skinAmount, 'net-skin': holeScore.netSkin && scorecard().skinAmount }">
+                    </div>
                     @if (scores.handicap) {
                     <div class="strokes">
                         &nbsp;
@@ -94,7 +97,19 @@
             <tr>
                 <td [attr.colspan]="scorecard().holes.length + (scorecard().roundHoles === roundHoles.All ? 5 : 4)">
                     <div>
-                        <span icon class="material-symbols-outlined">check</span> fairway hit
+                        <div>
+                            <span icon class="material-symbols-outlined fairway">check</span> fairway hit
+                        </div>
+                        @if (scorecard().skinAmount) {
+                        <div>
+                            <span icon class="material-symbols-outlined net-skin">attach_money</span> skin
+                        </div>
+                        <div>
+                            <!-- <span icon class="material-symbols-outlined net-skin">paid</span> net skin -->
+                            <span icon class="material-symbols-outlined net-skin">price_check</span> skin & fairway
+                            hit
+                        </div>
+                        }
                     </div>
                 </td>
             </tr>

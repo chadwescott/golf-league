@@ -5,5 +5,7 @@ export interface HoleScore {
     strokes: number,
     fairwayHit: boolean | null,
     score: number | null,
-    scoreType: ScoreType | null
+    scoreType: ScoreType | null,
+    grossSkin: boolean | null,
+    netSkin: boolean | null
 }

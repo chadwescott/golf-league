@@ -1,7 +1,12 @@
 @if (appStateService.selectedMatch()) {
-<div class="row">
-    <h2 class="section-header">{{ appStateService.selectedMatch()?.name }} - {{ appStateService.selectedMatch()?.date |
-        date:'M/d/y' }}</h2>
+<h2 class="section-header">{{ appStateService.selectedMatch()?.name }} - {{ appStateService.selectedMatch()?.date |
+    date:'M/d/y' }}
+</h2>
+<div class="match-info">
+    <span class="match-type">{{ appStateService.selectedMatch()?.matchType }}</span>
+    @if (appStateService.selectedMatch()?.skinAmount) {
+    - ${{ appStateService.selectedMatch()?.skinAmount }} skin entry fee
+    }
 </div>
 
 @if (appStateService.selectedMatch()?.matchType === matchTypes.StrokePlay) {

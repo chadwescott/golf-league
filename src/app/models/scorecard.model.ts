@@ -7,4 +7,5 @@ export interface Scorecard {
     roundHoles: RoundHoles;
     holes: Hole[];
     id: string;
+    skinAmount: number | null;
 }
