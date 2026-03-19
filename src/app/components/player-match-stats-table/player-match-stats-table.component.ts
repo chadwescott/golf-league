@@ -33,9 +33,6 @@ const ALL_COLUMNS: PlayerMatchStatsColumn[] = [
 export class PlayerMatchStatsTableComponent {
   readonly appStateService = inject(AppStateService);
 
-  // TODO: remove this and get it from the appStatService
-  playerMatchStats = input.required<PlayerMatchStats[]>();
-
   displayedColumns = input<PlayerMatchStatsColumnKey[]>([]);
   defaultSortColumn = input<keyof PlayerMatchStats>('netPoints');
   defaultSortDirection = input<'asc' | 'desc'>('desc');
@@ -71,7 +68,7 @@ export class PlayerMatchStatsTableComponent {
     const direction = this.sortDirection();
     const modifier = direction === 'asc' ? 1 : -1;
 
-    return [...this.playerMatchStats()].sort((a, b) => {
+    return [...this.appStateService.playerMatchStats()].sort((a, b) => {
       let left: string | number | Date | null = a[key];
       let right: string | number | Date | null = b[key];
 
@@ -95,7 +92,7 @@ export class PlayerMatchStatsTableComponent {
     }
 
     this.sortKey.set(key);
-    this.sortDirection.set('asc');
+    this.sortDirection.set('desc');
   }
 
   getSortIndicator(key: keyof PlayerMatchStats): string {

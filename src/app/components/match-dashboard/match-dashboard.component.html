@@ -11,8 +11,7 @@
 }
 
 <h3>Weekly Statistics</h3>
-<app-player-match-stats-table [playerMatchStats]="playerMatchStats"
-    [displayedColumns]="['playerId', 'grossScore', 'handicap', 'netScore', 'eagles', 'birdies', 'pars', 'bogeys', 'doublePars', 'fairwaysHit', 'grossPoints', 'netPoints']"></app-player-match-stats-table>
+<app-player-match-stats-table [displayedColumns]="displayedColumns()"></app-player-match-stats-table>
 <hr />
 
 @if (appStateService.selectedMatch()?.matchType === matchTypes.StrokePlay) {

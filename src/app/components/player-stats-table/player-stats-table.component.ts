@@ -109,6 +109,7 @@ export class PlayerStatsTableComponent {
   constructor() {
     effect(() => {
       this.sortKey.set(this.defaultSortColumn());
+      this.sortDirection.set(this.defaultSortDirection());
     });
   }
 
@@ -119,7 +120,7 @@ export class PlayerStatsTableComponent {
     }
 
     this.sortKey.set(key);
-    this.sortDirection.set('asc');
+    this.sortDirection.set('desc');
   }
 
   getSortIndicator(key: keyof PlayerStats): string {

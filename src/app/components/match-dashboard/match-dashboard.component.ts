@@ -1,4 +1,4 @@
-import { Component, DestroyRef, inject } from '@angular/core';
+import { Component, computed, DestroyRef, inject } from '@angular/core';
 import { takeUntilDestroyed, toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { of, switchMap } from 'rxjs';
@@ -12,7 +12,6 @@ import { PlayerMatchStats } from '../../models/player-match-stats.model';
 import { AppStateService } from '../../services/app-state.service';
 import { PlayerScoresService } from '../../services/player-score.service';
 import { ScorecardService } from '../../services/scorecard.service';
-import { MatchListComponent } from '../match-list/match-list.component';
 import { MatchResultsComponent } from '../match-results/match-results.component';
 import { PlayerMatchStatsTableComponent } from '../player-match-stats-table/player-match-stats-table.component';
 import { PlayerStatsTableComponent } from '../player-stats-table/player-stats-table.component';
@@ -22,7 +21,6 @@ import { ScorecardComponent } from '../scorecard/scorecard.component';
   selector: 'app-match-dashboard',
   imports: [
     DatePipe,
-    MatchListComponent,
     MatchResultsComponent,
     PlayerMatchStatsTableComponent,
     PlayerStatsTableComponent,
@@ -44,6 +42,38 @@ export class MatchDashboardComponent {
   private matchId: string | undefined;
 
   readonly appStateService = inject(AppStateService);
+
+  displayedColumns = computed(() => {
+    const results = [
+      'playerId',
+      'grossScore',
+      'eagles',
+      'birdies',
+      'pars',
+      'bogeys',
+      'others',
+      'doublePars',
+      'fairwaysHit',
+      'grossPoints',
+      'netPoints'
+    ] as (keyof PlayerMatchStats)[];
+
+    const playerMatchStats = this.appStateService.playerMatchStats();
+    if (playerMatchStats.length === 0) {
+      return results;
+    }
+    const showHandicap = playerMatchStats.some(stats => stats.handicap !== undefined && stats.handicap !== null);
+
+    if (showHandicap) {
+      results.splice(2, 0, 'handicap', 'netScore');
+    }
+
+    if (this.appStateService.selectedMatch()?.matchType === MatchTypes.StrokePlay) {
+      results.push('result');
+    }
+
+    return results;
+  });
 
   matchTypes = MatchTypes;
 
@@ -73,8 +103,6 @@ export class MatchDashboardComponent {
     { initialValue: undefined }
   );
 
-  playerMatchStats: PlayerMatchStats[] = [];
-
   ngOnInit(): void {
     this.leagueId = this.appStateService.selectedLeague()?.id;
     this.seasonId = this.appStateService.selectedSeason()?.id;
@@ -99,7 +127,6 @@ export class MatchDashboardComponent {
       .subscribe(matchId => {
         this.matchId = matchId!;
         this.updateMatch();
-        this.updatePlayerStatsForMatch();
       });
   }
 
@@ -110,12 +137,6 @@ export class MatchDashboardComponent {
   private updateMatch(): void {
     this.matchService.getMatchById(this.leagueId!, this.seasonId!, this.matchId!).subscribe(match => {
       this.appStateService.selectedMatch.set(match);
-    });
-  }
-
-  private updatePlayerStatsForMatch(): void {
-    this.matchService.getPlayerStatsByMatchId(this.leagueId!, this.seasonId!, this.matchId!).subscribe(playerStats => {
-      this.playerMatchStats = playerStats;
     });
   }
 }

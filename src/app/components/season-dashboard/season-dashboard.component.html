@@ -5,7 +5,9 @@
         <h3>
             Overall Statistics
         </h3>
-        <app-player-stats-table></app-player-stats-table>
+        <app-player-stats-table
+            [displayedColumns]="['playerId', 'eagles', 'birdies', 'pars', 'bogeys', 'doublePars', 'fairwaysHit', 'grossPoints', 'netPoints', 'wins', 'losses']"
+            [defaultSortColumn]="'netPoints'" [defaultSortDirection]="'desc'"></app-player-stats-table>
         }
         <router-outlet></router-outlet>
     </div>

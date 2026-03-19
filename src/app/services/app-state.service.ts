@@ -2,6 +2,7 @@ import { computed, effect, Injectable, signal } from '@angular/core';
 import { League } from '../models/league.model';
 import { MatchMatchup } from '../models/match-matchup.model';
 import { Match } from '../models/match.model';
+import { PlayerMatchStats } from '../models/player-match-stats.model';
 import { PlayerStats } from '../models/player-stats';
 import { Player } from '../models/player.model';
 import { Season } from '../models/season.model';
@@ -25,7 +26,7 @@ export class AppStateService {
     selectedMatch = signal<Match | null>(null);
     seasonMatches = signal<Match[]>([]);
     playerStats = signal<PlayerStats[]>([]);
-    playerMatchStats = signal<{ [key: string]: PlayerStats[] }>({});
+    playerMatchStats = signal<PlayerMatchStats[]>([]);
     playerSeasonStats = signal<PlayerStats[]>([]);
     cumulativeMatchPlayerStats = signal<PlayerStats[]>([]);
     matchMatchups = signal<MatchMatchup[]>([]);

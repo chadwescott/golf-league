@@ -61,23 +61,6 @@ export class AppDataService {
         });
 
         effect(() => {
-            const results: { [key: string]: PlayerStats[] } = {};
-            const playerSeasonStats = this.appStateService.playerSeasonStats();
-
-            if (playerSeasonStats.length === 0) {
-                this.appStateService.playerMatchStats.set({});
-                return;
-            }
-
-            this.appStateService.seasonMatches().forEach(match => {
-                const matchPlayerStats = playerSeasonStats.find(ps => ps.leagueEventId === match.id);
-                results[match.id] = matchPlayerStats ? [matchPlayerStats] : [];
-            });
-
-            this.appStateService.playerMatchStats.set(results);
-        });
-
-        effect(() => {
             const match = this.appStateService.selectedMatch();
 
             if (!match) {
@@ -90,6 +73,10 @@ export class AppDataService {
                     matchMatchups.forEach(m => m.teams.sort((a, b) => a.result && b.result ? b.result?.localeCompare(a.result) : 0));
                     this.appStateService.matchMatchups.set(matchMatchups);
                 });
+
+            this.matchService.getPlayerStatsByMatchId(this.appStateService.selectedLeague()!.id, this.appStateService.selectedSeason()!.id, match.id).subscribe(playerStats => {
+                this.appStateService.playerMatchStats.set(playerStats);
+            });
         });
     }
 }
