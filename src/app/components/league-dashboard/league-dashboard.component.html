@@ -1,14 +1,1 @@
-<div class="banner">
-    <h1>
-        @if (appStateService.selectedSeason()) {
-        {{ appStateService.selectedSeason()?.name }} {{ appStateService.selectedSeason()?.year }}
-        }
-        {{ appStateService.selectedLeague()?.name }}
-    </h1>
-    <!-- <button icon><span class="material-symbols-outlined">menu</span></button> -->
-</div>
-<div class="body">
-    <div class="wrapper">
-        <router-outlet></router-outlet>
-    </div>
-</div>
+<router-outlet></router-outlet>

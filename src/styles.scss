@@ -61,25 +61,6 @@ hr {
     margin: 1.25rem 0;
 }
 
-.banner {
-    position: sticky;
-    top: 0;
-    z-index: 10;
-    background-color: var(--banner-color);
-    color: white;
-    padding: .5em 2em;
-    text-shadow: black .125em .125em 0;
-
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    box-shadow: 0 0 4px 4px rgb(0 0 0 / 0.25), 0 0 2px 1px rgb(0 0 0 / 0.5);
-}
-
-.body {
-    margin: 1em 2em;
-}
-
 li {
     margin-top: .25em;
     margin-bottom: .25em;
@@ -131,5 +112,4 @@ mat-select {
     flex-direction: row;
     justify-content: space-between;
     max-width: 100%;
-    overflow-x: auto;
 }

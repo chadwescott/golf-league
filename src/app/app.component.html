@@ -1,1 +1,49 @@
-<router-outlet />
+<mat-toolbar>
+    <button mat-icon-button [matMenuTriggerFor]="menu" class="example-icon">
+        <mat-icon>menu</mat-icon>
+    </button>
+    <div class="app-title">
+        <mat-icon>sports_golf</mat-icon>
+        <h1 class="title">
+            @if (appStateService.selectedLeague()) {
+            @if (appStateService.selectedSeason()) {
+            {{ appStateService.selectedSeason()?.name }} {{ appStateService.selectedSeason()?.year }}
+            }
+            {{ appStateService.selectedLeague()?.name }}
+            } @else {
+            Golf League Manager
+            }
+        </h1>
+    </div>
+</mat-toolbar>
+
+<mat-menu #menu="matMenu">
+    @if (!!appStateService.selectedLeague() && !!appStateService.selectedSeason()) {
+    <button mat-menu-item [routerLink]="seasonRoute()">
+        <mat-icon>home</mat-icon>
+        <span>{{ this.appStateService.selectedSeason()?.year }} Season Dashboard</span>
+    </button>
+    <button mat-menu-item [matMenuTriggerFor]="matchMenu">
+        <mat-icon>event</mat-icon>
+        <span>Select Match</span>
+    </button>
+    }
+</mat-menu>
+
+<mat-menu #matchMenu="matMenu">
+    @if (appStateService.seasonMatches().length === 0) {
+    <button mat-menu-item disabled>
+        <span>No matches available</span>
+    </button>
+    } @else {
+    @for (match of appStateService.seasonMatches(); track match.id) {
+    <button mat-menu-item [routerLink]="getMatchRoute(match.id)">
+        <span>{{ match.name }} - {{ match.date | date:'shortDate' }}</span>
+    </button>
+    }
+    }
+</mat-menu>
+
+<div class="content">
+    <router-outlet />
+</div>
