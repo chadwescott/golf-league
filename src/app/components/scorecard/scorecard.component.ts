@@ -1,4 +1,4 @@
-import { DatePipe, NgClass } from '@angular/common';
+import { DatePipe, DecimalPipe, NgClass } from '@angular/common';
 import { Component, computed, inject, input, signal } from '@angular/core';
 import { RoundHoles } from '../../enums/round-holes.enum';
 import { Course } from '../../models/course.model';
@@ -10,7 +10,7 @@ import { PlayerService } from '../../services/player.service';
 
 @Component({
   selector: 'app-scorecard',
-  imports: [DatePipe, NgClass],
+  imports: [DatePipe, DecimalPipe, NgClass],
   templateUrl: './scorecard.component.html',
   styleUrls: ['./scorecard.component.scss'],
 })

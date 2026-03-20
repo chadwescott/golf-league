@@ -79,7 +79,7 @@
                     <div class="gross-score">{{ scores.totalScore }}</div>
                     @if (scores.handicap && scores.totalScore) {
                     <div class="net-score">({{ scores.totalScore -
-                        (scores.handicap) }})</div>
+                        (scores.handicap) | number:'1.0-2' }})</div>
                     }
                 </td>
                 <td>

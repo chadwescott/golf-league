@@ -104,7 +104,7 @@ export class PlayerMatchStatsTableComponent {
     }
 
     this.sortKey.set(key);
-    this.sortDirection.set('desc');
+    this.sortDirection.set(key === 'grossScore' || key === 'netScore' ? 'asc' : 'desc');
   }
 
   getSortIndicator(key: keyof PlayerMatchStats): string {

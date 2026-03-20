@@ -113,3 +113,9 @@ mat-select {
     justify-content: space-between;
     max-width: 100%;
 }
+
+.player {
+    font-size: 1.25em;
+    font-weight: bold;
+    font-family: var(--player-font-family);
+}

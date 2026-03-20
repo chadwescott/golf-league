@@ -15,14 +15,26 @@
 <hr />
 }
 
-<h3>Weekly Statistics</h3>
-<app-player-match-stats-table [displayedColumns]="displayedColumns()"></app-player-match-stats-table>
+<h3>Weekly Scores</h3>
+@if (hasHandicap()) {
+<app-player-match-stats-table [displayedColumns]="['playerId', 'grossScore', 'handicap', 'netScore' ]"
+    [defaultSortColumn]="'netScore'" [defaultSortDirection]="'asc'"></app-player-match-stats-table>
+} @else {
+<app-player-match-stats-table [displayedColumns]="['playerId', 'grossScore' ]" [defaultSortColumn]="'grossScore'"
+    [defaultSortDirection]="'asc'"></app-player-match-stats-table>
+}
 <hr />
 
-<h3>Skins</h3>
+<h3>Weekly Points</h3>
+@if (hasHandicap()) {
 <app-player-match-stats-table
-    [displayedColumns]="['playerId', 'grossSkins', 'netSkins', 'grossSkinAmount', 'netSkinAmount']"
-    [defaultSortColumn]="'netSkinAmount'"></app-player-match-stats-table>
+    [displayedColumns]="['playerId', 'eagles', 'birdies', 'pars', 'bogeys', 'others', 'doublePars', 'fairwaysHit', 'grossPoints', 'netPoints' ]"
+    [defaultSortColumn]="'netPoints'"></app-player-match-stats-table>
+} @else {
+<app-player-match-stats-table
+    [displayedColumns]="['playerId', 'eagles', 'birdies', 'pars', 'bogeys', 'others', 'doublePars', 'fairwaysHit', 'grossPoints' ]"
+    [defaultSortColumn]="'grossPoints'"></app-player-match-stats-table>
+}
 <hr />
 
 @if (appStateService.selectedMatch()?.matchType === matchTypes.StrokePlay) {
@@ -32,9 +44,25 @@
 <hr />
 }
 
-<h3>Overall Statistics</h3>
+<h3>Skins</h3>
+<app-player-match-stats-table
+    [displayedColumns]="['playerId', 'grossSkins', 'netSkins', 'grossSkinAmount', 'netSkinAmount']"
+    [defaultSortColumn]="'netSkinAmount'"></app-player-match-stats-table>
+<hr />
+
+<h3>Overall Points Standings</h3>
 <app-player-stats-table
-    [displayedColumns]="['playerId', 'eagles', 'birdies', 'pars', 'bogeys', 'doublePars', 'fairwaysHit', 'grossPoints', 'netPoints', 'grossSkins', 'netSkins', 'grossSkinAmount', 'netSkinAmount']"></app-player-stats-table>
+    [displayedColumns]="['playerId', 'eagles', 'birdies', 'pars', 'bogeys', 'doublePars', 'fairwaysHit', 'grossPoints', 'netPoints']"></app-player-stats-table>
+<hr />
+
+<h3>Overall Versus Standings</h3>
+<app-player-stats-table [displayedColumns]="['playerId', 'wins', 'losses']" ,
+    [defaultSortColumn]="'wins'"></app-player-stats-table>
+<hr />
+
+<h3>Overall Skins Standings</h3>
+<app-player-stats-table [displayedColumns]="['playerId', 'grossSkins', 'netSkins', 'grossSkinAmount', 'netSkinAmount']"
+    [defaultSortColumn]="'netSkinAmount'"></app-player-stats-table>
 <hr />
 
 @if (scorecard() && playerScores()) {

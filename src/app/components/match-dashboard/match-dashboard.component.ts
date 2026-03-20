@@ -8,7 +8,6 @@ import { MatchService } from '../../services/match.service';
 
 import { DatePipe } from '@angular/common';
 import { MatchTypes } from '../../enums/match-types.enum';
-import { PlayerMatchStats } from '../../models/player-match-stats.model';
 import { AppStateService } from '../../services/app-state.service';
 import { PlayerScoresService } from '../../services/player-score.service';
 import { ScorecardService } from '../../services/scorecard.service';
@@ -43,36 +42,9 @@ export class MatchDashboardComponent {
 
   readonly appStateService = inject(AppStateService);
 
-  displayedColumns = computed(() => {
-    const results = [
-      'playerId',
-      'grossScore',
-      'eagles',
-      'birdies',
-      'pars',
-      'bogeys',
-      'others',
-      'doublePars',
-      'fairwaysHit',
-      'grossPoints',
-      'netPoints'
-    ] as (keyof PlayerMatchStats)[];
-
+  hasHandicap = computed(() => {
     const playerMatchStats = this.appStateService.playerMatchStats();
-    if (playerMatchStats.length === 0) {
-      return results;
-    }
-    const showHandicap = playerMatchStats.some(stats => stats.handicap !== undefined && stats.handicap !== null);
-
-    if (showHandicap) {
-      results.splice(2, 0, 'handicap', 'netScore');
-    }
-
-    if (this.appStateService.selectedMatch()?.matchType === MatchTypes.StrokePlay) {
-      results.push('result');
-    }
-
-    return results;
+    return playerMatchStats.some(stats => stats.handicap !== undefined && stats.handicap !== null);
   });
 
   matchTypes = MatchTypes;

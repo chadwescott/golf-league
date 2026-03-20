@@ -14,7 +14,6 @@
         </h3>
         <app-player-stats-table [displayedColumns]="['playerId', 'wins', 'losses']" [defaultSortColumn]="'wins'"
             [defaultSortDirection]="'desc'"></app-player-stats-table>
-        }
         <hr />
         <h3>
             Skins Standings
@@ -22,6 +21,7 @@
         <app-player-stats-table
             [displayedColumns]="['playerId', 'grossSkins', 'netSkins', 'grossSkinAmount', 'netSkinAmount']"
             [defaultSortColumn]="'netSkinAmount'" [defaultSortDirection]="'desc'"></app-player-stats-table>
+        }
         <router-outlet></router-outlet>
     </div>
 </div>
