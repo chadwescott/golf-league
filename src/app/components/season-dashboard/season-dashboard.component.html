@@ -3,12 +3,25 @@
     <div>
         @if (!appStateService.selectedMatch()) {
         <h3>
-            Overall Statistics
+            Point Standings
         </h3>
         <app-player-stats-table
-            [displayedColumns]="['playerId', 'eagles', 'birdies', 'pars', 'bogeys', 'doublePars', 'fairwaysHit', 'grossPoints', 'netPoints', 'grossSkins', 'netSkins', 'grossSkinAmount', 'netSkinAmount', 'wins', 'losses']"
+            [displayedColumns]="['playerId', 'eagles', 'birdies', 'pars', 'bogeys', 'doublePars', 'fairwaysHit', 'grossPoints', 'netPoints']"
             [defaultSortColumn]="'netPoints'" [defaultSortDirection]="'desc'"></app-player-stats-table>
+        <hr />
+        <h3>
+            Versus Standings
+        </h3>
+        <app-player-stats-table [displayedColumns]="['playerId', 'wins', 'losses']" [defaultSortColumn]="'wins'"
+            [defaultSortDirection]="'desc'"></app-player-stats-table>
         }
+        <hr />
+        <h3>
+            Skins Standings
+        </h3>
+        <app-player-stats-table
+            [displayedColumns]="['playerId', 'grossSkins', 'netSkins', 'grossSkinAmount', 'netSkinAmount']"
+            [defaultSortColumn]="'netSkinAmount'" [defaultSortDirection]="'desc'"></app-player-stats-table>
         <router-outlet></router-outlet>
     </div>
 </div>
