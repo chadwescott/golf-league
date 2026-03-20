@@ -79,10 +79,15 @@ export class SeasonService {
             );
     }
 
-    getSeasonById(leagueId: string, seasonId: string): Observable<Season | undefined> {
+    getSeasonById(leagueId: string, seasonId: string): Observable<Season | null> {
         const cachedSeason = this.seasonCache.find(season => season.id === seasonId);
         if (cachedSeason) {
+            this.appStateService.selectedSeason.set(cachedSeason);
             return of(cachedSeason);
+        }
+
+        if (this.appStateService.selectedSeason()?.id === seasonId) {
+            return of(this.appStateService.selectedSeason()!);
         }
 
         return runInInjectionContext(this.environmentInjector, () => {
@@ -95,9 +100,10 @@ export class SeasonService {
                         const season = snap.data();
                         this.seasonCache.push(season);
                         this.appStateService.saveDataToStorage(this.seasonKey, this.seasonCache);
+                        this.appStateService.selectedSeason.set(season);
                         return season;
                     } else {
-                        return undefined;
+                        return null;
                     }
                 })
             );

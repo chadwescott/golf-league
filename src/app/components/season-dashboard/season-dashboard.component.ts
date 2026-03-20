@@ -1,16 +1,16 @@
-import { Component, computed, inject } from '@angular/core';
+import { Component, computed, DestroyRef, inject } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router, RouterOutlet } from '@angular/router';
+import { map } from 'rxjs/operators';
 import { Paths, RouteParams } from '../../app.routes';
+import { Season } from '../../models/season.model';
 import { AppStateService } from '../../services/app-state.service';
-import { SeasonService } from '../../services/season.service';
-import { MatchListComponent } from '../match-list/match-list.component';
 import { PlayerStatsTableComponent } from '../player-stats-table/player-stats-table.component';
 
 @Component({
   selector: 'app-season-dashboard',
   imports: [
     RouterOutlet,
-    MatchListComponent,
     PlayerStatsTableComponent
   ],
   templateUrl: './season-dashboard.component.html',
@@ -19,7 +19,7 @@ import { PlayerStatsTableComponent } from '../player-stats-table/player-stats-ta
 export class SeasonDashboardComponent {
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
-  private readonly seasonService = inject(SeasonService);
+  private readonly destroyRef = inject(DestroyRef);
 
   readonly appStateService = inject(AppStateService);
 
@@ -44,28 +44,24 @@ export class SeasonDashboardComponent {
   });
 
   ngOnInit(): void {
-    this.leagueId = this.appStateService.selectedLeague()?.id;
-    this.seasonId = this.route.snapshot.params[RouteParams.seasonId];
+    this.route.data.pipe(
+      takeUntilDestroyed(this.destroyRef),
+      map(data => (data['season'] as Season | null) ?? null)
+    ).subscribe(season => {
+      this.leagueId = this.route.parent?.snapshot.paramMap.get(RouteParams.leagueId) ?? undefined;
+      this.seasonId = season?.id;
 
-    if (!this.leagueId || !this.seasonId) {
-      this.appStateService.selectedSeason.set(null);
-      this.router.navigate(['..'], { relativeTo: this.route });
-      return;
-    }
-
-    this.seasonService.getSeasonById(this.leagueId, this.seasonId).subscribe(season => {
-      if (season) {
-        this.appStateService.selectedSeason.set(season);
+      if (!this.leagueId || !season) {
+        this.appStateService.selectedSeason.set(null);
+        this.router.navigate(['..'], { relativeTo: this.route });
         return;
       }
 
-      this.router.navigate(['..'], { relativeTo: this.route });
+      this.appStateService.selectedSeason.set(season);
     });
   }
 
   goBackToSeason(): void {
-    // this.appStateService.selectedMatch.set(null);
-
     const leagueId = this.appStateService.selectedLeague()?.id ?? this.leagueId;
     const seasonId = this.appStateService.selectedSeason()?.id ?? this.seasonId;
 

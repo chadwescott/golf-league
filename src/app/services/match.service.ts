@@ -1,4 +1,4 @@
-import { EnvironmentInjector, inject, Injectable, runInInjectionContext } from '@angular/core';
+import { EnvironmentInjector, inject, Injectable, NgZone, runInInjectionContext } from '@angular/core';
 import { from, map, Observable, of, tap } from 'rxjs';
 
 
@@ -15,8 +15,15 @@ export class MatchService {
     private readonly appStateService = inject(AppStateService);
     private readonly environmentInjector = inject(EnvironmentInjector);
     private readonly firestore = inject(Firestore);
+    private readonly ngZone = inject(NgZone);
     private matchCache: Match[] = [];
-    private readonly matchKey = 'match';
+    private readonly matchKey = 'matches';
+
+    private setSelectedMatch(match: Match): void {
+        this.ngZone.run(() => {
+            this.appStateService.selectedMatch.set(match);
+        });
+    }
 
     readonly matchConverter: FirestoreDataConverter<Match> = {
         toFirestore(match: Match) {
@@ -83,9 +90,17 @@ export class MatchService {
     }
 
     getMatchById(leagueId: string, seasonId: string, matchId: string): Observable<Match | null> {
+        console.log('get match by id');
         const cachedMatch = this.matchCache.find(event => event.id === matchId);
         if (cachedMatch) {
+            console.log(`Match found in cache: ${cachedMatch.id}`);
+            this.setSelectedMatch(cachedMatch);
             return of(cachedMatch);
+        }
+
+        if (this.appStateService.selectedMatch()?.id === matchId) {
+            console.log(`Match found in app state: ${this.appStateService.selectedMatch()?.id}`);
+            return of(this.appStateService.selectedMatch()!);
         }
 
         return runInInjectionContext(this.environmentInjector, () => {
@@ -95,10 +110,11 @@ export class MatchService {
             return from(getDoc(eventRef)).pipe(
                 map(snap => {
                     if (snap.exists()) {
-                        const event = snap.data();
-                        this.matchCache.push(event);
+                        const match = snap.data();
+                        this.matchCache.push(match);
                         this.appStateService.saveDataToStorage(this.matchKey, this.matchCache);
-                        return event;
+                        this.setSelectedMatch(match);
+                        return match;
                     } else {
                         return null;
                     }

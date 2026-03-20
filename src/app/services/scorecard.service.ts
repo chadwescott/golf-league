@@ -37,7 +37,7 @@ export class ScorecardService {
         },
     };
 
-    getScorecardById(scorecardId: string): Observable<Scorecard | undefined> {
+    getScorecardById(scorecardId: string): Observable<Scorecard | null> {
         const cachedScorecard = this.scorecardCache.find(scorecard => scorecard.id === scorecardId);
         if (cachedScorecard) {
             console.log(`Scorecard found in cache: ${cachedScorecard.id}`);
@@ -54,7 +54,7 @@ export class ScorecardService {
                         this.appStateService.saveDataToStorage(this.scorecardKey, this.scorecardCache);
                         return scorecard;
                     } else {
-                        return undefined;
+                        return null;
                     }
                 }))
         });

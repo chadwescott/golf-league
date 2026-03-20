@@ -1,4 +1,4 @@
-@if (appStateService.selectedMatch()) {
+@if (!!appStateService.selectedMatch()) {
 <h2 class="section-header">{{ appStateService.selectedMatch()?.name }} - {{ appStateService.selectedMatch()?.date |
     date:'M/d/y' }}
 </h2>
@@ -56,7 +56,7 @@
 <hr />
 
 <h3>Overall Versus Standings</h3>
-<app-player-stats-table [displayedColumns]="['playerId', 'wins', 'losses']" ,
+<app-player-stats-table [displayedColumns]="['playerId', 'wins', 'losses']"
     [defaultSortColumn]="'wins'"></app-player-stats-table>
 <hr />
 
@@ -65,8 +65,9 @@
     [defaultSortColumn]="'netSkinAmount'"></app-player-stats-table>
 <hr />
 
-@if (scorecard() && playerScores()) {
+@if (!!appStateService.selectedScorecard() && !!appStateService.playerScores()) {
 <h3>Scorecard</h3>
-<app-scorecard [scorecard]="scorecard()!" [playerScores]="playerScores()!"></app-scorecard>
+<app-scorecard [scorecard]="appStateService.selectedScorecard()!"
+    [playerScores]="appStateService.playerScores()!"></app-scorecard>
 }
 }

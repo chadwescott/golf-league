@@ -50,10 +50,15 @@ export class LeagueService {
         return leagues.sort((a, b) => a.name.localeCompare(b.name));
     }
 
-    getLeagueById(leagueId: string): Observable<League | undefined> {
+    getLeagueById(leagueId: string): Observable<League | null> {
         const cachedLeague = this.leagueCache.find(league => league.id === leagueId);
         if (cachedLeague) {
+            this.appStateService.selectedLeague.set(cachedLeague);
             return of(cachedLeague);
+        }
+
+        if (this.appStateService.selectedLeague()?.id === leagueId) {
+            return of(this.appStateService.selectedLeague()!);
         }
 
         return runInInjectionContext(this.environmentInjector, () => {
@@ -66,9 +71,10 @@ export class LeagueService {
                         const league = snap.data();
                         this.leagueCache.push(league);
                         this.appStateService.saveDataToStorage(this.leagueKey, this.leagueCache);
+                        this.appStateService.selectedLeague.set(league);
                         return league;
                     } else {
-                        return undefined;
+                        return null;
                     }
                 })
             );

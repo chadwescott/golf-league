@@ -5,6 +5,9 @@ import { MatchDashboardComponent } from './components/match-dashboard/match-dash
 import { PlayerListComponent } from './components/player-list/player-list.component';
 import { SeasonDashboardComponent } from './components/season-dashboard/season-dashboard.component';
 import { SeasonListComponent } from './components/season-list/season-list.component';
+import { leagueResolver } from './resolvers/league.resolver';
+import { matchResolver } from './resolvers/match.resolver';
+import { seasonResolver } from './resolvers/season.resolver';
 
 export const Paths = {
     leagues: 'leagues',
@@ -27,7 +30,7 @@ export const routes: Routes = [
     { path: Paths.players, component: PlayerListComponent },
     { path: Paths.leagues, component: LeagueListComponent },
     {
-        path: `${Paths.leagues}/:${RouteParams.leagueId}`, component: LeagueDashboardComponent,
+        path: `${Paths.leagues}/:${RouteParams.leagueId}`, component: LeagueDashboardComponent, resolve: { league: leagueResolver },
         children: [
             {
                 path: '', redirectTo: Paths.seasons, pathMatch: 'full',
@@ -36,9 +39,9 @@ export const routes: Routes = [
                 path: `${Paths.seasons}`, component: SeasonListComponent,
             },
             {
-                path: `${Paths.seasons}/:${RouteParams.seasonId}`, component: SeasonDashboardComponent,
+                path: `${Paths.seasons}/:${RouteParams.seasonId}`, component: SeasonDashboardComponent, resolve: { season: seasonResolver },
                 children: [
-                    { path: `${Paths.matches}/:${RouteParams.matchId}`, component: MatchDashboardComponent },
+                    { path: `${Paths.matches}/:${RouteParams.matchId}`, component: MatchDashboardComponent, resolve: { match: matchResolver } },
                 ]
             }
         ]

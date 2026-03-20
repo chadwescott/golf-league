@@ -1,8 +1,10 @@
-import { Component, inject } from '@angular/core';
+import { Component, DestroyRef, inject } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router, RouterOutlet } from '@angular/router';
-import { Paths, RouteParams } from '../../app.routes';
+import { map } from 'rxjs/operators';
+import { Paths } from '../../app.routes';
+import { League } from '../../models/league.model';
 import { AppStateService } from '../../services/app-state.service';
-import { LeagueService } from '../../services/league.service';
 
 @Component({
   selector: 'app-league-dashboard',
@@ -13,19 +15,15 @@ import { LeagueService } from '../../services/league.service';
 export class LeagueDashboardComponent {
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
-  private readonly leagueService = inject(LeagueService);
+  private readonly destroyRef = inject(DestroyRef);
 
   readonly appStateService = inject(AppStateService);
 
   ngOnInit(): void {
-    const leagueId = this.route.snapshot.params[RouteParams.leagueId];
-
-    if (!leagueId) {
-      this.appStateService.selectedLeague.set(null);
-      this.router.navigate(['/', Paths.leagues]);
-    }
-
-    this.leagueService.getLeagueById(leagueId).subscribe(league => {
+    this.route.data.pipe(
+      takeUntilDestroyed(this.destroyRef),
+      map(data => (data['league'] as League | null) ?? null)
+    ).subscribe(league => {
       if (league) {
         this.appStateService.selectedLeague.set(league);
         return;

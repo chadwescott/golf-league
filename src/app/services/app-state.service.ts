@@ -3,8 +3,10 @@ import { League } from '../models/league.model';
 import { MatchMatchup } from '../models/match-matchup.model';
 import { Match } from '../models/match.model';
 import { PlayerMatchStats } from '../models/player-match-stats.model';
+import { PlayerScores } from '../models/player-scores.model';
 import { PlayerStats } from '../models/player-stats';
 import { Player } from '../models/player.model';
+import { Scorecard } from '../models/scorecard.model';
 import { Season } from '../models/season.model';
 
 @Injectable({
@@ -24,6 +26,8 @@ export class AppStateService {
     selectedLeague = signal<League | null>(null);
     selectedSeason = signal<Season | null>(null);
     selectedMatch = signal<Match | null>(null);
+    selectedScorecard = signal<Scorecard | null>(null);
+    playerScores = signal<PlayerScores[]>([]);
     seasonMatches = signal<Match[]>([]);
     playerStats = signal<PlayerStats[]>([]);
     playerMatchStats = signal<PlayerMatchStats[]>([]);
@@ -33,8 +37,10 @@ export class AppStateService {
 
     private readonly selectedLeagueKey = 'selectedLeague';
     private readonly selectedSeasonKey = 'selectedSeason';
+    private readonly selectedMatchKey = 'selectedMatch';
 
     constructor() {
+        console.log('AppStateService initialized');
         effect(() => {
             const selectedLeague = this.selectedLeague();
             this.saveOrDeleteDataInStorage(this.selectedLeagueKey, selectedLeague);
@@ -47,6 +53,7 @@ export class AppStateService {
 
         effect(() => {
             const selectedMatch = this.selectedMatch();
+            this.saveOrDeleteDataInStorage(this.selectedMatchKey, selectedMatch);
         });
 
         const storedLeague = this.loadDataFromStorage<League>(this.selectedLeagueKey);

@@ -31,7 +31,7 @@ export class PlayerScoresService {
         },
     };
 
-    getPlayerScoresByScorecardId(scorecardId: string): Observable<PlayerScores[] | undefined> {
+    getPlayerScoresByScorecardId(scorecardId: string): Observable<PlayerScores[]> {
         return runInInjectionContext(this.environmentInjector, () => {
             const playerScoresRef = collection(this.firestore, `${FirestorePaths.scorecards}/${scorecardId}/${FirestorePaths.playerScores}`)
                 .withConverter(this.playerScoresConverter);

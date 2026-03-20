@@ -1,29 +1,35 @@
-<div class="matches">
-    @for (matchup of appStateService.matchMatchups(); track matchup.id; let i = $index) {
-    <div class="matchup">
-        @for (team of matchup.teams; track team.playerIds; let j = $index) {
-        <div class="team">
-            @for (playerId of team.playerIds; track playerId) {
-            <div>
-                <span class="player">{{ players[playerId]?.firstName }} {{ players[playerId]?.lastName }}</span>
-            </div>
-            }
-            @if (team.totalScore != null) {
-            <div>
-                <span class="total-score">{{ team.totalScore }}</span>
-                @if(team.totalScore != null && team.handicap != null) {
-                <span class="net-score"> ({{ team.totalScore - team.handicap }})</span>
+<table class="results-table">
+    <tbody>
+        @for (matchup of appStateService.matchMatchups(); track matchup.id; let i = $index) {
+        <tr>
+            @for (team of matchup.teams; track team.playerIds; let j = $index) {
+            <td class="team">
+                @for (playerId of team.playerIds; track playerId) {
+                <div>
+                    <span class="player">{{ players[playerId]?.firstName }} {{ players[playerId]?.lastName }}</span>
+                </div>
                 }
-            </div>
-            }
-        </div>
-        @if ((j < matchup.teams.length - 1) && team.result===resultType.Win) { <div class="def">def
-    </div>
-    }
-    @if (matchup.teams.length === 1 && team.result) {
-    <div class="result">({{ team.result }})</div>
-    }
-    }
-</div>
-}
-</div>
+                @if (team.totalScore != null) {
+                <div>
+                    <span class="total-score">{{ team.totalScore }}</span>
+                    @if(team.totalScore != null && team.handicap != null) {
+                    <span class="net-score"> ({{ team.totalScore - team.handicap }})</span>
+                    }
+                </div>
+                }
+            </td>
+            @if ((j < matchup.teams.length - 1) && team.result===resultType.Win) { <td class="def">def
+                </td>
+                }
+                @if (matchup.teams.length === 1) {
+                <td></td>
+                @if (team.result) {
+                <td class="win-loss">({{ team.result }})</td>
+                } @else {
+                <td></td>
+                }
+                }
+                }
+                }
+    </tbody>
+</table>
