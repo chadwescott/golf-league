@@ -28,11 +28,11 @@
 <h3>Weekly Points</h3>
 @if (hasHandicap()) {
 <app-player-match-stats-table
-    [displayedColumns]="['playerId', 'eagles', 'birdies', 'pars', 'bogeys', 'others', 'doublePars', 'fairwaysHit', 'grossPoints', 'netPoints' ]"
+    [displayedColumns]="['playerId', 'eagles', 'birdies', 'pars', 'bogeys', 'doublePars', 'fairwaysHit', 'grossPoints', 'netPoints' ]"
     [defaultSortColumn]="'netPoints'"></app-player-match-stats-table>
 } @else {
 <app-player-match-stats-table
-    [displayedColumns]="['playerId', 'eagles', 'birdies', 'pars', 'bogeys', 'others', 'doublePars', 'fairwaysHit', 'grossPoints' ]"
+    [displayedColumns]="['playerId', 'eagles', 'birdies', 'pars', 'bogeys', 'doublePars', 'fairwaysHit', 'grossPoints' ]"
     [defaultSortColumn]="'grossPoints'"></app-player-match-stats-table>
 }
 <hr />
@@ -53,11 +53,6 @@
 <h3>Overall Points Standings</h3>
 <app-player-stats-table
     [displayedColumns]="['playerId', 'eagles', 'birdies', 'pars', 'bogeys', 'doublePars', 'fairwaysHit', 'grossPoints', 'netPoints']"></app-player-stats-table>
-<hr />
-
-<h3>Overall Versus Standings</h3>
-<app-player-stats-table [displayedColumns]="['playerId', 'wins', 'losses']"
-    [defaultSortColumn]="'wins'"></app-player-stats-table>
 <hr />
 
 <h3>Overall Skins Standings</h3>
