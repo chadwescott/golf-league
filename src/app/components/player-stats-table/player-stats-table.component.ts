@@ -35,13 +35,11 @@ const ALL_COLUMNS: PlayerStatsColumn[] = [
   styleUrl: './player-stats-table.component.scss',
 })
 export class PlayerStatsTableComponent {
-  readonly appService = inject(AppStateService);
+  readonly appStateService = inject(AppStateService);
 
   displayedColumns = input<PlayerStatsColumnKey[]>([]);
   defaultSortColumn = input<keyof PlayerStats>('netPoints');
   defaultSortDirection = input<'asc' | 'desc'>('desc');
-
-  players = this.appService.playerMap();
 
   readonly columns = computed<PlayerStatsColumn[]>(() => {
     const keys = this.displayedColumns();
@@ -71,14 +69,14 @@ export class PlayerStatsTableComponent {
     const direction = this.sortDirection();
     const modifier = direction === 'asc' ? 1 : -1;
 
-    return [...this.appService.playerSeasonStats()].sort((a, b) => {
+    return [...this.appStateService.playerSeasonStats()].sort((a, b) => {
       let left: string | number | Date | null = a[key];
       let right: string | number | Date | null = b[key];
 
-      const playerA = this.players[a[key]];
-      const playerB = this.players[b[key]];
-
       if (key === 'playerId') {
+        const playerA = this.appStateService.playerMap()[a[key]];
+        const playerB = this.appStateService.playerMap()[b[key]];
+
         left = playerA ? `${playerA.lastName} ${playerA.firstName}` : '';
         right = playerB ? `${playerB.lastName} ${playerB.firstName}` : '';
       }
@@ -138,7 +136,7 @@ export class PlayerStatsTableComponent {
 
   getColumnValue(stats: PlayerStats, key: PlayerStatsColumnKey): string | number {
     if (key === 'playerId') {
-      const player = this.players[stats.playerId];
+      const player = this.appStateService.playerMap()[stats.playerId];
       return player ? `${player.firstName} ${player.lastName}` : '';
     }
 

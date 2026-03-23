@@ -2,7 +2,7 @@ import { Component, computed, DestroyRef, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router, RouterOutlet } from '@angular/router';
 import { map } from 'rxjs/operators';
-import { Paths, RouteParams } from '../../app.routes';
+import { RouteParams } from '../../app.routes';
 import { Season } from '../../models/season.model';
 import { AppStateService } from '../../services/app-state.service';
 import { PlayerStatsTableComponent } from '../player-stats-table/player-stats-table.component';
@@ -44,6 +44,7 @@ export class SeasonDashboardComponent {
   });
 
   ngOnInit(): void {
+    console.log(this.appStateService.selectedSeason());
     this.route.data.pipe(
       takeUntilDestroyed(this.destroyRef),
       map(data => (data['season'] as Season | null) ?? null)
@@ -59,17 +60,5 @@ export class SeasonDashboardComponent {
 
       this.appStateService.selectedSeason.set(season);
     });
-  }
-
-  goBackToSeason(): void {
-    const leagueId = this.appStateService.selectedLeague()?.id ?? this.leagueId;
-    const seasonId = this.appStateService.selectedSeason()?.id ?? this.seasonId;
-
-    if (!leagueId || !seasonId) {
-      this.router.navigate(['..'], { relativeTo: this.route });
-      return;
-    }
-
-    this.router.navigate(['/', Paths.leagues, leagueId, Paths.seasons, seasonId]);
   }
 }

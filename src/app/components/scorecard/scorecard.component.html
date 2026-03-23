@@ -28,16 +28,32 @@
             </tr>
             <tr>
                 <th>Handicap</th>
-                @for(hole of scorecard().holes; track hole.holeNumber) {
+                @for(hole of scorecard().holes; track hole.holeNumber; let i = $index) {
                 <th>{{ hole.handicap }}</th>
+                @if (scorecard().roundHoles === roundHoles.All) {
+                @if (i === 8) {
+                <th></th>
+                }
+                @if (i === 17) {
+                <th></th>
+                }
+                }
                 }
                 <th></th>
                 <th></th>
             </tr>
             <tr>
                 <th>Par</th>
-                @for(hole of scorecard().holes; track hole.holeNumber) {
+                @for(hole of scorecard().holes; track hole.holeNumber; let i = $index) {
                 <th>{{ hole.par }}</th>
+                @if (scorecard().roundHoles === roundHoles.All) {
+                @if (i === 8) {
+                <th></th>
+                }
+                @if (i === 17) {
+                <th></th>
+                }
+                }
                 }
                 <th>{{ totalPar }}</th>
                 <th></th>
@@ -54,7 +70,7 @@
                     <div class="handicap">Handicap: {{scores.handicap}}</div>
                     }
                 </td>
-                @for (holeScore of scores.holeScores; track holeScore.holeNumber) {
+                @for (holeScore of scores.holeScores; track holeScore.holeNumber; let i = $index) {
                 <td>
                     <div class="symbol"
                         [ngClass]="{ fairway: holeScore.fairwayHit, 'gross-skin': holeScore.grossSkin && scorecard().skinAmount, 'net-skin': holeScore.netSkin && scorecard().skinAmount }">
@@ -74,6 +90,28 @@
                     <div class="net-hole-score">({{ holeScore.score - holeScore.strokes }})</div>
                     }
                 </td>
+                @if (scorecard().roundHoles === roundHoles.All) {
+                @if (i === 8) {
+                <td>
+                    <div class="gross-hole-score">
+                        {{ scores.grossOutScore }}
+                    </div>
+                    @if (scores.handicap && scores.netOutScore) {
+                    <div class="net-hole-score">({{ scores.netOutScore }})</div>
+                    }
+                </td>
+                }
+                @if (i === 17) {
+                <td>
+                    <div class="gross-hole-score">
+                        {{ scores.grossInScore }}
+                    </div>
+                    @if (scores.handicap && scores.netInScore) {
+                    <div class="net-hole-score">({{ scores.netInScore }})</div>
+                    }
+                </td>
+                }
+                }
                 }
                 <td>
                     <div class="gross-score">{{ scores.totalScore }}</div>

@@ -1,4 +1,4 @@
 <h2>Seasons</h2>
-@for (season of seasons; track season.id) {
+@for (season of appStateService.leagueSeasons(); track season.id) {
 <div (click)="selectSeason(season)">{{ season.year }}</div>
 }

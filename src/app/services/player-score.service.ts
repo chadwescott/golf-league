@@ -19,8 +19,8 @@ export class PlayerScoresService {
                 playerId: playerScores.playerId,
                 holeScores: playerScores.holeScores,
                 handicap: playerScores.handicap,
-                inScore: playerScores.inScore,
-                outScore: playerScores.outScore,
+                inScore: playerScores.netInScore,
+                outScore: playerScores.netOutScore,
                 totalScore: playerScores.totalScore,
                 grossPoints: playerScores.grossPoints,
                 netPoints: playerScores.netPoints

@@ -71,7 +71,6 @@ export class SeasonService {
         })
             .pipe(
                 map(seasons => this.sort(seasons)),
-                tap(seasons => console.log(seasons)),
                 tap(seasons => {
                     this.seasonCache = seasons;
                     this.appStateService.saveDataToStorage(this.seasonKey, this.seasonCache);
@@ -83,10 +82,12 @@ export class SeasonService {
         const cachedSeason = this.seasonCache.find(season => season.id === seasonId);
         if (cachedSeason) {
             this.appStateService.selectedSeason.set(cachedSeason);
+            console.log(cachedSeason);
             return of(cachedSeason);
         }
 
         if (this.appStateService.selectedSeason()?.id === seasonId) {
+            console.log(this.appStateService.selectedSeason());
             return of(this.appStateService.selectedSeason()!);
         }
 
@@ -98,6 +99,7 @@ export class SeasonService {
                 map(snap => {
                     if (snap.exists()) {
                         const season = snap.data();
+                        console.log(season);
                         this.seasonCache.push(season);
                         this.appStateService.saveDataToStorage(this.seasonKey, this.seasonCache);
                         this.appStateService.selectedSeason.set(season);

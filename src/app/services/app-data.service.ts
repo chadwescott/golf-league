@@ -1,7 +1,9 @@
 import { effect, inject, Injectable } from '@angular/core';
 
 
+import { forkJoin } from 'rxjs';
 import { PlayerStats } from '../models/player-stats';
+import { Player } from '../models/player.model';
 import { AppStateService } from './app-state.service';
 import { MatchMatchupService } from './match-matchup.service';
 import { MatchService } from './match.service';
@@ -23,7 +25,18 @@ export class AppDataService {
     private readonly playerScoresService = inject(PlayerScoresService);
 
     constructor() {
-        this.playerService.getPlayers().subscribe(players => this.appStateService.players.set(players));
+        effect(() => {
+            const leagueId = this.appStateService.selectedLeague()?.id;
+
+            if (!leagueId) {
+                this.appStateService.leagueSeasons.set([]);
+                return;
+            }
+
+            this.seasonService.getSeasonsByLeagueId(leagueId).subscribe(seasons => {
+                this.appStateService.leagueSeasons.set(seasons);
+            });
+        })
 
         effect(() => {
             const leagueId = this.appStateService.selectedLeague()?.id;
@@ -40,6 +53,10 @@ export class AppDataService {
             });
 
             this.matchService.getMatchesByLeagueIdAndSeasonId(leagueId, seasonId).subscribe(le => this.appStateService.seasonMatches.set(le));
+
+            this.playerService.getLeagueSeasonPlayers(leagueId, seasonId).subscribe(players => {
+                this.appStateService.leagueSeasonPlayers.set(players);
+            });
         });
 
         effect(() => {
@@ -101,6 +118,13 @@ export class AppDataService {
 
             this.playerScoresService.getPlayerScoresByScorecardId(scorecard.id).subscribe(playerScores => {
                 this.appStateService.playerScores.set(playerScores);
+            });
+        });
+
+        effect(() => {
+            forkJoin(this.appStateService.leagueSeasonPlayers().map(lsp => this.playerService.getPlayerById(lsp.playerId))).subscribe(players => {
+                console.log(players);
+                this.appStateService.players.set(players.filter(p => p !== null) as Player[]);
             });
         });
     }

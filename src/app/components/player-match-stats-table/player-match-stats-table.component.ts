@@ -42,9 +42,6 @@ export class PlayerMatchStatsTableComponent {
   defaultSortColumn = input<keyof PlayerMatchStats>('netPoints');
   defaultSortDirection = input<'asc' | 'desc'>('desc');
 
-  players = this.appStateService.playerMap();
-
-
   readonly columns = computed<PlayerMatchStatsColumn[]>(() => {
     const keys = this.displayedColumns();
 
@@ -78,8 +75,11 @@ export class PlayerMatchStatsTableComponent {
       let right: string | number | Date | null = b[key];
 
       if (key === 'playerId') {
-        left = this.players[a[key]] ? `${this.players[a[key]].lastName} ${this.players[a[key]].firstName}` : '';
-        right = this.players[b[key]] ? `${this.players[b[key]].lastName} ${this.players[b[key]].firstName}` : '';
+        const playerA = this.appStateService.playerMap()[a[key]];
+        const playerB = this.appStateService.playerMap()[b[key]];
+
+        left = playerA ? `${playerA.lastName} ${playerA.firstName}` : '';
+        right = playerB ? `${playerB.lastName} ${playerB.firstName}` : '';
       }
 
       if (typeof left === 'number' && typeof right === 'number') {
@@ -117,7 +117,7 @@ export class PlayerMatchStatsTableComponent {
 
   getColumnValue(stats: PlayerMatchStats, key: PlayerMatchStatsColumnKey): string | number | Date | null {
     if (key === 'playerId') {
-      const player = this.players[stats.playerId];
+      const player = this.appStateService.playerMap()[stats.playerId];
       return player ? `${player.firstName} ${player.lastName}` : '';
     }
 

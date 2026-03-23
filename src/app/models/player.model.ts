@@ -3,5 +3,6 @@ export interface Player {
     firstName: string,
     lastName: string,
     imagePath: string,
+    rollingHandicap: number | null
     handicap: number | null
 }

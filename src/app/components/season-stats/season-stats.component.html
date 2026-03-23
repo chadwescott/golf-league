@@ -1,0 +1,23 @@
+<div class="row">
+    <div>
+        <h3>
+            Point Standings
+        </h3>
+        <app-player-stats-table
+            [displayedColumns]="['playerId', 'eagles', 'birdies', 'pars', 'bogeys', 'doublePars', 'fairwaysHit', 'grossPoints', 'netPoints']"
+            [defaultSortColumn]="'netPoints'" [defaultSortDirection]="'desc'"></app-player-stats-table>
+        <hr />
+        <h3>
+            Versus Standings
+        </h3>
+        <app-player-stats-table [displayedColumns]="['playerId', 'wins', 'losses']" [defaultSortColumn]="'wins'"
+            [defaultSortDirection]="'desc'"></app-player-stats-table>
+        <hr />
+        <h3>
+            Skins Standings
+        </h3>
+        <app-player-stats-table
+            [displayedColumns]="['playerId', 'grossSkins', 'netSkins', 'grossSkinAmount', 'netSkinAmount']"
+            [defaultSortColumn]="'netSkinAmount'" [defaultSortDirection]="'desc'"></app-player-stats-table>
+    </div>
+</div>

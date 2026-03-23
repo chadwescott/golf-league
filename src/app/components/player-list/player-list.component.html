@@ -1,6 +1,33 @@
-@for (player of players; track $index) {
-<div class="player">
-    <div class="player-name">{{ player.firstName }} {{ player.lastName }}</div>
-    <div class="player-handicap">{{ player.handicap }}</div>
+<div class="results-table-wrapper">
+    <table class="results-table">
+        <thead>
+            <tr>
+                @for (column of columns(); track column.key) {
+                <th>
+                    <button class="sort-button" type="button" (click)="sortBy(column.key)">
+                        <span>{{ column.label }}</span>
+                        <span class="sort-indicator">{{ getSortIndicator(column.key) }}</span>
+                    </button>
+                </th>
+                }
+            </tr>
+        </thead>
+        <tbody>
+            @for (stats of sortedPlayer(); track $index) {
+            <tr>
+                @for (column of columns(); track column.key) {
+                <td [class.player]="column.key === 'id'" [class.stat]="column.key !== 'id'">
+                    @if (column.key === 'imagePath') {
+                    @if (getColumnValue(stats, column.key)) {
+                    <img [src]="getColumnValue(stats, column.key)" alt="Player Image" />
+                    }
+                    } @else {
+                    {{ getColumnValue(stats, column.key) }}
+                    }
+                </td>
+                }
+            </tr>
+            }
+        </tbody>
+    </table>
 </div>
-}
