@@ -2,6 +2,7 @@ import { ResultType } from "../enums/result.enum"
 
 export interface PlayerMatchStats {
     playerId: string,
+    playerIds: string[],
     leagueEventId: string,
     eventDate: Date,
     grossScore: number,

@@ -7,7 +7,7 @@ type PlayerMatchStatsColumnKey = keyof PlayerMatchStats;
 type PlayerMatchStatsColumn = { key: PlayerMatchStatsColumnKey; label: string };
 
 const ALL_COLUMNS: PlayerMatchStatsColumn[] = [
-  { key: 'playerId', label: 'Player' },
+  { key: 'playerIds', label: 'Player' },
   { key: 'handicap', label: 'Handicap' },
   { key: 'grossScore', label: 'Gross Score' },
   { key: 'netScore', label: 'Net Score' },
@@ -71,8 +71,8 @@ export class PlayerMatchStatsTableComponent {
     const modifier = direction === 'asc' ? 1 : -1;
 
     return [...this.appStateService.playerMatchStats()].sort((a, b) => {
-      let left: string | number | Date | null = a[key];
-      let right: string | number | Date | null = b[key];
+      let left: string | number | Date | string[] | null = a[key];
+      let right: string | number | Date | string[] | null = b[key];
 
       if (key === 'playerId') {
         const playerA = this.appStateService.playerMap()[a[key]];
@@ -119,6 +119,11 @@ export class PlayerMatchStatsTableComponent {
     if (key === 'playerId') {
       const player = this.appStateService.playerMap()[stats.playerId];
       return player ? `${player.firstName} ${player.lastName}` : '';
+    }
+
+    if (key === 'playerIds') {
+      const players = stats.playerIds.map(id => this.appStateService.playerMap()[id]);
+      return players.map(player => `${player.firstName} ${player.lastName}`).join(', ');
     }
 
     return stats[key];

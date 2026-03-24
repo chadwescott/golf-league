@@ -16,7 +16,8 @@
             @for (stats of sortedPlayerMatchStats(); track $index) {
             <tr>
                 @for (column of columns(); track column.key) {
-                <td [class.player]="column.key === 'playerId'" [class.stat]="column.key !== 'playerId'">
+                <td [class.player]="column.key === 'playerId' || column.key === 'playerIds'"
+                    [class.stat]="column.key !== 'playerId' && column.key !== 'playerIds'">
                     @if (column.key === 'netSkinAmount' || column.key === 'grossSkinAmount') {
                     {{ stats[column.key] | currency }}
                     } @else {

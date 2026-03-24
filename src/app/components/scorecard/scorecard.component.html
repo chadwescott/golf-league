@@ -60,7 +60,7 @@
             </tr>
         </thead>
         <tbody>
-            @for (scores of sortedPlayerScores(); track scores.playerId) {
+            @for (scores of sortedPlayerScores(); track scores.id) {
             <tr class="player-score-row">
                 <td>
                     @for (playerId of scores.playerIds; track playerId) {
