@@ -2,12 +2,12 @@
 <h2 class="section-header">{{ appStateService.selectedMatch()?.name }} - {{ appStateService.selectedMatch()?.date |
     date:'M/d/y' }}
 </h2>
-<div class="match-info">
-    <span class="match-type">{{ appStateService.selectedMatch()?.matchType }}</span>
+<h4 class="match-type">
+    {{ appStateService.selectedMatch()?.matchType }}
     @if (appStateService.selectedMatch()?.skinFee) {
     - ${{ appStateService.selectedMatch()?.skinFee }} skin entry fee
     }
-</div>
+</h4>
 
 @if (appStateService.selectedMatch()?.matchType === matchTypes.StrokePlay) {
 <h3>Versus Results</h3>
@@ -46,7 +46,7 @@
 
 <h3>Skins</h3>
 <app-player-match-stats-table
-    [displayedColumns]="['playerIds', 'grossSkins', 'netSkins', 'grossSkinAmount', 'netSkinAmount']"
+    [displayedColumns]="['playerIds', 'grossSkins', 'grossSkinAmount', 'netSkins', 'netSkinAmount']"
     [defaultSortColumn]="'netSkinAmount'"></app-player-match-stats-table>
 <hr />
 
@@ -57,7 +57,7 @@
 <hr />
 
 <h3>Overall Skins Standings</h3>
-<app-player-stats-table [displayedColumns]="['playerId', 'grossSkins', 'netSkins', 'grossSkinAmount', 'netSkinAmount']"
+<app-player-stats-table [displayedColumns]="['playerId', 'grossSkins', 'grossSkinAmount', 'netSkins', 'netSkinAmount']"
     [defaultSortColumn]="'netSkinAmount'"></app-player-stats-table>
 <hr />
 }
