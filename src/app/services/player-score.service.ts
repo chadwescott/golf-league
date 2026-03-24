@@ -17,17 +17,20 @@ export class PlayerScoresService {
         toFirestore(playerScores: PlayerScores) {
             return {
                 playerId: playerScores.playerId,
+                playerIds: playerScores.playerIds,
                 holeScores: playerScores.holeScores,
                 handicap: playerScores.handicap,
-                inScore: playerScores.netInScore,
-                outScore: playerScores.netOutScore,
+                grossInScore: playerScores.grossInScore,
+                grossOutScore: playerScores.grossOutScore,
+                netInScore: playerScores.netInScore,
+                netOutScore: playerScores.netOutScore,
                 totalScore: playerScores.totalScore,
                 grossPoints: playerScores.grossPoints,
                 netPoints: playerScores.netPoints
             };
         },
         fromFirestore(snapshot: QueryDocumentSnapshot, options: SnapshotOptions): PlayerScores {
-            return snapshot.data(options) as PlayerScores;
+            return { id: snapshot.id, ...snapshot.data(options) } as PlayerScores;
         },
     };
 

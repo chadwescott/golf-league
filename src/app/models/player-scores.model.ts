@@ -1,7 +1,9 @@
 import { HoleScore } from "./hole-score.model";
 
 export interface PlayerScores {
+    id: string,
     playerId: string,
+    playerIds: string[],
     holeScores: HoleScore[],
     handicap: number | null,
     grossInScore: number | null,

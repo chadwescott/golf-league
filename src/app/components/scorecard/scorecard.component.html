@@ -63,9 +63,11 @@
             @for (scores of sortedPlayerScores(); track scores.playerId) {
             <tr class="player-score-row">
                 <td>
-                    <div class="player">{{ players()[scores.playerId]?.firstName }} {{
-                        players()[scores.playerId]?.lastName
+                    @for (playerId of scores.playerIds; track playerId) {
+                    <div class="player">{{ players()[playerId]?.firstName }} {{
+                        players()[playerId]?.lastName
                         }}</div>
+                    }
                     @if (scores.handicap) {
                     <div class="handicap">Handicap: {{scores.handicap}}</div>
                     }

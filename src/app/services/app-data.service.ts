@@ -123,7 +123,6 @@ export class AppDataService {
 
         effect(() => {
             forkJoin(this.appStateService.leagueSeasonPlayers().map(lsp => this.playerService.getPlayerById(lsp.playerId))).subscribe(players => {
-                console.log(players);
                 this.appStateService.players.set(players.filter(p => p !== null) as Player[]);
             });
         });
