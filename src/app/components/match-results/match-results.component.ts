@@ -12,6 +12,4 @@ export class MatchResultsComponent {
   readonly appStateService = inject(AppStateService);
 
   resultType = ResultType;
-
-  players = this.appStateService.playerMap();
 }

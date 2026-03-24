@@ -6,7 +6,8 @@
             <td class="team">
                 @for (playerId of team.playerIds; track playerId) {
                 <div>
-                    <span class="player">{{ players[playerId]?.firstName }} {{ players[playerId]?.lastName }}</span>
+                    <span class="player">{{ appStateService.playerMap()[playerId]?.firstName }} {{
+                        appStateService.playerMap()[playerId]?.lastName }}</span>
                 </div>
                 }
                 @if (team.totalScore != null) {

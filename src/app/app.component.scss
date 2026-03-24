@@ -25,11 +25,15 @@ mat-toolbar.mat-toolbar {
     }   
 }
 
+mat-icon.menu-icon,
+.app-title {
+    text-shadow: black .05em .05em 0;
+}
+
 .app-title {
     display: flex;
     align-items: center;
     gap: 0.25em;
-    text-shadow: black .05em .05em 0;
 }
 
 .content {
