@@ -5,6 +5,7 @@ import { forkJoin } from 'rxjs';
 import { PlayerStats } from '../models/player-stats';
 import { Player } from '../models/player.model';
 import { AppStateService } from './app-state.service';
+import { CourseService } from './course.service';
 import { MatchMatchupService } from './match-matchup.service';
 import { MatchService } from './match.service';
 import { PlayerScoresService } from './player-score.service';
@@ -20,111 +21,114 @@ export class AppDataService {
     private readonly seasonService = inject(SeasonService);
     private readonly matchService = inject(MatchService);
     private readonly scorecardService = inject(ScorecardService);
+    private readonly courseService = inject(CourseService);
     private readonly matchMatchupService = inject(MatchMatchupService);
     private readonly playerService = inject(PlayerService);
     private readonly playerScoresService = inject(PlayerScoresService);
 
-    constructor() {
-        effect(() => {
-            const leagueId = this.appStateService.selectedLeague()?.id;
+    readonly leageSelectedEffect = effect(() => {
+        const leagueId = this.appStateService.selectedLeague()?.id;
 
-            if (!leagueId) {
-                this.appStateService.leagueSeasons.set([]);
-                return;
-            }
+        if (!leagueId) {
+            this.appStateService.leagueSeasons.set([]);
+            return;
+        }
 
-            this.seasonService.getSeasonsByLeagueId(leagueId).subscribe(seasons => {
-                this.appStateService.leagueSeasons.set(seasons);
-            });
-        })
+        this.seasonService.getSeasonsByLeagueId(leagueId).subscribe(seasons => {
+            this.appStateService.leagueSeasons.set(seasons);
+        });
+    });
 
-        effect(() => {
-            const leagueId = this.appStateService.selectedLeague()?.id;
-            const seasonId = this.appStateService.selectedSeason()?.id;
+    readonly seasonSelectedEffect = effect(() => {
+        const leagueId = this.appStateService.selectedLeague()?.id;
+        const seasonId = this.appStateService.selectedSeason()?.id;
 
-            if (!leagueId || !seasonId) {
-                this.appStateService.playerStats.set([]);
-                this.appStateService.seasonMatches.set([]);
-                return;
-            }
+        if (!leagueId || !seasonId) {
+            this.appStateService.playerStats.set([]);
+            this.appStateService.seasonMatches.set([]);
+            return;
+        }
 
-            this.seasonService.getPlayerStatsBySeasonId(leagueId, seasonId).subscribe(playerStats => {
-                this.appStateService.playerStats.set(playerStats);
-            });
-
-            this.matchService.getMatchesByLeagueIdAndSeasonId(leagueId, seasonId).subscribe(le => this.appStateService.seasonMatches.set(le));
-
-            this.playerService.getLeagueSeasonPlayers(leagueId, seasonId).subscribe(players => {
-                this.appStateService.leagueSeasonPlayers.set(players);
-            });
+        this.seasonService.getPlayerStatsBySeasonId(leagueId, seasonId).subscribe(playerStats => {
+            this.appStateService.playerStats.set(playerStats);
         });
 
-        effect(() => {
-            const playerStats = this.appStateService.playerStats();
-            const selectedMatch = this.appStateService.selectedMatch() ?? this.appStateService.seasonMatches().reduce((latest, match) =>
-                new Date(match.date) > new Date(latest.date) ? match : latest, this.appStateService.seasonMatches()[0]);
+        this.matchService.getMatchesByLeagueIdAndSeasonId(leagueId, seasonId).subscribe(le => this.appStateService.seasonMatches.set(le));
 
-            if (playerStats.length === 0 || !selectedMatch) {
-                this.appStateService.playerSeasonStats.set([]);
-                return;
+        this.playerService.getLeagueSeasonPlayers(leagueId, seasonId).subscribe(players => {
+            this.appStateService.leagueSeasonPlayers.set(players);
+        });
+    });
+
+    readonly playerStatsForMatchEffect = effect(() => {
+        const playerStats = this.appStateService.playerStats();
+        const selectedMatch = this.appStateService.selectedMatch() ?? this.appStateService.seasonMatches().reduce((latest, match) =>
+            new Date(match.date) > new Date(latest.date) ? match : latest, this.appStateService.seasonMatches()[0]);
+
+        if (playerStats.length === 0 || !selectedMatch) {
+            this.appStateService.playerSeasonStats.set([]);
+            return;
+        }
+
+        const results: PlayerStats[] = [];
+        const playerIds = [...new Set(playerStats.map(ps => ps.playerId))];
+
+        playerIds.forEach(playerId => {
+            const playerStatsForPlayer = playerStats.filter(ps => ps.playerId === playerId && ps.leagueEventId === selectedMatch.id);
+            if (playerStatsForPlayer.length > 0) {
+                results.push(playerStatsForPlayer[0]);
             }
-
-            const results: PlayerStats[] = [];
-            const playerIds = [...new Set(playerStats.map(ps => ps.playerId))];
-
-            playerIds.forEach(playerId => {
-                const playerStatsForPlayer = playerStats.filter(ps => ps.playerId === playerId && ps.leagueEventId === selectedMatch.id);
-                if (playerStatsForPlayer.length > 0) {
-                    results.push(playerStatsForPlayer[0]);
-                }
-            });
-
-            this.appStateService.playerSeasonStats.set(results);
         });
 
-        effect(() => {
-            const league = this.appStateService.selectedLeague();
-            const season = this.appStateService.selectedSeason();
-            const match = this.appStateService.selectedMatch();
+        this.appStateService.playerSeasonStats.set(results);
+    });
 
-            if (!league || !season || !match) {
-                this.appStateService.matchMatchups.set([]);
-                this.appStateService.playerMatchStats.set([]);
-                this.appStateService.selectedScorecard.set(null);
-                return;
-            }
+    readonly matchSelectedEffect = effect(() => {
+        const league = this.appStateService.selectedLeague();
+        const season = this.appStateService.selectedSeason();
+        const match = this.appStateService.selectedMatch();
 
-            this.matchMatchupService.getMatchupsByMatchId(league!.id, season!.id, match.id)
-                .subscribe(matchMatchups => {
-                    matchMatchups.forEach(m => m.teams.sort((a, b) => a.result && b.result ? b.result?.localeCompare(a.result) : 0));
-                    this.appStateService.matchMatchups.set(matchMatchups);
-                });
+        if (!league || !season || !match) {
+            this.appStateService.matchMatchups.set([]);
+            this.appStateService.playerMatchStats.set([]);
+            this.appStateService.selectedScorecard.set(null);
+            return;
+        }
 
-            this.matchService.getPlayerStatsByMatchId(league!.id, season!.id, match.id).subscribe(playerStats => {
-                this.appStateService.playerMatchStats.set(playerStats);
+        this.matchMatchupService.getMatchupsByMatchId(league!.id, season!.id, match.id)
+            .subscribe(matchMatchups => {
+                matchMatchups.forEach(m => m.teams.sort((a, b) => a.result && b.result ? b.result?.localeCompare(a.result) : 0));
+                this.appStateService.matchMatchups.set(matchMatchups);
             });
 
-            this.scorecardService.getScorecardById(match.scorecardId).subscribe(scorecard => {
-                this.appStateService.selectedScorecard.set(scorecard);
-            });
+        this.matchService.getPlayerStatsByMatchId(league!.id, season!.id, match.id).subscribe(playerStats => {
+            this.appStateService.playerMatchStats.set(playerStats);
         });
 
-        effect(() => {
-            const scorecard = this.appStateService.selectedScorecard();
-            if (!scorecard) {
-                this.appStateService.playerScores.set([]);
-                return;
-            }
+        this.scorecardService.getScorecardById(match.scorecardId).subscribe(scorecard => {
+            this.appStateService.selectedScorecard.set(scorecard);
+        });
+    });
 
-            this.playerScoresService.getPlayerScoresByScorecardId(scorecard.id).subscribe(playerScores => {
-                this.appStateService.playerScores.set(playerScores);
-            });
+    readonly scorecardSelectedEffect = effect(() => {
+        const scorecard = this.appStateService.selectedScorecard();
+        if (!scorecard) {
+            this.appStateService.playerScores.set([]);
+            return;
+        }
+
+        this.playerScoresService.getPlayerScoresByScorecardId(scorecard.id).subscribe(playerScores => {
+            this.appStateService.playerScores.set(playerScores);
         });
 
-        effect(() => {
-            forkJoin(this.appStateService.leagueSeasonPlayers().map(lsp => this.playerService.getPlayerById(lsp.playerId))).subscribe(players => {
-                this.appStateService.players.set(players.filter(p => p !== null) as Player[]);
-            });
+        this.courseService.getCourseById(scorecard.courseId).subscribe(course => {
+            this.appStateService.selectedCourse.set(course);
         });
-    }
+    });
+
+    readonly leagueSeasonPlayersEffect = effect(() => {
+        forkJoin(this.appStateService.leagueSeasonPlayers().map(lsp => this.playerService.getPlayerById(lsp.playerId))).subscribe(players => {
+            this.appStateService.players.set(players.filter(p => p !== null) as Player[]);
+        });
+    });
 }

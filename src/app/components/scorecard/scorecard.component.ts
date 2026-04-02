@@ -1,11 +1,10 @@
 import { DatePipe, DecimalPipe, NgClass } from '@angular/common';
 import { Component, computed, inject, input, signal } from '@angular/core';
 import { RoundHoles } from '../../enums/round-holes.enum';
-import { Course } from '../../models/course.model';
 import { PlayerScores } from '../../models/player-scores.model';
 import { Player } from '../../models/player.model';
 import { Scorecard } from '../../models/scorecard.model';
-import { CourseService } from '../../services/course.service';
+import { AppStateService } from '../../services/app-state.service';
 import { PlayerService } from '../../services/player.service';
 
 @Component({
@@ -22,18 +21,13 @@ export class ScorecardComponent {
   });
 
   totalPar = 0;
-  course: Course | undefined;
   roundHoles = RoundHoles;
   players = signal<{ [keyof: string]: Player }>({});
 
-  private readonly courseService = inject(CourseService);
   private readonly playerService = inject(PlayerService);
+  readonly appStateService = inject(AppStateService);
 
   ngOnInit() {
-    this.courseService.getCourseById(this.scorecard().courseId).subscribe(course => {
-      this.course = course;
-    });
-
     this.playerService.getPlayers().subscribe(players => {
       const playersMap: { [keyof: string]: Player } = {};
       players.forEach(player => {

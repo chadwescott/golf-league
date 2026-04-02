@@ -5,7 +5,7 @@
                 <th [attr.colspan]="scorecard().holes.length + (scorecard().roundHoles === roundHoles.All ? 5 : 4)"
                     class="course-header">
                     <div>
-                        <h4>{{ course?.name }}</h4>
+                        <h4>{{ appStateService.selectedCourse()?.name }}</h4>
                         <h4>{{scorecard().date | date: 'M/d/yyyy'}}</h4>
                     </div>
                 </th>

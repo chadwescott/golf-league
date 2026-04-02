@@ -40,7 +40,7 @@ export class CourseService {
         },
     };
 
-    getCourseById(courseId: string): Observable<Course | undefined> {
+    getCourseById(courseId: string): Observable<Course | null> {
         const cachedCourse = this.courseCache.find(course => course.id === courseId);
         if (cachedCourse) {
             return of(cachedCourse);
@@ -55,7 +55,7 @@ export class CourseService {
                     this.appStateService.saveDataToStorage(this.courseKey, this.courseCache);
                     return course;
                 } else {
-                    return undefined;
+                    return null;
                 }
             }));
     }

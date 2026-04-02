@@ -1,4 +1,5 @@
 import { computed, effect, Injectable, signal } from '@angular/core';
+import { Course } from '../models/course.model';
 import { League } from '../models/league.model';
 import { MatchMatchup } from '../models/match-matchup.model';
 import { Match } from '../models/match.model';
@@ -28,6 +29,7 @@ export class AppStateService {
     selectedSeason = signal<Season | null>(null);
     selectedMatch = signal<Match | null>(null);
     selectedScorecard = signal<Scorecard | null>(null);
+    selectedCourse = signal<Course | null>(null);
     leagueSeasons = signal<Season[]>([]);
     leagueSeasonPlayers = signal<SeasonPlayer[]>([]);
     playerScores = signal<PlayerScores[]>([]);
