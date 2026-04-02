@@ -64,8 +64,8 @@
             <tr class="player-score-row">
                 <td>
                     @for (playerId of scores.playerIds; track playerId) {
-                    <div class="player">{{ players()[playerId]?.firstName }} {{
-                        players()[playerId]?.lastName
+                    <div class="player">{{ appStateService.playerMap()[playerId]?.firstName }} {{
+                        appStateService.playerMap()[playerId]?.lastName
                         }}</div>
                     }
                     @if (scores.handicap) {
