@@ -19,19 +19,35 @@
 
 <mat-menu #menu="matMenu">
     @if (!!appStateService.selectedLeague() && !!appStateService.selectedSeason()) {
-    <button mat-menu-item [routerLink]="seasonRoute()">
-        <mat-icon>home</mat-icon>
-        <span>{{ this.appStateService.selectedSeason()?.year }} Season Dashboard</span>
-    </button>
-    <button mat-menu-item [matMenuTriggerFor]="matchMenu">
-        <mat-icon>event</mat-icon>
-        <span>Select Match</span>
-    </button>
-    <button mat-menu-item [routerLink]="playersRoute()">
-        <mat-icon>people</mat-icon>
-        <span>Players</span>
+    <button mat-menu-item [matMenuTriggerFor]="seasonMenu"
+        [matMenuTriggerData]="{ season: appStateService.selectedSeason() }">
+        <span>{{ appStateService.selectedSeason()?.year }} Season</span>
     </button>
     }
+    @for (season of appStateService.leagueSeasons(); track season.id) {
+    @if (appStateService.selectedSeason()?.year !== season.year) {
+    <button mat-menu-item [routerLink]="getSeasonRoute(season?.id)">
+        <span>{{ season.year }} Season</span>
+    </button>
+    }
+    }
+</mat-menu>
+
+<mat-menu #seasonMenu="matMenu">
+    <ng-template matMenuContent let-season="season">
+        <button mat-menu-item [routerLink]="getSeasonRoute(season?.id)">
+            <mat-icon>home</mat-icon>
+            <span>Dashboard</span>
+        </button>
+        <button mat-menu-item [matMenuTriggerFor]="matchMenu">
+            <mat-icon>event</mat-icon>
+            <span>Select Match</span>
+        </button>
+        <button mat-menu-item [routerLink]="playersRoute()">
+            <mat-icon>people</mat-icon>
+            <span>Players</span>
+        </button>
+    </ng-template>
 </mat-menu>
 
 <mat-menu #matchMenu="matMenu">

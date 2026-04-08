@@ -27,17 +27,6 @@ export class AppComponent {
   readonly appStateService = inject(AppStateService);
   private readonly appDataService = inject(AppDataService);
 
-  seasonRoute = computed(() => {
-    const leagueId = this.appStateService.selectedLeague()?.id;
-    const seasonId = this.appStateService.selectedSeason()?.id;
-
-    if (!leagueId || !seasonId) {
-      return ['/', this.paths.leagues];
-    }
-
-    return ['/', this.paths.leagues, leagueId, this.paths.seasons, seasonId];
-  })
-
   playersRoute = computed(() => {
     const leagueId = this.appStateService.selectedLeague()?.id;
     const seasonId = this.appStateService.selectedSeason()?.id;
@@ -67,5 +56,15 @@ export class AppComponent {
     }
 
     return ['/', this.paths.leagues, leagueId, this.paths.seasons, seasonId, this.paths.matches, matchId];
+  }
+
+  getSeasonRoute(seasonId: string | undefined): string[] {
+    const leagueId = this.appStateService.selectedLeague()?.id;
+
+    if (!leagueId || !seasonId) {
+      return ['/', this.paths.leagues];
+    }
+
+    return ['/', this.paths.leagues, leagueId, this.paths.seasons, seasonId];
   }
 }

@@ -24,8 +24,9 @@ export class SeasonListComponent {
       }
 
       const seasons = this.appStateService.leagueSeasons();
-      if (seasons.length === 1) {
-        this.router.navigate([`${Paths.seasons}/${seasons[0].id}`], { relativeTo: this.router.routerState.root.firstChild });
+      if (seasons.length > 0) {
+        const season = seasons.sort((a, b) => b.year - a.year)[0];
+        this.router.navigate([`${Paths.seasons}/${season.id}`], { relativeTo: this.router.routerState.root.firstChild });
       }
     });
   }

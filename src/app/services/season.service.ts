@@ -113,7 +113,7 @@ export class SeasonService {
     }
 
     sort(seasons: Season[]): Season[] {
-        return seasons.sort((a, b) => b.name.localeCompare(a.name));
+        return seasons.sort((a, b) => b.year < a.year ? -1 : 1);
     }
 
     getPlayerStatsBySeasonId(leagueId: string, seasonId: string): Observable<PlayerStats[]> {
