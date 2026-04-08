@@ -44,7 +44,6 @@ export class SeasonDashboardComponent {
   });
 
   ngOnInit(): void {
-    console.log(this.appStateService.selectedSeason());
     this.route.data.pipe(
       takeUntilDestroyed(this.destroyRef),
       map(data => (data['season'] as Season | null) ?? null)

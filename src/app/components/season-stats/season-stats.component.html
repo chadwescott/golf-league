@@ -16,8 +16,13 @@
         <h3>
             Skins Standings
         </h3>
+        @if (appStateService.selectedSeason()?.showGrossSkins) {
         <app-player-stats-table
             [displayedColumns]="['playerId', 'grossSkins', 'grossSkinAmount', 'netSkins', 'netSkinAmount']"
             [defaultSortColumn]="'netSkinAmount'" [defaultSortDirection]="'desc'"></app-player-stats-table>
+        } @else {
+        <app-player-stats-table [displayedColumns]="['playerId', 'netSkins', 'netSkinAmount']"
+            [defaultSortColumn]="'netSkinAmount'" [defaultSortDirection]="'desc'"></app-player-stats-table>
+        }
     </div>
 </div>

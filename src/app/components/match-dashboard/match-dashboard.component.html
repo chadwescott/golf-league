@@ -45,9 +45,14 @@
 }
 
 <h3>Skins</h3>
+@if (appStateService.selectedSeason()?.showGrossSkins) {
 <app-player-match-stats-table
     [displayedColumns]="['playerIds', 'grossSkins', 'grossSkinAmount', 'netSkins', 'netSkinAmount']"
     [defaultSortColumn]="'netSkinAmount'"></app-player-match-stats-table>
+} @else {
+<app-player-match-stats-table [displayedColumns]="['playerIds', 'netSkins', 'netSkinAmount']"
+    [defaultSortColumn]="'netSkinAmount'"></app-player-match-stats-table>
+}
 <hr />
 
 @if (appStateService.selectedMatch()?.matchType !== matchTypes.Scramble) {
@@ -57,8 +62,13 @@
 <hr />
 
 <h3>Overall Skins Standings</h3>
+@if (appStateService.selectedSeason()?.showGrossSkins) {
 <app-player-stats-table [displayedColumns]="['playerId', 'grossSkins', 'grossSkinAmount', 'netSkins', 'netSkinAmount']"
     [defaultSortColumn]="'netSkinAmount'"></app-player-stats-table>
+} @else {
+<app-player-stats-table [displayedColumns]="['playerId', 'netSkins', 'netSkinAmount']"
+    [defaultSortColumn]="'netSkinAmount'"></app-player-stats-table>
+}
 <hr />
 }
 
