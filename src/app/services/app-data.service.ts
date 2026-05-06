@@ -127,8 +127,8 @@ export class AppDataService {
     });
 
     readonly leagueSeasonPlayersEffect = effect(() => {
-        forkJoin(this.appStateService.leagueSeasonPlayers().map(lsp => this.playerService.getPlayerById(lsp.playerId))).subscribe(players => {
-            this.appStateService.players.set(players.filter(p => p !== null) as Player[]);
-        });
+        forkJoin(this.appStateService.leagueSeasonPlayers().map(lsp => this.playerService.getPlayerById(lsp.playerId)))
+            .subscribe(players => this.appStateService.players.set(players.filter(p => p !== null) as Player[])
+            );
     });
 }

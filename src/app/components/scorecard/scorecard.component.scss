@@ -77,10 +77,13 @@
 
         .player {
             margin-bottom: .5em;
+            text-align: right;
+            text-wrap: nowrap;
         }
 
         .handicap {
             font-style: italic;
+            text-align: right;
         }
 
         [scoreType='albatross'],

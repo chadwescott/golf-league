@@ -134,6 +134,10 @@ mat-select {
     justify-content: flex-start;
     max-width: 100%;
     row-gap: .125em;
+
+    &[right] {
+        align-items: flex-end;
+    }
 }
 
 .player {

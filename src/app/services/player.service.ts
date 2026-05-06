@@ -1,26 +1,21 @@
 import { EnvironmentInjector, inject, Injectable, runInInjectionContext } from '@angular/core';
-import { from, map, Observable, of, tap } from 'rxjs';
+import { from, map, Observable } from 'rxjs';
 
 
 import { collection, collectionData, CollectionReference, doc, Firestore, FirestoreDataConverter, getDoc, QueryDocumentSnapshot, SnapshotOptions } from '@angular/fire/firestore';
 import { LeaguePlayer } from '../models/league-player.model';
 import { Player } from '../models/player.model';
 import { SeasonPlayer } from '../models/season-player.model';
-import { AppStateService } from './app-state.service';
 import { FirestorePaths } from './firestore-paths';
 
 @Injectable({
     providedIn: 'root'
 })
 export class PlayerService {
-    private readonly appStateService = inject(AppStateService);
     private readonly environmentInjector = inject(EnvironmentInjector);
     private readonly firestore = inject(Firestore);
-    private readonly playerCache: Player[] = [];
-    private readonly playerKey = 'gl:players';
 
     constructor() {
-        this.appStateService.loadDataFromStorage<Player[]>(this.playerKey)?.map(player => this.playerCache.push(player));
     }
 
     readonly playerConverter: FirestoreDataConverter<Player> = {
@@ -68,53 +63,17 @@ export class PlayerService {
     };
 
     getPlayerById(playerId: string): Observable<Player | null> {
-        const cachedPlayer = this.playerCache.find(player => player.id === playerId);
-        if (cachedPlayer) {
-            console.log(`Player found in cache: ${cachedPlayer.id}`);
-            return of(cachedPlayer);
-        }
-
         return runInInjectionContext(this.environmentInjector, () => {
             const playerRef = doc(this.firestore, `${FirestorePaths.players}/${playerId}`).withConverter(this.playerConverter);
             return from(getDoc(playerRef)).pipe(
                 map(snap => {
                     if (snap.exists()) {
                         const player = snap.data();
-                        this.playerCache.push(player);
-                        this.appStateService.saveDataToStorage(this.playerKey, this.playerCache);
                         return player;
                     } else {
                         return null;
                     }
                 }))
-        });
-    }
-
-    getPlayers(): Observable<Player[]> {
-        const cachedPlayers = this.playerCache.length ? this.playerCache : null;
-        if (cachedPlayers) {
-            return of(cachedPlayers);
-        }
-
-        return runInInjectionContext(this.environmentInjector, () => {
-            const playerRef = collection(this.firestore, FirestorePaths.players)
-                .withConverter(this.playerConverter) as CollectionReference<Player>;
-
-            return collectionData(playerRef);
-        })
-            .pipe(
-                map((players) => this.sort(players)),
-                tap(players => { this.appStateService.saveDataToStorage(this.playerKey, players); }),
-                tap(players => this.appStateService.players.set(players))
-            );
-    }
-
-    getLeaguePlayers(leagueId: string): Observable<LeaguePlayer[]> {
-        return runInInjectionContext(this.environmentInjector, () => {
-            const playersRef = collection(this.firestore, `${FirestorePaths.leagues}/${leagueId}/${FirestorePaths.players}`)
-                .withConverter(this.leaguePlayerConverter) as CollectionReference<LeaguePlayer>;
-
-            return collectionData(playersRef);
         });
     }
 
