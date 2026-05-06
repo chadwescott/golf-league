@@ -1,12 +1,13 @@
 import { Component, computed, effect, inject, input, signal } from '@angular/core';
 import { Player } from '../../models/player.model';
 import { AppStateService } from '../../services/app-state.service';
+import { PlayerScorecardService } from '../../services/player-scorecard.service';
 
 type PlayerColumnKey = keyof Player;
 type PlayerColumn = { key: PlayerColumnKey; label: string };
 
 const ALL_COLUMNS: PlayerColumn[] = [
-  // { key: 'imagePath', label: 'Image' },
+  { key: 'imagePath', label: '' },
   { key: 'id', label: 'Player' },
   { key: 'handicap', label: 'Handicap' },
   { key: 'rollingHandicap', label: 'Rolling Handicap' }
@@ -20,6 +21,7 @@ const ALL_COLUMNS: PlayerColumn[] = [
 })
 export class PlayerListComponent {
   readonly appStateService = inject(AppStateService);
+  readonly playerScorecardService = inject(PlayerScorecardService);
 
   displayedColumns = input<PlayerColumnKey[]>([]);
   defaultSortColumn = input<keyof Player>('id');
@@ -113,5 +115,11 @@ export class PlayerListComponent {
     }
 
     return player[key];
+  }
+
+  showStats(player: Player): void {
+    this.playerScorecardService.getPlayerScorecardsByScorecardId(player.id).subscribe(scorecards => {
+      console.log(scorecards);
+    });
   }
 }

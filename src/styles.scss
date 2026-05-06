@@ -125,10 +125,37 @@ mat-select {
     flex-direction: row;
     justify-content: space-between;
     max-width: 100%;
+    column-gap: .5em;
+}
+
+.column {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    max-width: 100%;
+    row-gap: .125em;
 }
 
 .player {
     font-size: 1.25em;
     font-weight: bold;
     font-family: var(--player-font-family);
+}
+
+img.profile {
+    width: 4em;
+    height: 4em;
+    object-fit: cover;
+    border-radius: .25rem;
+    border: solid 1px black;
+    box-shadow: .125em .125em .125em .125em rgb(0 0 0 / 0.15);
+}
+
+img.season {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+    border-radius: .25rem;
+    border: solid 1px black;
+    box-shadow: .25rem .25rem .75rem .5rem rgb(0 0 0 / 0.15); 
 }

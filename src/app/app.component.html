@@ -58,6 +58,7 @@
     } @else {
     @for (match of appStateService.seasonMatches(); track match.id) {
     <button mat-menu-item [routerLink]="getMatchRoute(match.id)">
+        <mat-icon>sports_golf</mat-icon>
         <span>{{ match.name }} - {{ match.date | date:'shortDate' }}</span>
     </button>
     }

@@ -63,14 +63,34 @@
             @for (scores of sortedPlayerScores(); track scores.id) {
             <tr class="player-score-row">
                 <td>
-                    @for (playerId of scores.playerIds; track playerId) {
-                    <div class="player">{{ appStateService.playerMap()[playerId]?.firstName }} {{
-                        appStateService.playerMap()[playerId]?.lastName
-                        }}</div>
-                    }
-                    @if (scores.handicap) {
-                    <div class="handicap">Handicap: {{scores.handicap}}</div>
-                    }
+                    <div class="row">
+                        <!-- @if (scores.playerIds.length === 1 &&
+                        appStateService.playerMap()[scores.playerIds[0]]?.imagePath )
+                        {
+                        <div>
+                            <img class="profile" [src]="appStateService.playerMap()[scores.playerIds[0]]?.imagePath"
+                                [alt]="appStateService.playerMap()[scores.playerIds[0]]?.firstName + ' ' + appStateService.playerMap()[scores.playerIds[0]]?.lastName" />
+                        </div>
+                        } -->
+                        <div class="row">
+                            @for (playerId of scores.playerIds; track playerId) {
+                            @if (appStateService.playerMap()[playerId]?.imagePath) {
+                            <img class="profile" [src]="appStateService.playerMap()[playerId]?.imagePath"
+                                [alt]="appStateService.playerMap()[playerId]?.firstName + ' ' + appStateService.playerMap()[playerId]?.lastName" />
+                            }
+                            }
+                        </div>
+                        <div class="column">
+                            @for (playerId of scores.playerIds; track playerId) {
+                            <div class="player">{{ appStateService.playerMap()[playerId]?.firstName }} {{
+                                appStateService.playerMap()[playerId]?.lastName
+                                }}</div>
+                            }
+                            @if (scores.handicap) {
+                            <div class="handicap">Handicap: {{scores.handicap}}</div>
+                            }
+                        </div>
+                    </div>
                 </td>
                 @for (holeScore of scores.holeScores; track holeScore.holeNumber; let i = $index) {
                 <td>

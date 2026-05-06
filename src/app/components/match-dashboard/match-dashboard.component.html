@@ -15,7 +15,7 @@
 <hr />
 }
 
-<h3>Match Scores</h3>
+<h3>Scores</h3>
 @if (hasHandicap()) {
 <app-player-match-stats-table [displayedColumns]="['playerIds', 'grossScore', 'handicap', 'netScore' ]"
     [defaultSortColumn]="'netScore'" [defaultSortDirection]="'asc'"></app-player-match-stats-table>
@@ -25,7 +25,7 @@
 }
 <hr />
 
-<h3>Match Points</h3>
+<h3>Points</h3>
 @if (hasHandicap()) {
 <app-player-match-stats-table
     [displayedColumns]="['playerIds', 'eagles', 'birdies', 'pars', 'bogeys', 'doublePars', 'fairwaysHit', 'grossPoints', 'netPoints' ]"

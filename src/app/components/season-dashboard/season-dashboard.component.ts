@@ -5,13 +5,11 @@ import { map } from 'rxjs/operators';
 import { RouteParams } from '../../app.routes';
 import { Season } from '../../models/season.model';
 import { AppStateService } from '../../services/app-state.service';
-import { PlayerStatsTableComponent } from '../player-stats-table/player-stats-table.component';
 
 @Component({
   selector: 'app-season-dashboard',
   imports: [
-    RouterOutlet,
-    PlayerStatsTableComponent
+    RouterOutlet
   ],
   templateUrl: './season-dashboard.component.html',
   styleUrl: './season-dashboard.component.scss',

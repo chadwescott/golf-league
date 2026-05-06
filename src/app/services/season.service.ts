@@ -24,6 +24,7 @@ export class SeasonService {
             return {
                 id: season.id,
                 name: season.name,
+                imageUrl: season.imageUrl,
                 year: season.year
             };
         },

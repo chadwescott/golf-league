@@ -13,16 +13,20 @@
             </tr>
         </thead>
         <tbody>
-            @for (stats of sortedPlayer(); track $index) {
+            @for (player of sortedPlayer(); track $index) {
             <tr>
                 @for (column of columns(); track column.key) {
                 <td [class.player]="column.key === 'id'" [class.stat]="column.key !== 'id'">
                     @if (column.key === 'imagePath') {
-                    @if (getColumnValue(stats, column.key)) {
-                    <img [src]="getColumnValue(stats, column.key)" alt="Player Image" />
+                    @if (getColumnValue(player, column.key)) {
+                    <img class="profile" [src]="getColumnValue(player, column.key)" alt="Player Image" />
                     }
                     } @else {
-                    {{ getColumnValue(stats, column.key) }}
+                    {{ getColumnValue(player, column.key) }}
+                    <!-- Idea is to click a button to show the players scorecards with links to view the scorecards. This may move to a separate player detail component. -->
+                    <!-- @if (column.key === 'id') {
+                    <button (click)="showStats(player)">Stats</button>
+                    } -->
                     }
                 </td>
                 }
