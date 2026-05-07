@@ -1,7 +1,7 @@
 import { effect, inject, Injectable } from '@angular/core';
 
 
-import { forkJoin } from 'rxjs';
+import { forkJoin, map } from 'rxjs';
 import { PlayerStats } from '../models/player-stats';
 import { Player } from '../models/player.model';
 import { AppStateService } from './app-state.service';
@@ -128,7 +128,7 @@ export class AppDataService {
 
     readonly leagueSeasonPlayersEffect = effect(() => {
         forkJoin(this.appStateService.leagueSeasonPlayers().map(lsp => this.playerService.getPlayerById(lsp.playerId)))
-            .subscribe(players => this.appStateService.players.set(players.filter(p => p !== null) as Player[])
-            );
+            .pipe(map(player => player.filter(p => p !== null) as Player[]))
+            .subscribe(players => this.appStateService.players.set(players));
     });
 }
