@@ -83,6 +83,24 @@ export class AppDataService {
         this.appStateService.playerSeasonStats.set(results);
     });
 
+    readonly matchupsForSeasonMatchesEffect = effect(() => {
+        const league = this.appStateService.selectedLeague();
+        const season = this.appStateService.selectedSeason();
+        if (!league || !season) {
+            return;
+        }
+
+        this.appStateService.matchMatchupMap = {};
+
+        this.appStateService.seasonMatches().forEach(match => {
+            this.matchMatchupService.getMatchupsByMatchId(league!.id, season!.id, match.id)
+                .subscribe(matchMatchups => {
+                    matchMatchups.forEach(m => m.teams.sort((a, b) => a.result && b.result ? b.result?.localeCompare(a.result) : 0));
+                    this.appStateService.matchMatchupMap[match.id] = matchMatchups;
+                });
+        });
+    });
+
     readonly matchSelectedEffect = effect(() => {
         const league = this.appStateService.selectedLeague();
         const season = this.appStateService.selectedSeason();
@@ -95,11 +113,7 @@ export class AppDataService {
             return;
         }
 
-        this.matchMatchupService.getMatchupsByMatchId(league!.id, season!.id, match.id)
-            .subscribe(matchMatchups => {
-                matchMatchups.forEach(m => m.teams.sort((a, b) => a.result && b.result ? b.result?.localeCompare(a.result) : 0));
-                this.appStateService.matchMatchups.set(matchMatchups);
-            });
+        this.appStateService.matchMatchups.set(this.appStateService.matchMatchupMap[match.id] ?? []);
 
         this.matchService.getPlayerStatsByMatchId(league!.id, season!.id, match.id).subscribe(playerStats => {
             this.appStateService.playerMatchStats.set(playerStats);

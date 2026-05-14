@@ -1,6 +1,7 @@
 import { NgClass } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { Component, inject, input } from '@angular/core';
 import { ResultType } from '../../enums/result.enum';
+import { MatchMatchup } from '../../models/match-matchup.model';
 import { AppStateService } from '../../services/app-state.service';
 
 @Component({
@@ -13,6 +14,8 @@ import { AppStateService } from '../../services/app-state.service';
 })
 export class MatchResultsComponent {
   readonly appStateService = inject(AppStateService);
+
+  matchups = input.required<MatchMatchup[]>();
 
   resultType = ResultType;
 }

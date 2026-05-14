@@ -1,6 +1,6 @@
 <table class="results-table">
     <tbody>
-        @for (matchup of appStateService.matchMatchups(); track matchup.id; let i = $index) {
+        @for (matchup of matchups(); track matchup.id; let i = $index) {
         <tr>
             @for (team of matchup.teams; track team.playerIds; let j = $index) {
             @if (j === 0) {

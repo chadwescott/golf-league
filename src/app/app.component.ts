@@ -38,6 +38,17 @@ export class AppComponent {
     return ['/', this.paths.leagues, leagueId, this.paths.seasons, seasonId, this.paths.players];
   })
 
+  scheduleRoute = computed(() => {
+    const leagueId = this.appStateService.selectedLeague()?.id;
+    const seasonId = this.appStateService.selectedSeason()?.id;
+
+    if (!leagueId || !seasonId) {
+      return ['/', this.paths.leagues];
+    }
+
+    return ['/', this.paths.leagues, leagueId, this.paths.seasons, seasonId, this.paths.schedule];
+  })
+
   readonly paths = Paths;
 
   constructor() {

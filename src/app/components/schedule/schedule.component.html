@@ -1,0 +1,12 @@
+<h2 class="section-header">Schedule</h2>
+@for (match of appStateService.seasonMatches(); track match.id) {
+<div class="column">
+    <h3 class="section-header">{{ match.name }} - {{ match.date | date:'M/d/y' }}
+    </h3>
+    <app-match-results [matchups]="appStateService.matchMatchupMap[match.id]"></app-match-results>
+    @if (!!appStateService.selectedSeason()) {
+    <a [routerLink]="['..', paths.matches, match.id]">View Match Details</a>
+    }
+</div>
+<hr />
+}

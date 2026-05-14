@@ -39,6 +39,7 @@ export class AppStateService {
     playerSeasonStats = signal<PlayerStats[]>([]);
     cumulativeMatchPlayerStats = signal<PlayerStats[]>([]);
     matchMatchups = signal<MatchMatchup[]>([]);
+    matchMatchupMap: Record<string, MatchMatchup[]> = {};
 
     private readonly selectedLeagueKey = 'gl:selectedLeague';
     private readonly selectedSeasonKey = 'gl:selectedSeason';

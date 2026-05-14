@@ -39,6 +39,10 @@
             <mat-icon>home</mat-icon>
             <span>Dashboard</span>
         </button>
+        <button mat-menu-item [routerLink]="scheduleRoute()">
+            <mat-icon>calendar_month</mat-icon>
+            <span>Schedule</span>
+        </button>
         <button mat-menu-item [matMenuTriggerFor]="matchMenu">
             <mat-icon>event</mat-icon>
             <span>Select Match</span>

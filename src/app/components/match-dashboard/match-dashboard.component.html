@@ -11,7 +11,7 @@
 
 @if (appStateService.selectedMatch()?.matchType === matchTypes.StrokePlay) {
 <h3>Versus Results</h3>
-<app-match-results></app-match-results>
+<app-match-results [matchups]="appStateService.matchMatchups()"></app-match-results>
 <hr />
 }
 

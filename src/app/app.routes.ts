@@ -3,6 +3,7 @@ import { LeagueDashboardComponent } from './components/league-dashboard/league-d
 import { LeagueListComponent } from './components/league-list/league-list.component';
 import { MatchDashboardComponent } from './components/match-dashboard/match-dashboard.component';
 import { PlayerListComponent } from './components/player-list/player-list.component';
+import { ScheduleComponent } from './components/schedule/schedule.component';
 import { SeasonDashboardComponent } from './components/season-dashboard/season-dashboard.component';
 import { SeasonListComponent } from './components/season-list/season-list.component';
 import { SeasonStatsComponent } from './components/season-stats/season-stats.component';
@@ -15,7 +16,7 @@ export const Paths = {
     seasons: 'seasons',
     matches: 'matches',
     players: 'players',
-    schedules: 'schedules',
+    schedule: 'schedule',
     scorecards: 'scorecards',
     statistics: 'statistics'
 }
@@ -45,7 +46,8 @@ export const routes: Routes = [
                     { path: '', redirectTo: Paths.statistics, pathMatch: 'full' },
                     { path: Paths.statistics, component: SeasonStatsComponent, pathMatch: 'full' },
                     { path: `${Paths.matches}/:${RouteParams.matchId}`, component: MatchDashboardComponent, resolve: { match: matchResolver } },
-                    { path: Paths.players, component: PlayerListComponent }
+                    { path: Paths.players, component: PlayerListComponent },
+                    { path: Paths.schedule, component: ScheduleComponent }
                 ]
             }
         ]
