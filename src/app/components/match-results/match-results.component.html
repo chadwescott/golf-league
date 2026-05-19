@@ -28,7 +28,7 @@
                 <div>
                     <span class="total-score">{{ team.totalScore }}</span>
                     @if(team.totalScore != null && team.handicap != null) {
-                    <span class="net-score"> ({{ team.totalScore - team.handicap }})</span>
+                    <span class="net-score"> ({{ (team.totalScore - team.handicap) | number:'1.0-2' }})</span>
                     }
                 </div>
                 }
