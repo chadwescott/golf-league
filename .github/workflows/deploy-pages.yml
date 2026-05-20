@@ -18,6 +18,7 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
+    environment: github-pages
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -30,6 +31,69 @@ jobs:
 
       - name: Install dependencies
         run: npm ci
+
+      - name: Write environment file from secrets
+        run: |
+          mkdir -p src/environments
+          cat > src/environments/environment.ts << 'EOF'
+          export const environment = {
+            firebaseConfig: {
+              projectId: '${{ secrets.FIREBASE_PROJECT_ID }}',
+              appId: '${{ secrets.FIREBASE_APP_ID }}',
+              storageBucket: '${{ secrets.FIREBASE_STORAGE_BUCKET }}',
+              apiKey: '${{ secrets.FIREBASE_API_KEY }}',
+              authDomain: '${{ secrets.FIREBASE_AUTH_DOMAIN }}',
+              messagingSenderId: '${{ secrets.FIREBASE_MESSAGING_SENDER_ID }}'
+            }
+          };
+          EOF
+
+      - name: Validate generated environment file
+        run: |
+          node << 'NODE'
+          const fs = require('node:fs');
+
+          const filePath = 'src/environments/environment.ts';
+          if (!fs.existsSync(filePath)) {
+            console.error('environment.ts was not created');
+            process.exit(1);
+          }
+
+          const content = fs.readFileSync(filePath, 'utf8');
+
+          const requiredKeys = [
+            'projectId',
+            'appId',
+            'storageBucket',
+            'apiKey',
+            'authDomain',
+            'messagingSenderId'
+          ];
+
+          const values = {};
+          for (const key of requiredKeys) {
+            const regex = new RegExp(`${key}:\\s*'([^']*)'`);
+            const match = content.match(regex);
+            const value = match?.[1]?.trim();
+            if (!value) {
+              console.error(`Missing or empty firebaseConfig.${key} in environment.ts`);
+              process.exit(1);
+            }
+            values[key] = value;
+          }
+
+          const redact = (value) => {
+            if (value.length <= 6) {
+              return '***';
+            }
+            return `${value.slice(0, 3)}***${value.slice(-3)}`;
+          };
+
+          console.log('Validated generated environment.ts');
+          console.log(`projectId: ${redact(values.projectId)}`);
+          console.log(`appId: ${redact(values.appId)}`);
+          console.log(`apiKey: ${redact(values.apiKey)}`);
+          NODE
 
       - name: Build application
         run: npm run build:pages
