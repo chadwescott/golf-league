@@ -2,6 +2,7 @@ import { effect, inject, Injectable } from '@angular/core';
 
 
 import { forkJoin, map } from 'rxjs';
+import { MatchMatchup } from '../models/match-matchup.model';
 import { PlayerStats } from '../models/player-stats';
 import { Player } from '../models/player.model';
 import { AppStateService } from './app-state.service';
@@ -90,13 +91,14 @@ export class AppDataService {
             return;
         }
 
-        this.appStateService.matchMatchupMap = {};
+        const matchMatchupsMap: Record<string, MatchMatchup[]> = {};
 
         this.appStateService.seasonMatches().forEach(match => {
             this.matchMatchupService.getMatchupsByMatchId(league!.id, season!.id, match.id)
                 .subscribe(matchMatchups => {
                     matchMatchups.forEach(m => m.teams.sort((a, b) => a.result && b.result ? b.result?.localeCompare(a.result) : 0));
-                    this.appStateService.matchMatchupMap[match.id] = matchMatchups;
+                    matchMatchupsMap[match.id] = matchMatchups;
+                    this.appStateService.matchMatchupsMap.set(matchMatchupsMap);
                 });
         });
     });
@@ -113,8 +115,6 @@ export class AppDataService {
             return;
         }
 
-        this.appStateService.matchMatchups.set(this.appStateService.matchMatchupMap[match.id] ?? []);
-
         this.matchService.getPlayerStatsByMatchId(league!.id, season!.id, match.id).subscribe(playerStats => {
             this.appStateService.playerMatchStats.set(playerStats);
         });
@@ -122,6 +122,18 @@ export class AppDataService {
         this.scorecardService.getScorecardById(match.scorecardId).subscribe(scorecard => {
             this.appStateService.selectedScorecard.set(scorecard);
         });
+    });
+
+    readonly matchMatchupsEffect = effect(() => {
+        const match = this.appStateService.selectedMatch();
+        const matchMatchupsMap = this.appStateService.matchMatchupsMap();
+
+        if (!match) {
+            this.appStateService.matchMatchups.set([]);
+            return;
+        }
+
+        this.appStateService.matchMatchups.set(matchMatchupsMap[match.id] ?? []);
     });
 
     readonly scorecardSelectedEffect = effect(() => {
