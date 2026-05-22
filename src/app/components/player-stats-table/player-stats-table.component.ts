@@ -19,10 +19,10 @@ const ALL_COLUMNS: PlayerStatsColumn[] = [
   { key: 'fairwaysHit', label: 'Fairways Hit' },
   { key: 'grossPoints', label: 'Gross Points' },
   { key: 'netPoints', label: 'Net Points' },
-  { key: 'grossSkins', label: 'Gross Skins' },
   { key: 'netSkins', label: 'Net Skins' },
-  { key: 'grossSkinAmount', label: 'Gross Skin Winnings' },
-  { key: 'netSkinAmount', label: 'Net Skin Winnings' },
+  { key: 'skinFee', label: 'Skin Fee' },
+  { key: 'skinPayout', label: 'Payout' },
+  { key: 'netSkinAmount', label: 'Winnings' },
   { key: 'wins', label: 'Wins' },
   { key: 'losses', label: 'Losses' },
   { key: 'ties', label: 'Ties' }

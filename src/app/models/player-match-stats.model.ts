@@ -20,8 +20,8 @@ export interface PlayerMatchStats {
     fairwaysHit: number,
     grossPoints: number,
     netPoints: number,
-    grossSkins: number,
     netSkins: number,
-    grossSkinAmount: number,
+    skinFee: number,
+    skinPayout: number
     netSkinAmount: number
 }

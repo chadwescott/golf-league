@@ -52,9 +52,9 @@ export class SeasonService {
                 wins: stat.wins,
                 losses: stat.losses,
                 ties: stat.ties,
-                grossSkins: stat.grossSkins,
                 netSkins: stat.netSkins,
-                grossSkinAmount: stat.grossSkinAmount,
+                skinFee: stat.skinFee,
+                skinPayout: stat.skinPayout,
                 netSkinAmount: stat.netSkinAmount
             };
         },

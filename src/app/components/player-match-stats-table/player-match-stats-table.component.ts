@@ -22,10 +22,10 @@ const ALL_COLUMNS: PlayerMatchStatsColumn[] = [
   { key: 'fairwaysHit', label: 'Fairways Hit' },
   { key: 'grossPoints', label: 'Gross Points' },
   { key: 'netPoints', label: 'Net Points' },
-  { key: 'grossSkins', label: 'Gross Skins' },
-  { key: 'netSkins', label: 'Net Skins' },
-  { key: 'grossSkinAmount', label: 'Gross Skin Winnings' },
-  { key: 'netSkinAmount', label: 'Net Skin Winnings' },
+  { key: 'netSkins', label: 'Skins Won' },
+  { key: 'skinFee', label: 'Skin Fee' },
+  { key: 'skinPayout', label: 'Payout' },
+  { key: 'netSkinAmount', label: 'Winnings' },
   { key: 'result', label: 'Result' }
 ];
 
@@ -90,12 +90,10 @@ export class PlayerMatchStatsTableComponent {
     });
   });
 
-  constructor() {
-    effect(() => {
-      this.sortKey.set(this.defaultSortColumn());
-      this.sortDirection.set(this.defaultSortDirection());
-    });
-  }
+  private readonly resetSortEffect = effect(() => {
+    this.sortKey.set(this.defaultSortColumn());
+    this.sortDirection.set(this.defaultSortDirection());
+  });
 
   sortBy(key: keyof PlayerMatchStats): void {
     if (this.sortKey() === key) {

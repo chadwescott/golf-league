@@ -15,8 +15,8 @@ export interface PlayerStats {
     wins: number,
     losses: number,
     ties: number,
-    grossSkins: number,
     netSkins: number,
-    grossSkinAmount: number,
+    skinFee: number,
+    skinPayout: number,
     netSkinAmount: number
 }

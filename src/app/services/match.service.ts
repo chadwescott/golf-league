@@ -61,9 +61,7 @@ export class MatchService {
                 fairwaysHit: stats.fairwaysHit,
                 grossPoints: stats.grossPoints,
                 netPoints: stats.netPoints,
-                grossSkins: stats.grossSkins,
                 netSkins: stats.netSkins,
-                grossSkinAmount: stats.grossSkinAmount,
                 netSkinAmount: stats.netSkinAmount,
                 result: stats.result
             };
