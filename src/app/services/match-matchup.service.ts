@@ -1,5 +1,5 @@
 import { EnvironmentInjector, inject, Injectable, runInInjectionContext } from '@angular/core';
-import { Observable } from 'rxjs';
+import { first, Observable } from 'rxjs';
 
 
 import { collection, collectionData, Firestore, FirestoreDataConverter, QueryDocumentSnapshot, SnapshotOptions } from '@angular/fire/firestore';
@@ -33,7 +33,7 @@ export class MatchMatchupService {
                 `${FirestorePaths.leagues}/${leagueId}/${FirestorePaths.seasons}/${seasonId}/${FirestorePaths.matches}/${matchId}/${FirestorePaths.matchups}`)
                 .withConverter(this.matchMatchupConverter);
 
-            return collectionData(playerMatchStatsCollection);
+            return collectionData(playerMatchStatsCollection).pipe(first());
         });
     }
 }

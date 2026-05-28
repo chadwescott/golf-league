@@ -1,5 +1,5 @@
 import { EnvironmentInjector, inject, Injectable, runInInjectionContext } from '@angular/core';
-import { Observable } from 'rxjs';
+import { first, Observable } from 'rxjs';
 
 
 import { collection, collectionData, Firestore, FirestoreDataConverter, QueryDocumentSnapshot, SnapshotOptions } from '@angular/fire/firestore';
@@ -39,7 +39,7 @@ export class PlayerScoresService {
             const playerScoresRef = collection(this.firestore, `${FirestorePaths.scorecards}/${scorecardId}/${FirestorePaths.playerScores}`)
                 .withConverter(this.playerScoresConverter);
 
-            return collectionData(playerScoresRef);
+            return collectionData(playerScoresRef).pipe(first());
         });
     }
 }

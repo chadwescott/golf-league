@@ -91,15 +91,28 @@ export class AppDataService {
             return;
         }
 
-        const matchMatchupsMap: Record<string, MatchMatchup[]> = {};
+        const seasonMatches = this.appStateService.seasonMatches();
+        if (seasonMatches.length === 0) {
+            this.appStateService.matchMatchupsMap.set({});
+            return;
+        }
 
-        this.appStateService.seasonMatches().forEach(match => {
-            this.matchMatchupService.getMatchupsByMatchId(league!.id, season!.id, match.id)
-                .subscribe(matchMatchups => {
-                    matchMatchups.forEach(m => m.teams.sort((a, b) => a.result && b.result ? b.result?.localeCompare(a.result) : 0));
-                    matchMatchupsMap[match.id] = matchMatchups;
-                    this.appStateService.matchMatchupsMap.set(matchMatchupsMap);
-                });
+        forkJoin(
+            seasonMatches.map(match => {
+                return this.matchMatchupService.getMatchupsByMatchId(league.id, season.id, match.id)
+                    .pipe(map(matchMatchups => {
+                        matchMatchups.forEach(m => m.teams.sort((a, b) => a.result && b.result ? b.result.localeCompare(a.result) : 0));
+                        return { matchId: match.id, matchMatchups };
+                    }));
+            }
+            )
+        ).subscribe(results => {
+            const matchMatchupsMap: Record<string, MatchMatchup[]> = {};
+            results.forEach(({ matchId, matchMatchups }) => {
+                matchMatchupsMap[matchId] = matchMatchups;
+            });
+
+            this.appStateService.matchMatchupsMap.set(matchMatchupsMap);
         });
     });
 
@@ -128,8 +141,7 @@ export class AppDataService {
         const match = this.appStateService.selectedMatch();
         const matchMatchupsMap = this.appStateService.matchMatchupsMap();
 
-        if (!match) {
-            this.appStateService.matchMatchups.set([]);
+        if (!match || !matchMatchupsMap) {
             return;
         }
 

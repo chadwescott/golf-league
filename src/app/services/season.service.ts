@@ -1,5 +1,5 @@
 import { EnvironmentInjector, inject, Injectable, runInInjectionContext } from '@angular/core';
-import { from, map, Observable, of, tap } from 'rxjs';
+import { first, from, map, Observable, of, tap } from 'rxjs';
 
 
 import { collection, collectionData, CollectionReference, doc, Firestore, FirestoreDataConverter, getDoc, QueryDocumentSnapshot, SnapshotOptions } from '@angular/fire/firestore';
@@ -68,7 +68,7 @@ export class SeasonService {
             const seasonRef = collection(this.firestore, `${FirestorePaths.leagues}/${leagueId}/${FirestorePaths.seasons}`)
                 .withConverter(this.seasonConverter) as CollectionReference<Season>;
 
-            return collectionData(seasonRef);
+            return collectionData(seasonRef).pipe(first());
         })
             .pipe(
                 map(seasons => this.sort(seasons)),
@@ -100,7 +100,6 @@ export class SeasonService {
                 map(snap => {
                     if (snap.exists()) {
                         const season = snap.data();
-                        console.log(season);
                         this.seasonCache.push(season);
                         this.appStateService.saveDataToStorage(this.seasonKey, this.seasonCache);
                         this.appStateService.selectedSeason.set(season);
@@ -122,7 +121,7 @@ export class SeasonService {
             const playerResultsRef = collection(this.firestore, `${FirestorePaths.leagues}/${leagueId}/${FirestorePaths.seasons}/${seasonId}/${FirestorePaths.playerStats}`)
                 .withConverter(this.playerResultsConverter);
 
-            return collectionData(playerResultsRef);
+            return collectionData(playerResultsRef).pipe(first());
         });
     }
 }

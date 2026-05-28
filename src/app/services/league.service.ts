@@ -1,5 +1,5 @@
 import { EnvironmentInjector, inject, Injectable, runInInjectionContext } from '@angular/core';
-import { from, map, Observable, of, tap } from 'rxjs';
+import { first, from, map, Observable, of, tap } from 'rxjs';
 
 
 import { collection, collectionData, CollectionReference, doc, Firestore, FirestoreDataConverter, getDoc, QueryDocumentSnapshot, SnapshotOptions } from '@angular/fire/firestore';
@@ -35,7 +35,7 @@ export class LeagueService {
             const leagueRef = collection(this.firestore, FirestorePaths.leagues)
                 .withConverter(this.leagueConverter) as CollectionReference<League>;
 
-            return collectionData(leagueRef);
+            return collectionData(leagueRef).pipe(first());
         })
             .pipe(
                 map((leagues) => this.sort(leagues)),

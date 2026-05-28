@@ -1,5 +1,5 @@
-import { EnvironmentInjector, inject, Injectable, NgZone, runInInjectionContext } from '@angular/core';
-import { from, map, Observable, of, tap } from 'rxjs';
+import { EnvironmentInjector, inject, Injectable, runInInjectionContext } from '@angular/core';
+import { first, from, map, Observable, of, tap } from 'rxjs';
 
 
 import { collection, collectionData, CollectionReference, doc, Firestore, FirestoreDataConverter, getDoc, query, QueryDocumentSnapshot, SnapshotOptions, where } from '@angular/fire/firestore';
@@ -15,14 +15,11 @@ export class MatchService {
     private readonly appStateService = inject(AppStateService);
     private readonly environmentInjector = inject(EnvironmentInjector);
     private readonly firestore = inject(Firestore);
-    private readonly ngZone = inject(NgZone);
     private matchCache: Match[] = [];
     private readonly matchKey = 'matches';
 
     private setSelectedMatch(match: Match): void {
-        this.ngZone.run(() => {
-            this.appStateService.selectedMatch.set(match);
-        });
+        this.appStateService.selectedMatch.set(match);
     }
 
     readonly matchConverter: FirestoreDataConverter<Match> = {
@@ -76,7 +73,7 @@ export class MatchService {
             const matchRef = collection(this.firestore, `${FirestorePaths.leagues}/${leagueId}/${FirestorePaths.seasons}/${seasonId}/${FirestorePaths.matches}`)
                 .withConverter(this.matchConverter) as CollectionReference<Match>;
 
-            return collectionData(matchRef);
+            return collectionData(matchRef).pipe(first());
         })
             .pipe(
                 map(matches => this.sort(matches)),
@@ -88,7 +85,6 @@ export class MatchService {
     }
 
     getMatchById(leagueId: string, seasonId: string, matchId: string): Observable<Match | null> {
-        console.log('get match by id');
         const cachedMatch = this.matchCache.find(event => event.id === matchId);
         if (cachedMatch) {
             console.log(`Match found in cache: ${cachedMatch.id}`);
@@ -106,6 +102,7 @@ export class MatchService {
                 .withConverter(this.matchConverter);
 
             return from(getDoc(eventRef)).pipe(
+                first(),
                 map(snap => {
                     if (snap.exists()) {
                         const match = snap.data();
@@ -133,7 +130,7 @@ export class MatchService {
 
             const playerMatchStatsQuery = query(playerMatchStatsCollection, where('leagueEventId', '==', matchId));
 
-            return collectionData(playerMatchStatsQuery);
+            return collectionData(playerMatchStatsQuery).pipe(first());
         });
     }
 }
