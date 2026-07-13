@@ -40,6 +40,7 @@ export class PlayerStatsTableComponent {
   displayedColumns = input<PlayerStatsColumnKey[]>([]);
   defaultSortColumn = input<keyof PlayerStats>('netPoints');
   defaultSortDirection = input<'asc' | 'desc'>('desc');
+  skinsView = input<boolean>(false);
 
   readonly columns = computed<PlayerStatsColumn[]>(() => {
     const keys = this.displayedColumns();
@@ -69,7 +70,7 @@ export class PlayerStatsTableComponent {
     const direction = this.sortDirection();
     const modifier = direction === 'asc' ? 1 : -1;
 
-    return [...this.appStateService.playerSeasonStats()].sort((a, b) => {
+    return [...this.appStateService.playerSeasonStats()].filter(stats => this.skinsView() ? stats.skinFee > 0 : true).sort((a, b) => {
       let left: string | number | Date | null = a[key];
       let right: string | number | Date | null = b[key];
 

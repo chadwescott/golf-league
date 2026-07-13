@@ -1,6 +1,7 @@
 .scorecard {
     --size: 1.5em;
     --fairway-hit-color: black;
+    --no-skins-color: red;
     --gross-skin-color: green;
     --net-skin-color: green;
 
@@ -236,26 +237,30 @@
                     display: flex;
                     justify-content: end;
                     align-items: center;
-
-                    [icon] {
-                        font-size: 1.5em;
-                        font-weight: 800;
-                        margin-inline-end: .25em;
-
-                        &.fairway {
-                            color: var(--fairway-hit-color);
-                        }
-
-                        &.gross-skin {
-                            color: var(--gross-skin-color);
-                        }
-
-                        &.net-skin {
-                            color: var(--net-skin-color);
-                        }
-                    }
                 }
             }
+        }
+    }
+
+    [icon] {
+        font-size: 1.5em;
+        font-weight: 800;
+        margin-inline-end: .25em;
+
+        &.fairway {
+            color: var(--fairway-hit-color);
+        }
+
+        &.gross-skin {
+            color: var(--gross-skin-color);
+        }
+
+        &.net-skin {
+            color: var(--net-skin-color);
+        }
+        
+        &.no-skins {
+            color: var(--no-skins-color);
         }
     }
 }

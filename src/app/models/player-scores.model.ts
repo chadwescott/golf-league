@@ -12,5 +12,6 @@ export interface PlayerScores {
     netOutScore: number | null,
     totalScore: number | null,
     grossPoints: number | null
-    netPoints: number | null
+    netPoints: number | null,
+    excludeFromSkins: boolean | null
 }

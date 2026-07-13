@@ -47,7 +47,7 @@
 
 <h3>Skins</h3>
 <app-player-match-stats-table [displayedColumns]="['playerIds', 'netSkins', 'skinFee', 'skinPayout', 'netSkinAmount']"
-    [defaultSortColumn]="'netSkinAmount'"></app-player-match-stats-table>
+    [defaultSortColumn]="'netSkinAmount'" [skinsView]="true"></app-player-match-stats-table>
 <hr />
 
 @if (appStateService.selectedMatch()?.matchType === matchTypes.StrokePlay) {

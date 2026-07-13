@@ -72,13 +72,20 @@
                                 [alt]="appStateService.playerMap()[scores.playerIds[0]]?.firstName + ' ' + appStateService.playerMap()[scores.playerIds[0]]?.lastName" />
                         </div>
                         } -->
-                        <div class="row">
-                            @for (playerId of scores.playerIds; track playerId) {
-                            @if (appStateService.playerMap()[playerId]?.imagePath) {
-                            <img class="profile" [src]="appStateService.playerMap()[playerId]?.imagePath"
-                                [alt]="appStateService.playerMap()[playerId]?.firstName + ' ' + appStateService.playerMap()[playerId]?.lastName" />
-                            }
-                            }
+                        <div class="column" right>
+                            <div class="row">
+                                @for (playerId of scores.playerIds; track playerId) {
+                                @if (appStateService.playerMap()[playerId]?.imagePath) {
+                                <img class="profile" [src]="appStateService.playerMap()[playerId]?.imagePath"
+                                    [alt]="appStateService.playerMap()[playerId]?.firstName + ' ' + appStateService.playerMap()[playerId]?.lastName" />
+                                }
+                                }
+                                @if (scores.excludeFromSkins) {
+                                <div class="row" bottom>
+                                    <span icon class="material-symbols-outlined no-skins">block</span>
+                                </div>
+                                }
+                            </div>
                         </div>
                         <div class="column" right>
                             @for (playerId of scores.playerIds; track playerId) {
@@ -168,6 +175,9 @@
                             <!-- <span icon class="material-symbols-outlined net-skin">paid</span> net skin -->
                             <span icon class="material-symbols-outlined net-skin">price_check</span> skin & fairway
                             hit
+                        </div>
+                        <div>
+                            <span icon class="material-symbols-outlined no-skins">block</span> exluded from skins
                         </div>
                         }
                     </div>

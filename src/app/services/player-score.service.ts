@@ -26,7 +26,8 @@ export class PlayerScoresService {
                 netOutScore: playerScores.netOutScore,
                 totalScore: playerScores.totalScore,
                 grossPoints: playerScores.grossPoints,
-                netPoints: playerScores.netPoints
+                netPoints: playerScores.netPoints,
+                excludeFromSkins: playerScores.excludeFromSkins
             };
         },
         fromFirestore(snapshot: QueryDocumentSnapshot, options: SnapshotOptions): PlayerScores {
@@ -43,5 +44,3 @@ export class PlayerScoresService {
         });
     }
 }
-
-
