@@ -140,7 +140,11 @@ mat-select {
     max-width: 100%;
     column-gap: .5em;
 
-    &.right {
+    &[left] {
+        justify-content: flex-start;
+    }
+
+    &[right] {
         justify-content: flex-end;
     }
 

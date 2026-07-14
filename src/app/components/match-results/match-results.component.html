@@ -15,17 +15,19 @@
             }
             <td class="team">
                 @for (playerId of team.playerIds; track playerId) {
-                <div class="row" [ngClass]="{ right: j > 0 }">
+                <div class="row" [attr.left]="j === 0 ? '' : null" [attr.right]="j > 0 ? '' : null">
                     <span class="player">{{
                         appStateService.playerMap()[playerId]?.firstName }} {{
                         appStateService.playerMap()[playerId]?.lastName }}</span>
                 </div>
                 }
                 @if (!team.totalScore) {
-                <div class="row" [ngClass]="{ right: j > 0 }">Hdcp: {{ team.handicap }}</div>
+                <div class="row" [attr.left]="j === 0 ? '' : null" [attr.right]="j > 0 ? '' : null">Hdcp: {{
+                    team.handicap }}</div>
                 }
                 @if (team.totalScore != null) {
-                <div>
+
+                <div class="row" [attr.left]="j === 0 ? '' : null" [attr.right]="j > 0 ? '' : null">
                     <span class="total-score">{{ team.totalScore }}</span>
                     @if(team.totalScore != null && team.handicap != null) {
                     <span class="net-score"> ({{ (team.totalScore - team.handicap) | number:'1.0-2' }})</span>
