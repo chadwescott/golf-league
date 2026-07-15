@@ -5,12 +5,16 @@
             @for (team of matchup.teams; track team.playerIds; let j = $index) {
             @if (j === 0) {
             <td>
-                @for (playerId of team.playerIds; track playerId) {
-                @if(appStateService.playerMap()[playerId]?.imagePath){
-                <img class="profile" src="{{ appStateService.playerMap()[playerId]?.imagePath }}"
-                    alt="{{ appStateService.playerMap()[playerId]?.firstName }} {{ appStateService.playerMap()[playerId]?.lastName }}">
-                }
-                }
+                <div class="row">
+                    @for (playerId of team.playerIds; track playerId) {
+                    @if(appStateService.playerMap()[playerId]?.imagePath){
+                    <div>
+                        <img class="profile" src="{{ appStateService.playerMap()[playerId]?.imagePath }}"
+                            alt="{{ appStateService.playerMap()[playerId]?.firstName }} {{ appStateService.playerMap()[playerId]?.lastName }}">
+                    </div>
+                    }
+                    }
+                </div>
             </td>
             }
             <td class="team">
